@@ -1,0 +1,80 @@
+<div class="edit-user-container">
+
+  <div class="header-container">
+  <h2>Editar Usuario</h2>
+  <button (click)="onDeleteAccount()" class="btn-delete">Eliminar cuenta</button>
+  </div>
+
+  <!-- Formulario para editar usuario -->
+  <form (ngSubmit)="onSaveDatos()">
+    <div class="form-group">
+      <label for="nombre">Nombre</label>
+      <input id="nombre" [(ngModel)]="nombre" name="nombre" required />
+    </div>
+
+    <div class="form-group">
+      <label for="apellido">Apellido</label>
+      <input id="apellido" [(ngModel)]="apellido" name="apellido" required />
+    </div>
+
+    <div class="form-group">
+      <label for="correo">Correo</label>
+      <input id="correo" [(ngModel)]="correo" name="correo" type="email" required />
+    </div>
+
+    <button type="submit" class="btn-save">Guardar cambios</button>
+  </form>
+
+  <!-- Mensaje de error al actualizar los datos -->
+  <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+  <!-- Modal de confirmación para los datos -->
+  <div *ngIf="showModalDatos" class="modal">
+    <div class="modal-content">
+      <h3>¿Estás seguro de que deseas guardar los cambios?</h3>
+      <div class="modal-buttons">
+        <button (click)="confirmSaveDatos()" class="btn-confirm">Confirmar</button>
+        <button (click)="cancelSaveDatos()" class="btn-cancel">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulario para cambiar la contraseña -->
+  <h3>Cambiar Contraseña</h3>
+  <form (ngSubmit)="onSavePassword()">
+    <div class="form-group">
+      <label for="newPassword">Nueva contraseña</label>
+      <input id="newPassword" [(ngModel)]="newPassword" name="newPassword" type="password" required />
+    </div>
+
+    <div class="form-group">
+      <label for="confirmPassword">Confirmar nueva contraseña</label>
+      <input id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" type="password" required />
+    </div>
+
+    <button type="submit" class="btn-save">Actualizar Contraseña</button>
+    <h2></h2>
+    <button routerLink="/dashboard" class="btn-home">Regresar</button>
+
+  </form>
+
+  <!-- Mensaje de error o éxito al cambiar la contraseña -->
+  <p *ngIf="passwordError" class="error-message">{{ passwordError }}</p>
+  <p *ngIf="passwordSuccess" class="success-message">{{ passwordSuccess }}</p>
+
+  <!-- Modal de confirmación para la contraseña -->
+  <div *ngIf="showModalPassword" class="modal">
+    <div class="modal-content">
+      <h3>¿Estás seguro de que deseas cambiar la contraseña?</h3>
+      <div class="modal-buttons">
+        <button (click)="confirmSavePassword()" class="btn-confirm">Confirmar</button>
+
+        <button (click)="cancelSavePassword()" class="btn-cancel">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+

@@ -1,0 +1,59 @@
+<div class="register-student-container">
+  <h2>Registrar Estudiante</h2>
+
+  <form (ngSubmit)="onSubmit()" class="register-form">
+
+    <div class="form-group">
+      <label for="nombre">Nombre</label>
+      <input type="text" id="nombre" [(ngModel)]="student.nombre" name="nombre" required />
+    </div>
+
+    <div class="form-group">
+      <label for="edad">Edad</label>
+      <input type="number" id="edad" [(ngModel)]="student.edad" name="edad" required />
+    </div>
+
+    <div class="form-group">
+      <label for="genero">Género</label>
+      <select id="genero" [(ngModel)]="student.genero" name="genero" required>
+        <option value="">Seleccione</option>
+        <option value="M">Masculino</option>
+        <option value="F">Femenino</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="grado">Grado</label>
+      <input type="number" id="grado" [(ngModel)]="student.grado" name="grado" required />
+    </div>
+
+    <div class="form-group">
+      <label for="presenciaPadres">Presencia de los padres</label>
+      <select id="presenciaPadres" [(ngModel)]="student.presencia_padres" name="presenciaPadres" required>
+        <option value="">Seleccione</option>
+        <option value="Ninguno">Ninguno</option>
+        <option value="Solo padre">Solo padre</option>
+        <option value="Solo madre">Solo madre</option>
+        <option value="Ambos">Ambos</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="trabaja">¿Trabaja?</label>
+      <select id="trabaja" [(ngModel)]="student.trabaja" name="trabaja" required>
+        <option value="true">Sí</option>
+        <option value="false">No</option>
+      </select>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-save">Registrar</button>
+      <a href="/dashboard" class="btn-regresar">Regresar</a>
+    </div>
+
+  </form>
+
+  <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+</div>
+
