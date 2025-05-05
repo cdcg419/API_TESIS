@@ -1,0 +1,130 @@
+.edit-user-container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+}
+
+input {
+  width: 95%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 15px;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+  width: 300px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.btn-confirm, .btn-cancel {
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-confirm {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-cancel {
+  background-color: #dc3545;
+  color: white;
+}
+
+.error-message, .success-message {
+  color: red;
+}
+
+.modal-buttons button {
+  margin: 0 10px;  /* Se agrega un margen horizontal de 10px entre los botones */
+}
+
+.btn-delete {
+  top: 15px;              /* Distancia desde el top */
+  right: 15px;            /* Distancia desde el lado derecho */
+  background-color: #dc3545;
+  color: white;
+  padding: 5px 10px;      /* Tamaño más pequeño */
+  font-size: 12px;        /* Texto más pequeño */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 80px;
+  z-index: 1000;          /* Asegura que se vea por encima */
+}
+
+.btn-delete:hover {
+  background-color: #b02a37;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-container h2 {
+  margin: 0;
+}
+
