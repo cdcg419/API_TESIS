@@ -1,59 +1,110 @@
-<div class="register-student-container">
-  <h2>Registrar Estudiante</h2>
+<div class="container">
+  <div class="card p-4 shadow" style="width: 100%; max-width: 600px;">
+    <h3 class="text-center mb-4">Registrar Estudiante</h3>
 
-  <form (ngSubmit)="onSubmit()" class="register-form">
+    <form (ngSubmit)="onSubmit()" #form="ngForm">
+      <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre</label>
+        <input
+          type="text"
+          id="nombre"
+          class="form-control"
+          name="nombre"
+          [(ngModel)]="student.nombre"
+          required
+        />
+      </div>
 
-    <div class="form-group">
-      <label for="nombre">Nombre</label>
-      <input type="text" id="nombre" [(ngModel)]="student.nombre" name="nombre" required />
-    </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="apellido_paterno">Apellido paterno</label>
+          <input type="text" id="apellido_paterno" [(ngModel)]="student.apellido_paterno" name="apellido_paterno" required />
+        </div>
+        <div class="form-group">
+          <label for="apellido_materno">Apellido materno</label>
+          <input type="text" id="apellido_materno" [(ngModel)]="student.apellido_materno" name="apellido_materno" required />
+        </div>
+      </div>
 
-    <div class="form-group">
-      <label for="edad">Edad</label>
-      <input type="number" id="edad" [(ngModel)]="student.edad" name="edad" required />
-    </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="edad">Edad</label>
+          <input type="number" id="edad" [(ngModel)]="student.edad" name="edad" required />
+        </div>
+        <div class="form-group">
+          <label for="genero">Género</label>
+            <select id="genero" [(ngModel)]="student.genero" name="genero" required>
+              <option value="">Seleccione</option>
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+            </select>
+        </div>
+      </div>
 
-    <div class="form-group">
-      <label for="genero">Género</label>
-      <select id="genero" [(ngModel)]="student.genero" name="genero" required>
-        <option value="">Seleccione</option>
-        <option value="M">Masculino</option>
-        <option value="F">Femenino</option>
-      </select>
-    </div>
+      <div class="mb-3">
+        <label for="grado" class="form-label">Grado</label>
+        <input
+          type="text"
+          id="grado"
+          class="form-control"
+          name="grado"
+          [(ngModel)]="student.grado"
+          required
+        />
+      </div>
 
-    <div class="form-group">
-      <label for="grado">Grado</label>
-      <input type="number" id="grado" [(ngModel)]="student.grado" name="grado" required />
-    </div>
+      <div class="mb-3">
+        <label for="presencia_padres" class="form-label">Presencia de padres</label>
+        <select
+          id="presencia_padres"
+          class="form-select"
+          name="presencia_padres"
+          [(ngModel)]="student.presencia_padres"
+          required
+        >
+          <option value="" disabled selected>Seleccionar</option>
+          <option value="Ambos">Ambos</option>
+          <option value="Solo padre">Solo padre</option>
+          <option value="Solo madre">Solo madre</option>
+          <option value="Ninguno">Ninguno</option>
+        </select>
+      </div>
 
-    <div class="form-group">
-      <label for="presenciaPadres">Presencia de los padres</label>
-      <select id="presenciaPadres" [(ngModel)]="student.presencia_padres" name="presenciaPadres" required>
-        <option value="">Seleccione</option>
-        <option value="Ninguno">Ninguno</option>
-        <option value="Solo padre">Solo padre</option>
-        <option value="Solo madre">Solo madre</option>
-        <option value="Ambos">Ambos</option>
-      </select>
-    </div>
+      <div class="mb-4">
+        <label class="form-label">¿Trabaja?</label>
+        <div class="form-check">
+          <input
+            type="radio"
+            id="trabajaSi"
+            name="trabaja"
+            class="form-check-input"
+            [value]="true"
+            [(ngModel)]="student.trabaja"
+            required
+          />
+          <label for="trabajaSi" class="form-check-label">Sí</label>
+        </div>
+        <div class="form-check">
+          <input
+            type="radio"
+            id="trabajaNo"
+            name="trabaja"
+            class="form-check-input"
+            [value]="false"
+            [(ngModel)]="student.trabaja"
+          />
+          <label for="trabajaNo" class="form-check-label">No</label>
+        </div>
+      </div>
 
-    <div class="form-group">
-      <label for="trabaja">¿Trabaja?</label>
-      <select id="trabaja" [(ngModel)]="student.trabaja" name="trabaja" required>
-        <option value="true">Sí</option>
-        <option value="false">No</option>
-      </select>
-    </div>
+      <div class="button-group">
+        <button type="submit">Registrar</button>
+        <a routerLink="/dashboard">Volver al Dashboard</a>
+      </div>
 
-    <div class="form-actions">
-      <button type="submit" class="btn-save">Registrar</button>
-      <a href="/dashboard" class="btn-regresar">Regresar</a>
-    </div>
-
-  </form>
-
-  <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
-  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+    </form>
+  </div>
 </div>
+
+
 

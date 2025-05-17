@@ -6,9 +6,11 @@ import { AuthService } from './auth.service';
 export interface Student {
   id?: number;
   nombre: string;
+  apellido_paterno: string;
+  apellido_materno: string;
   edad: number;
+  grado: string;
   genero: string;
-  grado: number;
   presencia_padres: string;
   trabaja: boolean;
 }
@@ -18,55 +20,33 @@ export interface Student {
 })
 export class StudentService {
 
-  private apiUrl = 'http://localhost:8000/students';
+private apiUrl = 'http://127.0.0.1:8000/estudiantes'; // Ajusta la URL si es necesario
 
-  constructor(
-    private http: HttpClient,
-    private authService: AuthService  // Inyectar AuthService
-  ) {}
+  constructor(private http: HttpClient) {}
 
-  private getAuthHeaders(): HttpHeaders {
-    // Obtener el token del AuthService
-    const token = this.authService.getToken();
-    if (!token) {
-      throw new Error('Token de autenticación no disponible');
-    }
-
-    // Crear los encabezados con el token de autenticación
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    });
-  }
-
-  getStudents(): Observable<{ students: Student[] }> {
-    return this.http.get<{ students: Student[] }>(this.apiUrl, { headers: this.getAuthHeaders() });
-  }
-
+  // Crear estudiante
   createStudent(student: Student): Observable<Student> {
-    // Obtener el docente_id desde el AuthService
-    const docenteId = this.authService.getUserData()?.id;  // Obtener el ID del docente
-
-    if (!docenteId) {
-      throw new Error('Docente ID no disponible');
-    }
-
-    // Agregar docente_id al objeto student
-    const studentWithDocenteId = { ...student, docente_id: docenteId };
-
-    // Enviar la solicitud POST con el docente_id y los encabezados de autenticación
-    return this.http.post<Student>(this.apiUrl, studentWithDocenteId, { headers: this.getAuthHeaders() });
+    return this.http.post<Student>(this.apiUrl + '/', student);
   }
 
-  updateStudent(id: number, student: Partial<Student>): Observable<Student> {
-    return this.http.put<Student>(`${this.apiUrl}/${id}`, student, { headers: this.getAuthHeaders() });
+  // Obtener lista de estudiantes
+  getStudents(): Observable<Student[]> {
+    return this.http.get<Student[]>(this.apiUrl + '/');
   }
 
-  deleteStudent(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() });
+  // Obtener estudiante por ID
+  getStudent(id: number): Observable<Student> {
+    return this.http.get<Student>(`${this.apiUrl}/${id}`);
   }
 
-  getStudentById(id: number): Observable<Student> {
-    return this.http.get<Student>(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() });
+  // Actualizar estudiante
+  updateStudent(id: number, student: Student): Observable<Student> {
+    return this.http.put<Student>(`${this.apiUrl}/${id}`, student);
+  }
+
+  // Eliminar estudiante
+  deleteStudent(id: number): Observable<Student> {
+    return this.http.delete<Student>(`${this.apiUrl}/${id}`);
   }
 }
+

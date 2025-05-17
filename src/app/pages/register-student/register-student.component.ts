@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { StudentService } from '../../services/student.service';
+import { StudentService, Student } from '../../services/student.service';
 
 @Component({
   selector: 'app-register-student',
@@ -9,30 +9,36 @@ import { StudentService } from '../../services/student.service';
   styleUrl: './register-student.component.css'
 })
 export class RegisterStudentComponent {
-  student = {
+  student: Student = {
     nombre: '',
+    apellido_paterno: '',
+    apellido_materno: '',
     edad: 0,
+    grado: '',
     genero: '',
-    grado: 0,
     presencia_padres: '',
     trabaja: false
   };
-  successMessage = '';
-  errorMessage = '';
+
 
  constructor(private studentService: StudentService, private router: Router) {}
 
-  onSubmit(): void {
-    this.studentService.createStudent(this.student).subscribe(
-      () => {
-        this.successMessage = 'Estudiante registrado exitosamente.';
-        this.errorMessage = '';
-        this.router.navigate(['/dashboard']); // cambia a la ruta que corresponda
+  register() {
+    this.studentService.createStudent(this.student).subscribe({
+      next: (data) => {
+        alert('Estudiante registrado con éxito');
+        this.router.navigate(['/students']); // redirige a la lista de estudiantes
       },
-      () => {
-        this.errorMessage = 'Error al registrar el estudiante.';
-        this.successMessage = '';
+      error: (err) => {
+        alert('Error al registrar estudiante');
+        console.error(err);
       }
-    );
+    });
+  }
+  onSubmit() {
+  this.register();
+  }
+  volverAlDashboard() {
+  this.router.navigate(['/dashboard']); // Cambia si tu ruta es distinta
   }
 }
