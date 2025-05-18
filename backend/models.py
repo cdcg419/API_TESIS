@@ -12,18 +12,24 @@ class User(Base):
     apellido = Column(String(100))
     correo = Column(String(120), unique=True, index=True)
     contraseña = Column(String(255))
-    estudiantes = relationship("Student", back_populates="docente", cascade="all, delete-orphan")
+    estudiantes = relationship("Estudiante", back_populates="docente", cascade="all, delete-orphan")
 
-class Student(Base):
-    __tablename__ = "students"
+## recien agregado
+
+# Modelo de Estudiante 
+class Estudiante(Base):
+    __tablename__ = "estudiantes"
 
     id = Column(Integer, primary_key=True, index=True)
-    nombre = Column(String(100), nullable=False)
+    nombre = Column(String(100))
+    apellido_paterno = Column(String(100))
+    apellido_materno = Column(String(100))
     edad = Column(Integer, nullable=False)
-    genero = Column(String(2), nullable=False)
-    grado = Column(Integer, nullable=False)
-    presencia_padres = Column(String(100), nullable=False)
+    grado = Column(String(10))
+    genero = Column(String(1))
+    presencia_padres = Column(String(20))
     trabaja = Column(Boolean, nullable=False)
-    docente_id = Column(Integer, ForeignKey("users.id"))  # relación con el usuario
-    docente = relationship("User", back_populates="estudiantes")
-    
+
+    docente_id = Column(Integer, ForeignKey("users.id"))  
+    docente = relationship("User", back_populates="estudiantes")  
+

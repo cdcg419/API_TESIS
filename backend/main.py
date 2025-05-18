@@ -5,7 +5,7 @@ import models
 from auth import router as auth_router
 from fastapi.middleware.cors import CORSMiddleware
 from users import router as users_router
-from students import router as students_router
+from students import router as estudiantes_router
 
 app = FastAPI()
 
@@ -21,4 +21,4 @@ models.Base.metadata.create_all(bind=engine)
 
 app.include_router(auth_router, prefix="/api", tags=["auth"])
 app.include_router(users_router)
-app.include_router(students_router)
+app.include_router(estudiantes_router)

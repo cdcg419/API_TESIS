@@ -34,3 +34,22 @@ class PasswordUpdate(BaseModel):
     new_password: str
     
 #################################################################
+
+class EstudianteBase(BaseModel):
+    nombre: str
+    apellido_paterno: str
+    apellido_materno: str
+    edad: int
+    grado: str
+    genero: str
+    presencia_padres: str
+    trabaja: bool
+
+class EstudianteCreate(EstudianteBase):
+    pass
+
+class Estudiante(EstudianteBase):
+    id: int
+
+    class Config:
+        orm_mode = True

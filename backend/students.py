@@ -9,3 +9,41 @@ from utils import get_current_user
 
 router = APIRouter()
 
+router = APIRouter(
+    prefix="/estudiantes",
+    tags=["Estudiantes"]
+)
+
+@router.post("/", response_model=schemas.Estudiante)
+def crear_estudiante(
+    student: schemas.EstudianteCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),  # usuario actual
+):
+    # Asignar el docente_id al estudiante
+    return crud.crear_estudiante(db=db, student=student, docente_id=current_user.id)
+
+@router.get("/", response_model=list[schemas.Estudiante])
+def listar_estudiantes(db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    return crud.obtener_estudiantes(db)
+
+@router.get("/{estudiante_id}", response_model=schemas.Estudiante)
+def obtener_estudiante(estudiante_id: int, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    estudiante = crud.obtener_estudiante(db, estudiante_id)
+    if estudiante is None:
+        raise HTTPException(status_code=404, detail="Estudiante no encontrado")
+    return estudiante
+
+@router.put("/{estudiante_id}", response_model=schemas.Estudiante)
+def actualizar_estudiante(estudiante_id: int, estudiante: schemas.EstudianteCreate, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    estudiante_actualizado = crud.actualizar_estudiante(db, estudiante_id, estudiante)
+    if estudiante_actualizado is None:
+        raise HTTPException(status_code=404, detail="Estudiante no encontrado")
+    return estudiante_actualizado
+
+@router.delete("/{estudiante_id}", response_model=schemas.Estudiante)
+def eliminar_estudiante(estudiante_id: int, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    estudiante_eliminado = crud.eliminar_estudiante(db, estudiante_id)
+    if estudiante_eliminado is None:
+        raise HTTPException(status_code=404, detail="Estudiante no encontrado")
+    return estudiante_eliminado
