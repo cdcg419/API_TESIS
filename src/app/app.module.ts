@@ -20,7 +20,8 @@ import { FormsModule } from '@angular/forms'
 
 //
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthInterceptor } from './interceptor/auth.interceptor'; // Importa el interceptor
+import { AuthInterceptor } from './interceptor/auth.interceptor';
+import { MyStudentsComponent } from './pages/my-students/my-students.component'; // Importa el interceptor
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { AuthInterceptor } from './interceptor/auth.interceptor'; // Importa el 
     HomeComponent,
     DashboardComponent,
     EditUserComponent,
-    RegisterStudentComponent
+    RegisterStudentComponent,
+    MyStudentsComponent
   ],
   imports: [
     BrowserModule,

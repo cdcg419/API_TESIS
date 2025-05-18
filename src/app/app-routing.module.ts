@@ -6,6 +6,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { EditUserComponent } from './pages/edit-user/edit-user.component';
 import { RegisterStudentComponent } from './pages/register-student/register-student.component';
+import { MyStudentsComponent } from './pages/my-students/my-students.component';
 import { AuthGuard } from './guard/auth.guard';
 
 const routes: Routes = [
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   { path: 'edit_user', component: EditUserComponent, canActivate: [AuthGuard]},
   { path: 'register_student', component: RegisterStudentComponent, canActivate: [AuthGuard] },
+  { path: 'my_students', component: MyStudentsComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
