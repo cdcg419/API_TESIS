@@ -9,19 +9,23 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { EditUserComponent } from './pages/edit-user/edit-user.component';
 import { RegisterStudentComponent } from './pages/register-student/register-student.component';
 import { HomeComponent } from './pages/home/home.component';
+import { MyStudentsComponent } from './pages/my-students/my-students.component';
+import { RegisterNotesComponent } from './pages/register-notes/register-notes.component';
 //
 import {MatButtonModule} from '@angular/material/button';
-import { MatToolbarModule } from '@angular/material/toolbar';
+import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCardModule} from '@angular/material/card';
-import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms'
-
+import {MatInputModule} from '@angular/material/input';
+import {FormsModule} from '@angular/forms'
+import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
 //
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
-import { MyStudentsComponent } from './pages/my-students/my-students.component'; // Importa el interceptor
+import { EditStudentComponent } from './pages/edit-student/edit-student.component';
+
 
 
 @NgModule({
@@ -33,7 +37,9 @@ import { MyStudentsComponent } from './pages/my-students/my-students.component';
     DashboardComponent,
     EditUserComponent,
     RegisterStudentComponent,
-    MyStudentsComponent
+    MyStudentsComponent,
+    RegisterNotesComponent,
+    EditStudentComponent
   ],
   imports: [
     BrowserModule,
@@ -45,7 +51,9 @@ import { MyStudentsComponent } from './pages/my-students/my-students.component';
     MatFormFieldModule,
     MatSelectModule,
     MatCardModule,
-    MatInputModule
+    MatInputModule,
+    MatTableModule,
+    MatIconModule
   ],
   providers: [
     {

@@ -14,7 +14,7 @@ export class RegisterStudentComponent {
     apellido_paterno: '',
     apellido_materno: '',
     edad: 0,
-    grado: '',
+    grado: 0,
     genero: '',
     presencia_padres: '',
     trabaja: false

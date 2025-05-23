@@ -9,7 +9,7 @@ export interface Student {
   apellido_paterno: string;
   apellido_materno: string;
   edad: number;
-  grado: string;
+  grado: number;
   genero: string;
   presencia_padres: string;
   trabaja: boolean;

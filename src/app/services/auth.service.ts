@@ -33,6 +33,7 @@ export class AuthService {
           this.saveToken(response.access_token);
           // Guardar los datos del usuario en localStorage
           localStorage.setItem('user_data', JSON.stringify(response.user)); // Asumiendo que 'response.user' tiene los datos del usuario
+          localStorage.setItem('userId', response.user.id.toString());
         }
       })
     );

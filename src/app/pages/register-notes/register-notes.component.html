@@ -1,0 +1,101 @@
+<div class="form-container">
+  <h2>Registrar Notas Académicas</h2>
+
+  <form (ngSubmit)="registrarNotas()" #notesForm="ngForm">
+    <!-- Estudiante -->
+    <div class="form-group">
+      <label for="estudiante_id">Estudiante</label>
+      <select
+        id="estudiante_id"
+        name="estudiante_id"
+        [(ngModel)]="notas.estudiante_id"
+        required
+      >
+        <option *ngFor="let estudiante of estudiantes" [value]="estudiante.id">
+          {{ estudiante.nombre }} {{ estudiante.apellido_paterno }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Curso -->
+    <div class="form-group">
+      <label for="curso">Curso</label>
+      <input
+        type="text"
+        id="curso"
+        name="curso"
+        [(ngModel)]="notas.curso"
+        required
+      />
+    </div>
+
+    <!-- Grado -->
+    <div class="form-group">
+      <label for="estudiante_id">Grado</label>
+      <select
+        id="estudiante_id"
+        name="estudiante_id"
+        [(ngModel)]="notas.estudiante_id"
+        required
+      >
+        <option *ngFor="let estudiante of estudiantes" [value]="estudiante.id">
+          {{ estudiante.grado }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Trimestre -->
+    <div class="form-group">
+      <label for="trimestre">Trimestre</label>
+      <input
+        type="number"
+        id="trimestre"
+        name="trimestre"
+        [(ngModel)]="notas.trimestre"
+        required
+      />
+    </div>
+
+    <!-- Asistencia -->
+    <div class="form-group">
+      <label for="asistencia">Asistencia (%)</label>
+      <input
+        type="number"
+        id="asistencia"
+        name="asistencia"
+        [(ngModel)]="notas.asistencia"
+        required
+      />
+    </div>
+
+    <!-- Nota -->
+    <div class="form-group">
+      <label for="nota">Nota del Trimestre</label>
+      <input
+        type="number"
+        id="nota"
+        name="nota"
+        [(ngModel)]="notas.nota_trimestre"
+        required
+      />
+    </div>
+
+    <!-- Conducta -->
+    <div class="form-group">
+      <label for="conducta">Nota de Conducta</label>
+      <input
+        type="number"
+        id="conducta"
+        name="conducta"
+        [(ngModel)]="notas.conducta"
+        required
+      />
+    </div>
+
+    <!-- Botones -->
+    <div class="form-buttons">
+      <button type="submit" class="btn btn-primary">Registrar Notas</button>
+      <button class="btn btn-secondary" routerLink="/my_students">Mis estudiantes</button>
+    </div>
+  </form>
+</div>
