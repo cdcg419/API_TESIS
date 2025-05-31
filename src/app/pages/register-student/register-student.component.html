@@ -3,6 +3,8 @@
     <h3 class="text-center mb-4">Registrar Estudiante</h3>
 
     <form (ngSubmit)="onSubmit()" #form="ngForm">
+
+      <!-- Nombre -->
       <div class="mb-3">
         <label for="nombre" class="form-label">Nombre</label>
         <input
@@ -12,55 +14,132 @@
           name="nombre"
           [(ngModel)]="student.nombre"
           required
+          maxlength="100"
+          pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+          #nombreField="ngModel"
         />
+        <div *ngIf="nombreField.invalid && nombreField.touched" class="text-danger" class="error-text">
+          <div *ngIf="nombreField.errors?.['required']">Falta agregar el nombre.</div>
+          <div *ngIf="nombreField.errors?.['pattern']">Solo letras y espacios son permitidos.</div>
+          <div *ngIf="nombreField.errors?.['maxlength']">Máximo 100 caracteres.</div>
+        </div>
       </div>
 
+      <!-- Apellidos -->
       <div class="form-row">
         <div class="form-group">
           <label for="apellido_paterno">Apellido paterno</label>
-          <input type="text" id="apellido_paterno" [(ngModel)]="student.apellido_paterno" name="apellido_paterno" required />
+          <input
+            type="text"
+            id="apellido_paterno"
+            [(ngModel)]="student.apellido_paterno"
+            name="apellido_paterno"
+            required
+            maxlength="100"
+            pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+            #apellidoPField="ngModel"
+          />
+          <div *ngIf="apellidoPField.invalid && apellidoPField.touched" class="text-danger" class="error-text">
+            <div *ngIf="apellidoPField.errors?.['required']">Falta el apellido paterno.</div>
+            <div *ngIf="apellidoPField.errors?.['pattern']">Solo letras y espacios.</div>
+            <div *ngIf="apellidoPField.errors?.['maxlength']">Máximo 100 caracteres.</div>
+          </div>
         </div>
+
         <div class="form-group">
           <label for="apellido_materno">Apellido materno</label>
-          <input type="text" id="apellido_materno" [(ngModel)]="student.apellido_materno" name="apellido_materno" required />
+          <input
+            type="text"
+            id="apellido_materno"
+            [(ngModel)]="student.apellido_materno"
+            name="apellido_materno"
+            required
+            maxlength="100"
+            pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+            #apellidoMField="ngModel"
+          />
+          <div *ngIf="apellidoMField.invalid && apellidoMField.touched" class="text-danger" class="error-text">
+            <div *ngIf="apellidoMField.errors?.['required']">Falta el apellido materno.</div>
+            <div *ngIf="apellidoMField.errors?.['pattern']">Solo letras y espacios.</div>
+            <div *ngIf="apellidoMField.errors?.['maxlength']">Máximo 100 caracteres.</div>
+          </div>
         </div>
       </div>
 
+      <!-- Edad y Género -->
       <div class="form-row">
         <div class="form-group">
           <label for="edad">Edad</label>
-          <input type="number" id="edad" [(ngModel)]="student.edad" name="edad" required />
+          <select
+            id="edad"
+            name="edad"
+            class="form-control"
+            [(ngModel)]="student.edad"
+            required
+            #edadField="ngModel"
+          >
+            <option value="" disabled selected>Seleccione</option>
+            <option *ngFor="let edad of [6,7,8,9,10,11,12]" [value]="edad">{{ edad }}</option>
+          </select>
+          <div *ngIf="edadField.invalid && edadField.touched" class="text-danger" class="error-text">
+            <div *ngIf="edadField.errors?.['required']">Debe seleccionar una edad.</div>
+          </div>
         </div>
+
         <div class="form-group">
           <label for="genero">Género</label>
-            <select id="genero" [(ngModel)]="student.genero" name="genero" required>
-              <option value="">Seleccione</option>
-              <option value="M">Masculino</option>
-              <option value="F">Femenino</option>
-            </select>
+          <select
+            id="genero"
+            name="genero"
+            class="form-control"
+            [(ngModel)]="student.genero"
+            required
+            #generoField="ngModel"
+          >
+            <option value="" disabled selected>Seleccione</option>
+            <option value="M">Masculino</option>
+            <option value="F">Femenino</option>
+          </select>
+          <div *ngIf="generoField.invalid && generoField.touched" class="text-danger" class="error-text">
+            <div *ngIf="generoField.errors?.['required']">Debe seleccionar un género.</div>
+          </div>
         </div>
       </div>
 
+      <!-- Grado -->
       <div class="mb-3">
         <label for="grado" class="form-label">Grado</label>
-        <input
-          type="text"
+        <select
           id="grado"
-          class="form-control"
           name="grado"
+          class="form-control"
           [(ngModel)]="student.grado"
           required
-        />
+          #gradoField="ngModel"
+        >
+          <option value="" disabled selected>Seleccione</option>
+          <option [value]="1">Primero</option>
+          <option [value]="2">Segundo</option>
+          <option [value]="3">Tercero</option>
+          <option [value]="4">Cuarto</option>
+          <option [value]="5">Quinto</option>
+          <option [value]="6">Sexto</option>
+        </select>
+        <div *ngIf="gradoField.invalid && gradoField.touched" class="text-danger" class="error-text">
+          <div *ngIf="gradoField.errors?.['required']">Debe seleccionar un grado.</div>
+        </div>
       </div>
 
+      <!-- Presencia de Padres -->
       <div class="mb-3">
         <label for="presencia_padres" class="form-label">Presencia de padres</label>
         <select
           id="presencia_padres"
-          class="form-select"
+          class="form-control"
           name="presencia_padres"
           [(ngModel)]="student.presencia_padres"
           required
+          #padresField="ngModel"
         >
           <option value="" disabled selected>Seleccionar</option>
           <option value="Ambos">Ambos</option>
@@ -68,8 +147,12 @@
           <option value="Solo madre">Solo madre</option>
           <option value="Ninguno">Ninguno</option>
         </select>
+        <div *ngIf="padresField.invalid && padresField.touched" class="text-danger" class="error-text">
+          <div *ngIf="padresField.errors?.['required']">Debe seleccionar la presencia de padres.</div>
+        </div>
       </div>
 
+      <!-- ¿Trabaja? -->
       <div class="mb-4">
         <label class="form-label">¿Trabaja?</label>
         <div class="form-check">
@@ -81,6 +164,7 @@
             [value]="true"
             [(ngModel)]="student.trabaja"
             required
+            #trabajaField="ngModel"
           />
           <label for="trabajaSi" class="form-check-label">Sí</label>
         </div>
@@ -95,16 +179,20 @@
           />
           <label for="trabajaNo" class="form-check-label">No</label>
         </div>
+        <div *ngIf="trabajaField.invalid && form.submitted" class="text-danger" class="error-text">
+          <div>Debe seleccionar si el estudiante trabaja.</div>
+        </div>
       </div>
 
+      <!-- Botones -->
       <div class="button-group">
-        <button type="submit">Registrar</button>
+        <button type="submit" [disabled]="form.invalid">Registrar</button>
         <a routerLink="/my_students">Mis estudiantes</a>
       </div>
-
     </form>
   </div>
 </div>
+
 
 
 

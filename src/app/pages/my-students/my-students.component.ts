@@ -2,6 +2,8 @@ import { Component,OnInit } from '@angular/core';
 import { RegisterNotesService, EstudianteInfo} from '../../services/register-notes.service';
 import { Router } from '@angular/router';
 import { StudentService } from '../../services/student.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AcademicRecordsModalComponent } from '../academic-records-modal/academic-records-modal.component';
 
 @Component({
   selector: 'app-my-students',
@@ -13,7 +15,7 @@ export class MyStudentsComponent implements OnInit{
   displayedColumns: string[] = ['nombre', 'apellido_paterno', 'grado', 'acciones'];
   dataSource: EstudianteInfo[] = [];
 
-  constructor(private registerNotesService: RegisterNotesService, private router: Router,  private studentService: StudentService,) {}
+  constructor(private registerNotesService: RegisterNotesService, private router: Router,  private studentService: StudentService,private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.loadStudents();
@@ -50,5 +52,16 @@ export class MyStudentsComponent implements OnInit{
         }
       });
     }
+  }
+  abrirNotas(estudianteId: number): void {
+  this.dialog.open(AcademicRecordsModalComponent, {
+    width: '900px',
+    maxWidth: 'none', // 👈 esto es clave
+    data: { estudianteId }
+  });
+  }
+  obtenerNombreGrado(grado: number): string {
+  const nombres = ['Primer grado', 'Segundo grado', 'Tercer grado', 'Cuarto grado', 'Quinto grado', 'Sexto grado'];
+  return nombres[grado - 1] || 'Grado desconocido';
   }
 }

@@ -1,0 +1,64 @@
+<h2 mat-dialog-title>Notas del Estudiante</h2>
+
+<mat-dialog-content>
+  <table mat-table [dataSource]="notas" class="mat-elevation-z8">
+
+      <!-- Curso -->
+    <ng-container matColumnDef="curso">
+      <th mat-header-cell *matHeaderCellDef> Curso </th>
+      <td mat-cell *matCellDef="let nota">
+        <input matInput [(ngModel)]="nota.curso">
+      </td>
+    </ng-container>
+
+    <!-- Trimestre -->
+    <ng-container matColumnDef="trimestre">
+      <th mat-header-cell *matHeaderCellDef> Trimestre </th>
+      <td mat-cell *matCellDef="let nota">
+        <input matInput type="number" [(ngModel)]="nota.trimestre">
+      </td>
+    </ng-container>
+
+    <!-- Asistencia -->
+    <ng-container matColumnDef="asistencia">
+      <th mat-header-cell *matHeaderCellDef> Asistencia (%) </th>
+      <td mat-cell *matCellDef="let nota">
+        <input matInput type="number" [(ngModel)]="nota.asistencia">
+      </td>
+    </ng-container>
+
+    <!-- Nota -->
+    <ng-container matColumnDef="nota_trimestre">
+      <th mat-header-cell *matHeaderCellDef> Nota </th>
+      <td mat-cell *matCellDef="let nota">
+        <input matInput type="number" [(ngModel)]="nota.nota_trimestre">
+      </td>
+    </ng-container>
+
+    <!-- Conducta -->
+    <ng-container matColumnDef="conducta">
+      <th mat-header-cell *matHeaderCellDef> Conducta </th>
+      <td mat-cell *matCellDef="let nota">
+        <input matInput type="number" [(ngModel)]="nota.conducta">
+      </td>
+    </ng-container>
+
+    <!-- Acciones -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let nota">
+        <button mat-icon-button color="primary" (click)="confirmarEdicion(nota)">
+          <mat-icon>save</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="eliminarNota(nota.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+</mat-dialog-content>
+

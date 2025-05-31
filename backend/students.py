@@ -35,15 +35,21 @@ def obtener_estudiante(estudiante_id: int, db: Session = Depends(get_db), curren
     return estudiante
 
 @router.put("/{estudiante_id}", response_model=schemas.Estudiante)
-def actualizar_estudiante(estudiante_id: int, estudiante: schemas.EstudianteCreate, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+def actualizar_estudiante(estudiante_id: int, estudiante: schemas.EstudianteCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    # Verificar que el estudiante le pertenezca al docente autenticado
+    estudiante_actual = crud.obtener_estudiante_por_id_y_docente(db, estudiante_id, current_user.id)
+    if estudiante_actual is None:
+        raise HTTPException(status_code=403, detail="No tienes permiso para modificar este estudiante")
+    
     estudiante_actualizado = crud.actualizar_estudiante(db, estudiante_id, estudiante)
-    if estudiante_actualizado is None:
-        raise HTTPException(status_code=404, detail="Estudiante no encontrado")
     return estudiante_actualizado
 
 @router.delete("/{estudiante_id}", response_model=schemas.Estudiante)
-def eliminar_estudiante(estudiante_id: int, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+def eliminar_estudiante(estudiante_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    # Verificar que el estudiante le pertenezca al docente autenticado
+    estudiante_actual = crud.obtener_estudiante_por_id_y_docente(db, estudiante_id, current_user.id)
+    if estudiante_actual is None:
+        raise HTTPException(status_code=403, detail="No tienes permiso para eliminar este estudiante")
+    
     estudiante_eliminado = crud.eliminar_estudiante(db, estudiante_id)
-    if estudiante_eliminado is None:
-        raise HTTPException(status_code=404, detail="Estudiante no encontrado")
     return estudiante_eliminado

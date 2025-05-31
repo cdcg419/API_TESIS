@@ -40,7 +40,7 @@ class EstudianteBase(BaseModel):
     apellido_paterno: str
     apellido_materno: str
     edad: int
-    grado: str
+    grado: int
     genero: str
     presencia_padres: str
     trabaja: bool
@@ -53,3 +53,45 @@ class Estudiante(EstudianteBase):
 
     class Config:
         orm_mode = True
+        
+#recien agregado
+
+class RendimientoAcademicoBase(BaseModel):
+    curso: str
+    trimestre: int
+    asistencia: float
+    nota_trimestre: float
+    conducta: float
+    estudiante_id: int
+
+class RendimientoAcademicoCreate(RendimientoAcademicoBase):
+    pass
+
+class EstudianteInfo(BaseModel):
+    id: int
+    nombre: str
+    apellido_paterno: str
+    apellido_materno: str
+    grado: int
+
+    class Config:
+        orm_mode = True
+
+class RendimientoAcademicoOut(BaseModel):
+    id: int
+    curso: str
+    trimestre: int
+    asistencia: float
+    nota_trimestre: float
+    conducta: float
+    estudiante: EstudianteInfo
+
+    class Config:
+        orm_mode = True
+        
+class RendimientoAcademicoUpdate(BaseModel):
+    curso: str
+    trimestre: int
+    asistencia: float
+    nota_trimestre: float
+    conducta: float

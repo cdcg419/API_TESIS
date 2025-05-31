@@ -1,101 +1,124 @@
 <div class="form-container">
   <h2>Registrar Notas Académicas</h2>
-
-  <form (ngSubmit)="registrarNotas()" #notesForm="ngForm">
-    <!-- Estudiante -->
-    <div class="form-group">
-      <label for="estudiante_id">Estudiante</label>
-      <select
-        id="estudiante_id"
-        name="estudiante_id"
-        [(ngModel)]="notas.estudiante_id"
-        required
-      >
-        <option *ngFor="let estudiante of estudiantes" [value]="estudiante.id">
-          {{ estudiante.nombre }} {{ estudiante.apellido_paterno }}
-        </option>
-      </select>
+	<form (ngSubmit)="registrarNotas()" #notesForm="ngForm">
+  <!-- Estudiante -->
+  <div class="form-group">
+    <label for="estudiante_id">Estudiante</label>
+    <select
+      id="estudiante_id"
+      name="estudiante_id"
+      [(ngModel)]="notas.estudiante_id"
+      #estudianteId="ngModel"
+      required
+    >
+      <option value="" disabled selected>Seleccione estudiante</option>
+      <option *ngFor="let estudiante of estudiantes" [value]="estudiante.id">
+        {{ estudiante.nombre }} {{ estudiante.apellido_paterno }}
+      </option>
+    </select>
+    <div *ngIf="estudianteId.invalid && estudianteId.touched" class="text-danger">
+      Estudiante es requerido.
     </div>
+  </div>
 
-    <!-- Curso -->
-    <div class="form-group">
-      <label for="curso">Curso</label>
-      <input
-        type="text"
-        id="curso"
-        name="curso"
-        [(ngModel)]="notas.curso"
-        required
-      />
+  <!-- Curso -->
+  <div class="form-group">
+    <label for="curso">Curso</label>
+    <select
+      id="curso"
+      name="curso"
+      [(ngModel)]="notas.curso"
+      #curso="ngModel"
+      required
+    >
+      <option value="" disabled selected>Seleccione curso</option>
+      <option *ngFor="let c of cursos" [value]="c">{{ c }}</option>
+    </select>
+    <div *ngIf="curso.invalid && curso.touched" class="text-danger">
+      El curso es requerido.
     </div>
+  </div>
 
-    <!-- Grado -->
-    <div class="form-group">
-      <label for="estudiante_id">Grado</label>
-      <select
-        id="estudiante_id"
-        name="estudiante_id"
-        [(ngModel)]="notas.estudiante_id"
-        required
-      >
-        <option *ngFor="let estudiante of estudiantes" [value]="estudiante.id">
-          {{ estudiante.grado }}
-        </option>
-      </select>
+  <!-- Trimestre -->
+  <div class="form-group">
+    <label for="trimestre">Trimestre</label>
+    <select
+      id="trimestre"
+      name="trimestre"
+      [(ngModel)]="notas.trimestre"
+      #trimestre="ngModel"
+      required
+    >
+      <option value="" disabled selected>Seleccione trimestre</option>
+      <option [value]="1">Primer Trimestre</option>
+      <option [value]="2">Segundo Trimestre</option>
+      <option [value]="3">Tercer Trimestre</option>
+    </select>
+    <div *ngIf="trimestre.invalid && trimestre.touched" class="text-danger">
+      El trimestre es requerido.
     </div>
+  </div>
 
-    <!-- Trimestre -->
-    <div class="form-group">
-      <label for="trimestre">Trimestre</label>
-      <input
-        type="number"
-        id="trimestre"
-        name="trimestre"
-        [(ngModel)]="notas.trimestre"
-        required
-      />
+  <!-- Asistencia -->
+  <div class="form-group">
+    <label for="asistencia">Asistencia (%)</label>
+    <input
+      type="number"
+      id="asistencia"
+      name="asistencia"
+      [(ngModel)]="notas.asistencia"
+      #asistencia="ngModel"
+      required
+      min="1"
+      max="100"
+    />
+    <div *ngIf="asistencia.invalid && asistencia.touched" class="text-danger">
+      La asistencia debe estar entre 1 y 100.
     </div>
+  </div>
 
-    <!-- Asistencia -->
-    <div class="form-group">
-      <label for="asistencia">Asistencia (%)</label>
-      <input
-        type="number"
-        id="asistencia"
-        name="asistencia"
-        [(ngModel)]="notas.asistencia"
-        required
-      />
+  <!-- Nota del Trimestre -->
+  <div class="form-group">
+    <label for="nota">Nota del Trimestre</label>
+    <input
+      type="number"
+      id="nota"
+      name="nota"
+      [(ngModel)]="notas.nota_trimestre"
+      #notaTrimestre="ngModel"
+      required
+      min="1"
+      max="20"
+    />
+    <div *ngIf="notaTrimestre.invalid && notaTrimestre.touched" class="text-danger">
+      La nota debe estar entre 1 y 20.
     </div>
+  </div>
 
-    <!-- Nota -->
-    <div class="form-group">
-      <label for="nota">Nota del Trimestre</label>
-      <input
-        type="number"
-        id="nota"
-        name="nota"
-        [(ngModel)]="notas.nota_trimestre"
-        required
-      />
+  <!-- Conducta -->
+  <div class="form-group">
+    <label for="conducta">Nota de Conducta</label>
+    <input
+      type="number"
+      id="conducta"
+      name="conducta"
+      [(ngModel)]="notas.conducta"
+      #conducta="ngModel"
+      required
+      min="1"
+      max="20"
+    />
+    <div *ngIf="conducta.invalid && conducta.touched" class="text-danger">
+      La conducta debe estar entre 1 y 20.
     </div>
+  </div>
 
-    <!-- Conducta -->
-    <div class="form-group">
-      <label for="conducta">Nota de Conducta</label>
-      <input
-        type="number"
-        id="conducta"
-        name="conducta"
-        [(ngModel)]="notas.conducta"
-        required
-      />
-    </div>
-
-    <!-- Botones -->
-    <div class="form-buttons">
-      <button type="submit" class="btn btn-primary">Registrar Notas</button>
-      <button class="btn btn-secondary" routerLink="/my_students">Mis estudiantes</button>
-    </div>
-  </form>
+  <!-- Botones -->
+  <div class="form-buttons">
+    <button type="submit" class="btn btn-primary" [disabled]="notesForm.invalid">
+      Registrar Notas
+    </button>
+    <button class="btn btn-secondary" routerLink="/my_students">Mis estudiantes</button>
+  </div>
+</form>
 </div>

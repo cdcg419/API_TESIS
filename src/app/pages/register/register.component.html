@@ -1,32 +1,93 @@
 <div class="register-container">
   <h2>Registro</h2>
-  <form (ngSubmit)="onRegister()">
+
+  <form #registerForm="ngForm" (ngSubmit)="onRegister()">
+
+    <!-- Nombre -->
     <div class="form-group">
       <label for="nombre">Nombre</label>
-      <input id="nombre" [(ngModel)]="nombre" name="nombre" required />
+      <input
+        id="nombre"
+        name="nombre"
+        [(ngModel)]="nombre"
+        required
+        maxlength="100"
+        pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+        #nombreField="ngModel"
+      />
+      <div *ngIf="nombreField.invalid && nombreField.touched" class="error-message">
+        <span *ngIf="nombreField.errors?.['required']">Falta agregar el nombre.</span>
+        <span *ngIf="nombreField.errors?.['pattern']">Solo se permiten letras y espacios.</span>
+        <span *ngIf="nombreField.errors?.['maxlength']">Máximo 100 caracteres.</span>
+      </div>
     </div>
 
+    <!-- Apellido -->
     <div class="form-group">
       <label for="apellido">Apellido</label>
-      <input id="apellido" [(ngModel)]="apellido" name="apellido" required />
+      <input
+        id="apellido"
+        name="apellido"
+        [(ngModel)]="apellido"
+        required
+        maxlength="100"
+        pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+        #apellidoField="ngModel"
+      />
+      <div *ngIf="apellidoField.invalid && apellidoField.touched" class="error-message">
+        <span *ngIf="apellidoField.errors?.['required']">Falta agregar el apellido.</span>
+        <span *ngIf="apellidoField.errors?.['pattern']">Solo se permiten letras y espacios.</span>
+        <span *ngIf="apellidoField.errors?.['maxlength']">Máximo 100 caracteres.</span>
+      </div>
     </div>
 
+    <!-- Correo -->
     <div class="form-group">
       <label for="correo">Correo</label>
-      <input id="correo" [(ngModel)]="correo" name="correo" required />
+      <input
+        id="correo"
+        name="correo"
+        type="email"
+        [(ngModel)]="correo"
+        required
+        email
+        #correoField="ngModel"
+      />
+      <div *ngIf="correoField.invalid && correoField.touched" class="error-message">
+        <span *ngIf="correoField.errors?.['required']">Falta agregar el correo.</span>
+        <span *ngIf="correoField.errors?.['email']">El correo no es válido.</span>
+      </div>
     </div>
 
+    <!-- Contraseña -->
     <div class="form-group">
       <label for="password">Contraseña</label>
-      <input id="password" [(ngModel)]="password" name="password" type="password" required />
+      <input
+        id="password"
+        name="password"
+        type="password"
+        [(ngModel)]="password"
+        required
+        maxlength="14"
+        pattern="^(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{1,14}$"
+        #passwordField="ngModel"
+      />
+      <div *ngIf="passwordField.invalid && passwordField.touched" class="error-message">
+        <span *ngIf="passwordField.errors?.['required']">Falta agregar la contraseña.</span>
+        <span *ngIf="passwordField.errors?.['pattern']">
+          La contraseña debe tener al menos una letra mayúscula y un carácter especial.
+        </span>
+        <span *ngIf="passwordField.errors?.['maxlength']">Máximo 14 caracteres.</span>
+      </div>
     </div>
 
-    <button type="submit" class="btn-submit">Registrar</button>
+    <button type="submit" class="btn-submit" [disabled]="registerForm.invalid">Registrar</button>
   </form>
 
   <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
 
   <p class="login-link">¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión aquí</a></p>
 </div>
+
 
 

@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 export class RegisterNotesComponent {
   estudiantes: EstudianteInfo[] = [];
   notas: RendimientoAcademico = {
+    id: 0,
     estudiante_id: 0,
     curso: '',
     trimestre: 0,
@@ -39,11 +40,20 @@ export class RegisterNotesComponent {
       console.error('No se encontró el ID del docente en localStorage');
     }
   }
-
   registrarNotas(): void {
     this.notesService.registrarNotas(this.notas).subscribe({
       next: () => alert('Nota registrada correctamente'),
       error: (err) => console.error('Error al registrar nota:', err)
     });
   }
+  cursos: string[] = [
+  'Ciencia y Tecnología',
+  'Comunicación',
+  'Matemática',
+  'Personal Social',
+  'Educación Física',
+  'Arte y Cultura',
+  'Educación Religiosa',
+  'Competencias Transversales'
+  ];
 }

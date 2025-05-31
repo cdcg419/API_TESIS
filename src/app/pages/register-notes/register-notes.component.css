@@ -49,19 +49,24 @@ button {
 }
 
 .btn-primary {
-  background-color: #007bff;
+  background-color: #4CAF50;
   color: white;
 }
 
 .btn-primary:hover {
-  background-color: #0056b3;
+  background-color: #4CAF50;
 }
 
 .btn-secondary {
-  background-color: #6c757d;
+  background-color: #4CAF50;
   color: white;
 }
 
 .btn-secondary:hover {
-  background-color: #565e64;
+  background-color: #4CAF50;
+}
+
+.text-danger {
+  color: red;
+  font-size: 0.9em;
 }

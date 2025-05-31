@@ -90,3 +90,20 @@ input[type="checkbox"] {
   display: flex;
   flex-direction: column;
 }
+
+input.ng-invalid.ng-touched,
+select.ng-invalid.ng-touched {
+  border: 1px solid red;
+}
+
+.error-text {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
+
+button[disabled] {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}

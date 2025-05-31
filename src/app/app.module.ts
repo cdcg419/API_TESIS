@@ -21,10 +21,12 @@ import {MatInputModule} from '@angular/material/input';
 import {FormsModule} from '@angular/forms'
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
 //
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { EditStudentComponent } from './pages/edit-student/edit-student.component';
+import { AcademicRecordsModalComponent } from './pages/academic-records-modal/academic-records-modal.component';
 
 
 
@@ -39,7 +41,8 @@ import { EditStudentComponent } from './pages/edit-student/edit-student.componen
     RegisterStudentComponent,
     MyStudentsComponent,
     RegisterNotesComponent,
-    EditStudentComponent
+    EditStudentComponent,
+    AcademicRecordsModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -53,7 +56,8 @@ import { EditStudentComponent } from './pages/edit-student/edit-student.componen
     MatCardModule,
     MatInputModule,
     MatTableModule,
-    MatIconModule
+    MatIconModule,
+    MatDialogModule
   ],
   providers: [
     {

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface RendimientoAcademico {
+  id:number;
   estudiante_id: number;
   curso: string;
   trimestre: number;
@@ -33,5 +34,13 @@ export class RegisterNotesService {
   obtenerEstudiantesPorDocente(docente_id: number): Observable<EstudianteInfo[]> {
   return this.http.get<EstudianteInfo[]>(`${this.apiUrl}/estudiantes-docente/${docente_id}`);
   }
-
+  obtenerNotasPorEstudiante(estudianteId: number): Observable<RendimientoAcademico[]> {
+  return this.http.get<RendimientoAcademico[]>(`${this.apiUrl}/estudiante/${estudianteId}`);
+  }
+  actualizarNota(id: number, data: RendimientoAcademico): Observable<any> {
+  return this.http.put(`${this.apiUrl}/${id}`, data);
+  }
+  eliminarNota(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
 }
