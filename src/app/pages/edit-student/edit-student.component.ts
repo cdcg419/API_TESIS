@@ -10,9 +10,7 @@ import { StudentService, Student } from '../../services/student.service';
 })
 export class EditStudentComponent implements OnInit {
   student: Student = {
-    nombre: '',
-    apellido_paterno: '',
-    apellido_materno: '',
+    Codigo_estudiante: '',
     edad: 0,
     grado: 1,
     genero: '',

@@ -9,6 +9,7 @@ import { RegisterStudentComponent } from './pages/register-student/register-stud
 import { MyStudentsComponent } from './pages/my-students/my-students.component';
 import { RegisterNotesComponent } from './pages/register-notes/register-notes.component';
 import { EditStudentComponent } from './pages/edit-student/edit-student.component';
+import { AcademicRecordsStudentsComponent } from './pages/academic-records-students/academic-records-students.component';
 import { AuthGuard } from './guard/auth.guard';
 
 const routes: Routes = [
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'my_students', component: MyStudentsComponent, canActivate: [AuthGuard] },
   { path: 'register_notes_for_students', component: RegisterNotesComponent, canActivate: [AuthGuard] },
   { path: 'edit-student/:id', component: EditStudentComponent, canActivate: [AuthGuard] },
+  { path: 'notas/:id', component:AcademicRecordsStudentsComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({

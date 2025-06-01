@@ -13,3 +13,35 @@ mat-table {
 mat-header-cell, mat-cell {
   padding: 8px;
 }
+
+/* Centrar el cuadro en la página */
+.contenedor-tabla {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente si es necesario */
+  margin: 40px auto; /* Agrega espacio alrededor */
+  width: 60%; /* Ajusta el tamaño del cuadro */
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Ajustar tamaño de la tabla dentro del cuadro */
+table.mat-table {
+  width: 100%; /* Se ajusta dentro del contenedor */
+}
+
+/* Centrar los encabezados de columna */
+mat-header-cell {
+  text-align: center;
+  font-weight: bold;
+  background-color: #f5f5f5;
+  padding: 12px;
+}
+
+/* Centrar contenido de las celdas */
+mat-cell {
+  text-align: center;
+  padding: 12px;
+}

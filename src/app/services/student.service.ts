@@ -5,9 +5,7 @@ import { AuthService } from './auth.service';
 
 export interface Student {
   id?: number;
-  nombre: string;
-  apellido_paterno: string;
-  apellido_materno: string;
+  Codigo_estudiante: string;
   edad: number;
   grado: number;
   genero: string;

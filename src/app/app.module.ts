@@ -26,7 +26,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { EditStudentComponent } from './pages/edit-student/edit-student.component';
-import { AcademicRecordsModalComponent } from './pages/academic-records-modal/academic-records-modal.component';
+import { AcademicRecordsStudentsComponent } from './pages/academic-records-students/academic-records-students.component';
 
 
 
@@ -42,7 +42,7 @@ import { AcademicRecordsModalComponent } from './pages/academic-records-modal/ac
     MyStudentsComponent,
     RegisterNotesComponent,
     EditStudentComponent,
-    AcademicRecordsModalComponent,
+    AcademicRecordsStudentsComponent,
   ],
   imports: [
     BrowserModule,

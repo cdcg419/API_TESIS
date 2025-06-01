@@ -14,9 +14,10 @@ export interface RendimientoAcademico {
 
 export interface EstudianteInfo {
   id: number;
-  nombre: string;
-  apellido_paterno: string;
+  Codigo_estudiante: string;
   grado: number;
+  presencia_padres: string;
+  trabaja: boolean;
 }
 
 @Injectable({

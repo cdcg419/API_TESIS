@@ -36,9 +36,7 @@ class PasswordUpdate(BaseModel):
 #################################################################
 
 class EstudianteBase(BaseModel):
-    nombre: str
-    apellido_paterno: str
-    apellido_materno: str
+    Codigo_estudiante: str
     edad: int
     grado: int
     genero: str
@@ -69,10 +67,10 @@ class RendimientoAcademicoCreate(RendimientoAcademicoBase):
 
 class EstudianteInfo(BaseModel):
     id: int
-    nombre: str
-    apellido_paterno: str
-    apellido_materno: str
+    Codigo_estudiante: str
     grado: int
+    presencia_padres: str
+    trabaja: bool
 
     class Config:
         orm_mode = True

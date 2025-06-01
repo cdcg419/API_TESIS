@@ -13,7 +13,7 @@
     >
       <option value="" disabled selected>Seleccione estudiante</option>
       <option *ngFor="let estudiante of estudiantes" [value]="estudiante.id">
-        {{ estudiante.nombre }} {{ estudiante.apellido_paterno }}
+        {{ estudiante.Codigo_estudiante }}
       </option>
     </select>
     <div *ngIf="estudianteId.invalid && estudianteId.touched" class="text-danger">

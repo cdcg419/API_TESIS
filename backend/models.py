@@ -19,9 +19,7 @@ class Estudiante(Base):
     __tablename__ = "estudiantes"
 
     id = Column(Integer, primary_key=True, index=True)
-    nombre = Column(String(100))
-    apellido_paterno = Column(String(100))
-    apellido_materno = Column(String(100))
+    Codigo_estudiante = Column(String(10))
     edad = Column(Integer, nullable=False)
     grado = Column(Integer, nullable=False)
     genero = Column(String(1))
