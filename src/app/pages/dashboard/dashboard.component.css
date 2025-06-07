@@ -3,6 +3,10 @@
   flex: 1 1 auto;
 }
 
+.icon-btn {
+  margin-left: 12px;
+}
+
 /* Contenido centrado */
 .dashboard-content {
   flex: 1;
@@ -16,11 +20,11 @@
 
 /* Footer abajo */
 .footer {
-  background-color: #f1f1f1;
+  background-color: #4CAF50;
   padding: 1rem;
   text-align: center;
   font-size: 0.9rem;
-  color: #666;
+  color: white;
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -55,4 +59,49 @@
 .student-table th {
   background-color: #f0f0f0;
   font-weight: bold;
+}
+
+.badge {
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  top: 8px;
+  right: 4px;
+}
+
+.notificacion {
+  background: #e3f2fd;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-left: 5px solid #2196f3;
+  border-radius: 8px;
+}
+
+.notificaciones-menu {
+  position: absolute;
+  top: 64px; /* justo debajo del toolbar */
+  right: 16px;
+  width: 320px;
+  max-height: 400px;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 4px;
+  padding: 16px;
+  z-index: 1000;
+}
+
+.notificacion-alerta {
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+mat-toolbar {
+  background-color: #4CAF50 !important;
+  color: white;
+}
+
+mat-icon {
+  color: white;
 }

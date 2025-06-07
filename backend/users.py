@@ -4,7 +4,8 @@ from sqlalchemy.orm import Session
 from database import get_db
 import schemas, crud
 from utils import verify_password
-
+import models
+from utils import get_current_user
 
 router = APIRouter(prefix="/api/auth", tags=["users"])
 
@@ -46,3 +47,10 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
     # Llamar a la función que elimina el usuario en la base de datos
     crud.delete_user(db, user_id)
     return {"message": "Usuario eliminado exitosamente"}
+
+@router.get("/docente/predicciones", response_model=list[schemas.ResultadoPrediccionOut])
+def obtener_predicciones_docente(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    return crud.obtener_predicciones_por_docente(db, current_user.id)

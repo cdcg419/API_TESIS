@@ -22,11 +22,13 @@ import {FormsModule} from '@angular/forms'
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 //
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { EditStudentComponent } from './pages/edit-student/edit-student.component';
 import { AcademicRecordsStudentsComponent } from './pages/academic-records-students/academic-records-students.component';
+import { RendimientoDetalleComponent } from './pages/rendimiento-detalle/rendimiento-detalle.component';
 
 
 
@@ -43,6 +45,7 @@ import { AcademicRecordsStudentsComponent } from './pages/academic-records-stude
     RegisterNotesComponent,
     EditStudentComponent,
     AcademicRecordsStudentsComponent,
+    RendimientoDetalleComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,7 +60,8 @@ import { AcademicRecordsStudentsComponent } from './pages/academic-records-stude
     MatInputModule,
     MatTableModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    MatTooltipModule,
   ],
   providers: [
     {

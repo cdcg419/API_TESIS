@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>Detalle del Rendimiento</h2>
+<mat-dialog-content>
+  <p><strong>Rendimiento:</strong> {{ data.rendimiento }}</p>
+  <p><strong>Factores de Riesgo:</strong> {{ data.factores_riesgo || 'N/A' }}</p>
+  <p><strong>Observación:</strong> {{ data.observacion_final || 'N/A' }}</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

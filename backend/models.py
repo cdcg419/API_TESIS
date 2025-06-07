@@ -1,7 +1,6 @@
 #models.py
-from sqlalchemy import String,Integer,Column, Boolean, Float, ForeignKey
+from sqlalchemy import String,Integer,Column, Boolean, Float, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
-
 from database import Base
 
 class User(Base):
@@ -43,3 +42,28 @@ class RendimientoAcademico(Base):
 
     estudiante_id = Column(Integer, ForeignKey("estudiantes.id"))
     estudiante = relationship("Estudiante", backref="registros_academicos")
+
+class ResultadoPrediccion(Base):
+    __tablename__ = "resultado_prediccion"
+
+    id = Column(Integer, primary_key=True, index=True)
+    rendimiento = Column(String(10), nullable=False)
+    factores_riesgo = Column(String(255))
+    observacion = Column(String(255))
+
+    estudiante_id = Column(Integer, ForeignKey("estudiantes.id"))
+    curso = Column(String(100), nullable=False)
+    trimestre = Column(Integer, nullable=False)
+    
+    ##nuevo
+    user_id = Column(Integer, ForeignKey("users.id"))
+
+    estudiante = relationship("Estudiante", backref="resultados_prediccion")
+    #nuevo
+    docente = relationship("User")
+    
+
+    __table_args__ = (
+        UniqueConstraint('estudiante_id', 'curso', 'trimestre', name='unique_resultado_estudiante_trimestre'),
+    )
+

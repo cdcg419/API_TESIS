@@ -1,0 +1,70 @@
+/* Estilos generales */
+.spacer {
+  flex: 1 1 auto;
+}
+
+mat-card {
+  margin: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+/* Encabezados */
+th {
+  background-color: #3f51b5; /* Azul Material */
+  color: #4CAF50;
+  font-weight: bold;
+  padding: 12px;
+  text-align: center;
+}
+
+/* Celdas */
+td {
+  background-color: #f5f5f5;
+  padding: 10px;
+  text-align: center;
+}
+
+/* Estilos para select e input */
+select, input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+/* Botones */
+button.mat-button {
+  font-weight: bold;
+}
+
+button.mat-icon-button {
+  margin: 0 5px;
+}
+
+/* Resaltar fila al pasar el mouse */
+tr:hover {
+  background-color: #e3f2fd; /* Azul claro */
+}
+
+/* Agregar sombra y bordes sutiles */
+.mat-elevation-z8 {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.small-input {
+  width: 60px;
+  padding: 6px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.text-danger {
+  color: red;
+  font-size: 0.9em;
+}

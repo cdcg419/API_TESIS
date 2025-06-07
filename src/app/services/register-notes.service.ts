@@ -10,6 +10,9 @@ export interface RendimientoAcademico {
   asistencia: number;
   nota_trimestre: number;
   conducta: number;
+  rendimiento?: string;
+  factores_riesgo?: string;
+  Mensaje_riesgo?: string;
 }
 
 export interface EstudianteInfo {
@@ -44,4 +47,14 @@ export class RegisterNotesService {
   eliminarNota(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+  predecirRendimiento(estudianteId: number, nota: RendimientoAcademico) {
+  const payload = {
+    estudiante_id: estudianteId,
+    curso: nota.curso,
+    trimestre: nota.trimestre
+  };
+  return this.http.post<any>('http://127.0.0.1:8000/prediccion/predecir_rendimiento', payload);
+  }
+
 }
+

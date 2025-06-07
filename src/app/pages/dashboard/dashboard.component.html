@@ -1,13 +1,41 @@
-<mat-toolbar color="primary" class="mat-elevation-z4">
+<mat-toolbar class="mat-elevation-z4 custom-toolbar">
   <span>Predix</span>
   <span class="spacer"></span>
-  <button mat-button routerLink="/my_students">Mis estudiantes</button>
-  <button mat-button routerLink="/edit_user">Editar Perfil</button>
-  <button mat-button (click)="logout()">Cerrar sesión</button>
+
+  <!-- Icono de campana con contador -->
+  <button mat-icon-button class="icon-btn" (click)="toggleNotificaciones()" #notiBtn>
+    <mat-icon>notifications</mat-icon>
+    <span class="badge" *ngIf="alertas.length > 0">{{ alertas.length }}</span>
+  </button>
+
+  <button mat-icon-button class="icon-btn" matTooltip="Mis estudiantes" routerLink="/my_students">
+    <mat-icon>school</mat-icon>
+  </button>
+
+  <button mat-icon-button class="icon-btn" matTooltip="Editar perfil" routerLink="/edit_user">
+    <mat-icon>person</mat-icon>
+  </button>
+
+  <button mat-icon-button class="icon-btn" matTooltip="Cerrar sesión" (click)="logout()">
+    <mat-icon>logout</mat-icon>
+  </button>
 </mat-toolbar>
+
+<!-- Menú desplegable de notificaciones -->
+<div class="notificaciones-menu mat-elevation-z4" *ngIf="mostrarNotificaciones" #notiMenu>
+  <h3>Notificaciones de Alerta</h3>
+  <div *ngFor="let p of alertas" class="notificacion-alerta">
+    <p><strong>Estudiante:</strong> {{ p.Codigo_estudiante }}</p>
+    <p><strong>Curso:</strong> {{ p.curso }} | <strong>Trimestre:</strong> {{ p.trimestre }}</p>
+    <p><strong>Rendimiento:</strong> {{ p.rendimiento }}</p>
+    <p><strong>Observación:</strong> {{ p.observacion }}</p>
+    <hr />
+  </div>
+</div>
 
 
 <footer class="footer">
-  <p>&copy; 2025 Mi Aplicativo Educativo - Todos los derechos reservados.</p>
+  <p>&copy; 2025 Predix - Todos los derechos reservados.</p>
 </footer>
+
 

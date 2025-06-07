@@ -93,3 +93,48 @@ class RendimientoAcademicoUpdate(BaseModel):
     asistencia: float
     nota_trimestre: float
     conducta: float
+    
+###################################################
+class PrediccionInput(BaseModel):
+    estudiante_id: int
+    curso: str
+    trimestre: int
+    
+class ResultadoPrediccionCreate(BaseModel):
+    rendimiento: str
+    factores_riesgo: Optional[str]
+    observacion: Optional[str]
+    estudiante_id: int
+    #nuevo
+    user_id: int
+
+class ResultadoPrediccionOut(ResultadoPrediccionCreate):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+#nuevo
+class EstudianteConResultado(BaseModel):
+    id: int
+    Codigo_estudiante: str
+    grado: int
+    curso: str
+    rendimiento: Optional[str]
+    factores_riesgo: Optional[str]
+    observacion: Optional[str]
+
+    class Config:
+        orm_mode = True
+        
+class ResultadoPrediccionOut(BaseModel):
+    estudiante_id: int
+    Codigo_estudiante: str
+    curso: str
+    trimestre: int
+    rendimiento: str
+    factores_riesgo: str | None = None
+    observacion: str | None = None
+
+    class Config:
+        orm_mode = True

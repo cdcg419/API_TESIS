@@ -1,10 +1,12 @@
 # crud.py
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from fastapi import HTTPException
 import models, schemas
 import joblib
 from passlib.context import CryptContext
 from utils import hash_password
+from models import RendimientoAcademico
+from models import Estudiante, ResultadoPrediccion, User
 
 ################################### USUARIO - DOCENTE ########################################
 
@@ -114,3 +116,71 @@ def eliminar_registro_academico(db: Session, registro_id: int):
 
 def obtener_registro_por_id(db: Session, id: int):
     return db.query(models.RendimientoAcademico).filter(models.RendimientoAcademico.id == id).first()
+
+#####################################################################################
+
+def guardar_rendimiento_academico(db, datos, rendimiento, riesgos, Observacion, user_id):
+    nuevo_registro = RendimientoAcademico(
+        curso=datos.curso,
+        trimestre=datos.trimestre,
+        asistencia=datos.asistencia,
+        nota_trimestre=datos.nota_trimestre,
+        conducta=datos.conducta,
+        estudiante_id=datos.estudiante_id,
+        rendimiento_predicho=rendimiento,
+        riesgos_detectados=', '.join(riesgos),
+        observacion_final=Observacion,
+        ##nuevo
+        user_id=user_id
+    )
+    db.add(nuevo_registro)
+    db.commit()
+    db.refresh(nuevo_registro)
+    return nuevo_registro
+
+def crear_resultado_prediccion(db: Session, resultado: schemas.ResultadoPrediccionCreate):
+    nuevo_resultado = models.ResultadoPrediccion(**resultado.dict())
+    db.add(nuevo_resultado)
+    db.commit()
+    db.refresh(nuevo_resultado)
+    return nuevo_resultado
+
+def obtener_estudiantes_con_resultado(db: Session):
+    resultados = (
+        db.query(
+            Estudiante.id,
+            Estudiante.Codigo_estudiante,
+            Estudiante.grado,
+            ResultadoPrediccion.curso,
+            ResultadoPrediccion.rendimiento,
+            ResultadoPrediccion.factores_riesgo,
+            ResultadoPrediccion.observacion
+            
+        )
+        .join(ResultadoPrediccion, Estudiante.id == ResultadoPrediccion.estudiante_id)
+        .all()
+    )
+    return resultados
+
+##nuevo
+def obtener_predicciones_por_docente(db: Session, docente_id: int):
+    resultados = db.query(ResultadoPrediccion).\
+        join(ResultadoPrediccion.estudiante).\
+        filter(Estudiante.docente_id == docente_id).\
+        options(joinedload(ResultadoPrediccion.estudiante)).\
+        all()
+
+    return [
+        {
+            "estudiante_id": r.estudiante_id,
+            "Codigo_estudiante": r.estudiante.Codigo_estudiante,
+            "curso": r.curso,
+            "trimestre": r.trimestre,
+            "rendimiento": r.rendimiento,
+            "factores_riesgo": r.factores_riesgo,
+            "observacion": r.observacion
+        }
+        for r in resultados
+    ]
+
+
