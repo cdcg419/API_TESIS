@@ -183,4 +183,33 @@ def obtener_predicciones_por_docente(db: Session, docente_id: int):
         for r in resultados
     ]
 
+##########################################
 
+def obtener_reportes_academicos_por_docente(db: Session, user_id: int):
+    resultados = (
+        db.query(
+            Estudiante.id.label("estudiante_id"),
+            Estudiante.Codigo_estudiante.label("codigo_estudiante"),
+            User.nombre.label("nombre"),
+            User.apellido.label("apellido"),
+            Estudiante.grado,
+            RendimientoAcademico.curso,
+            RendimientoAcademico.trimestre,
+            RendimientoAcademico.asistencia,
+            RendimientoAcademico.nota_trimestre,
+            RendimientoAcademico.conducta,
+            ResultadoPrediccion.rendimiento,
+            ResultadoPrediccion.factores_riesgo,
+            ResultadoPrediccion.observacion
+        )
+        .join(User, Estudiante.docente_id == User.id)
+        .join(RendimientoAcademico, RendimientoAcademico.estudiante_id == Estudiante.id)
+        .outerjoin(ResultadoPrediccion, 
+                   (ResultadoPrediccion.estudiante_id == Estudiante.id) & 
+                   (ResultadoPrediccion.trimestre == RendimientoAcademico.trimestre) & 
+                   (ResultadoPrediccion.curso == RendimientoAcademico.curso))
+        .filter(User.id == user_id)
+        .all()
+    )
+
+    return resultados

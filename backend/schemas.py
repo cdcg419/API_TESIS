@@ -138,3 +138,21 @@ class ResultadoPrediccionOut(BaseModel):
 
     class Config:
         orm_mode = True
+        
+class ReporteAcademico(BaseModel):
+    estudiante_id: int
+    codigo_estudiante: str
+    nombre: str
+    apellido: str
+    grado: int
+    curso: str
+    trimestre: int
+    asistencia: float
+    nota_trimestre: float
+    conducta: float
+    rendimiento: Optional[str]
+    factores_riesgo: Optional[str]
+    observacion: Optional[str]
+
+    class Config:
+        orm_mode = True

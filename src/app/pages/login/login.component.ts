@@ -15,6 +15,7 @@ export class LoginComponent {
   acceptedTerms: boolean = false;
   showTermsError: boolean = false;
   showModal: boolean = false;
+  showPassword: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -48,6 +49,9 @@ export class LoginComponent {
 
   closeModal(): void {
     this.showModal = false;
+  }
+  togglePasswordVisibility(): void {
+  this.showPassword = !this.showPassword;
   }
 }
 

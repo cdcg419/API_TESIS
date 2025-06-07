@@ -1,0 +1,48 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+mat-toolbar {
+  background-color: #4CAF50 !important;
+  color: white;
+}
+
+.container {
+  padding: 20px;
+}
+
+.filtros {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.export-buttons {
+  margin-bottom: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+.btn-exportar {
+  background-color: #4CAF50 !important;
+  color: white !important;
+}
+
+.tabla-card {
+  padding: 10px;
+}
+
+.tabla-container {
+  overflow-x: auto;
+}
+
+.full-width-table {
+  width: 100%;
+  min-width: 800px;
+}

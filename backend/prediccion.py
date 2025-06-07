@@ -14,6 +14,8 @@ from database import get_db
 from crud import obtener_estudiantes_con_resultado
 from typing import List
 from schemas import EstudianteConResultado
+from crud import obtener_reportes_academicos_por_docente
+from schemas import ReporteAcademico
 import utils
 
 router = APIRouter(
@@ -158,7 +160,10 @@ def predecir_rendimiento(input: PrediccionInput, db: Session = Depends(get_db),c
 def listar_estudiantes_con_resultado(db: Session = Depends(get_db)):
     return obtener_estudiantes_con_resultado(db)
     
-
+@router.get("/reportes", response_model=List[ReporteAcademico])
+def reportes_academicos(current_user: User = Depends(utils.get_current_user), db: Session = Depends(get_db)):
+    reportes = obtener_reportes_academicos_por_docente(db, current_user.id)
+    return reportes
 
     
     

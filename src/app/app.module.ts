@@ -23,12 +23,15 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 //
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { EditStudentComponent } from './pages/edit-student/edit-student.component';
 import { AcademicRecordsStudentsComponent } from './pages/academic-records-students/academic-records-students.component';
 import { RendimientoDetalleComponent } from './pages/rendimiento-detalle/rendimiento-detalle.component';
+import { ReportsStudentsComponent } from './pages/reports-students/reports-students.component';
 
 
 
@@ -46,6 +49,7 @@ import { RendimientoDetalleComponent } from './pages/rendimiento-detalle/rendimi
     EditStudentComponent,
     AcademicRecordsStudentsComponent,
     RendimientoDetalleComponent,
+    ReportsStudentsComponent,
   ],
   imports: [
     BrowserModule,
@@ -62,6 +66,8 @@ import { RendimientoDetalleComponent } from './pages/rendimiento-detalle/rendimi
     MatIconModule,
     MatDialogModule,
     MatTooltipModule,
+    MatPaginatorModule,
+    MatSortModule,
   ],
   providers: [
     {

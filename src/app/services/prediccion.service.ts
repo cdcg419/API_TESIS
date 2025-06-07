@@ -16,7 +16,7 @@ export interface ResultadoPrediccion {
   providedIn: 'root'
 })
 export class PrediccionService {
-  private apiUrl = 'http://127.0.0.1:8000/api/auth/docente/predicciones'; // Ajusta según tu backend
+  private apiUrl = 'http://127.0.0.1:8000/api/auth/docente/predicciones';
 
   constructor(private http: HttpClient) {}
 
