@@ -12,10 +12,21 @@ import { RendimientoDetalleComponent } from '../rendimiento-detalle/rendimiento-
   styleUrl: './academic-records-students.component.css'
 })
 export class AcademicRecordsStudentsComponent implements OnInit{
-displayedColumns: string[] = ['curso', 'trimestre', 'asistencia', 'nota_trimestre', 'conducta', 'rendimiento', 'acciones'];
+  displayedColumns: string[] = [
+    'curso', 'trimestre', 'asistencia', 'nota_trimestre', 'conducta', 'rendimiento', 'resultados_prediccion', 'acciones'
+  ];
   notas: RendimientoAcademico[] = [];
   estudianteId!: number;
-
+  cargandoDatos: boolean = false;
+  mensajeCarga: string = "Preparando datos...";
+  pasosCarga: string[] = [
+    "Recopilando asistencia...",
+    "Procesando notas...",
+    "Analizando conducta...",
+    "Obteniendo información de padres...",
+    "Verificando condiciones laborales...",
+    "Generando predicción de rendimiento..."
+  ];
   constructor(private route: ActivatedRoute, private notesService: RegisterNotesService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
@@ -23,23 +34,38 @@ displayedColumns: string[] = ['curso', 'trimestre', 'asistencia', 'nota_trimestr
     this.notesService.obtenerNotasPorEstudiante(this.estudianteId).subscribe({
       next: (res) => {
       this.notas = res;
-
-      // Predecir rendimiento automáticamente para cada nota
-      this.notas.forEach(nota => {
-        this.predecirRendimiento(nota);
-      });},
-      error: (err) => console.error('Error cargando notas', err)
-    });
+    },});
   }
 
-  confirmarEdicion(nota: RendimientoAcademico): void {
-    if (confirm('¿Estás seguro de aplicar los cambios?')) {
+  iniciarPrediccion(): void {
+  this.cargandoDatos = true;
+  let index = 0;
+
+  let intervalo = setInterval(() => {
+    this.mensajeCarga = this.pasosCarga[index];
+    index++;
+    if (index >= this.pasosCarga.length) clearInterval(intervalo);
+  }, 1200);
+
+  setTimeout(() => {
+    this.notas.forEach(nota => this.predecirRendimiento(nota));
+    this.cargandoDatos = false;
+  }, Math.max(this.pasosCarga.length * 1200, 3000)); // Garantiza al menos 3 segundos de carga
+}
+
+
+
+confirmarEdicion(nota: RendimientoAcademico): void {
+  if (confirm('¿Estás seguro de aplicar los cambios?')) {
       this.notesService.actualizarNota(nota.id, nota).subscribe({
         next: () => {
-          alert('Cambios aplicados correctamente')
-          this.notas.forEach(nota => {
-          this.predecirRendimiento(nota);
-          })
+          alert('Cambios aplicados correctamente');
+
+          // Oculta la barra de progreso eliminando el valor de rendimiento
+          nota.rendimiento = undefined;
+
+          // Muestra una ventana emergente pidiendo volver a predecir
+          alert('Debes volver a predecir el rendimiento para actualizar los datos.');
         },
         error: err => {
           console.error(err);
@@ -48,6 +74,7 @@ displayedColumns: string[] = ['curso', 'trimestre', 'asistencia', 'nota_trimestr
       });
     }
   }
+
 
   eliminarNota(id: number): void {
     if (confirm('¿Estás seguro de eliminar esta nota?')) {
@@ -78,14 +105,26 @@ displayedColumns: string[] = ['curso', 'trimestre', 'asistencia', 'nota_trimestr
   });
   }
   abrirDetalle(nota: RendimientoAcademico): void {
-  this.dialog.open(RendimientoDetalleComponent, {
-    data: {
-      rendimiento: nota.rendimiento,
-      factores_riesgo: nota.factores_riesgo,
-      observacion_final: nota.Mensaje_riesgo
-    }
-  });
+    this.dialog.open(RendimientoDetalleComponent, {
+      data: {
+        rendimiento: nota.rendimiento,
+        factores_riesgo: nota.factores_riesgo,
+        observacion_final: nota.Mensaje_riesgo
+      }
+    });
   }
+  getRendimientoValor(rendimiento: string): number {
+    if (rendimiento === "Alto") return 100; // Máximo progreso
+    else if (rendimiento === "Medio") return 50; // Nivel medio
+    else return 20; // Bajo rendimiento
+  }
+
+  getProgressColor(rendimiento: string): string {
+    if (rendimiento === "Alto") return '#4CAF50';  // Verde
+    else if (rendimiento === "Medio") return '#FFC107';  // Amarillo
+    else return '#F44336';  // Rojo
+  }
+
   cursos: string[] = [
   'Ciencia y Tecnología',
   'Comunicación',

@@ -12,7 +12,7 @@ export interface RendimientoAcademico {
   conducta: number;
   rendimiento?: string;
   factores_riesgo?: string;
-  Mensaje_riesgo?: string;
+  Mensaje_riesgo?: string | string[];
 }
 
 export interface EstudianteInfo {

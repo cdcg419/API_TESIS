@@ -1,6 +1,7 @@
 ##schemas.py
 from pydantic import BaseModel, EmailStr
 from typing import List, Optional
+from datetime import datetime
 
 class UserCreate(BaseModel):
     nombre: str
@@ -153,6 +154,7 @@ class ReporteAcademico(BaseModel):
     rendimiento: Optional[str]
     factores_riesgo: Optional[str]
     observacion: Optional[str]
+    fecha_registro: Optional[datetime] 
 
     class Config:
         orm_mode = True

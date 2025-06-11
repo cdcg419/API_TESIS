@@ -9,7 +9,7 @@ export interface ResultadoPrediccion {
   trimestre: number;
   rendimiento: string;
   factores_riesgo: string;
-  observacion: string;
+  observacion: string | string[];
 }
 
 @Injectable({

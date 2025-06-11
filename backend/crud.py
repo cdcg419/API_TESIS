@@ -1,5 +1,6 @@
 # crud.py
 from sqlalchemy.orm import Session, joinedload
+from sqlalchemy import extract
 from fastapi import HTTPException
 import models, schemas
 import joblib
@@ -185,8 +186,10 @@ def obtener_predicciones_por_docente(db: Session, docente_id: int):
 
 ##########################################
 
-def obtener_reportes_academicos_por_docente(db: Session, user_id: int):
-    resultados = (
+from sqlalchemy import extract
+
+def obtener_reportes_academicos_por_docente(db: Session, user_id: int, mes: int = None, anio: int = None):
+    query = (
         db.query(
             Estudiante.id.label("estudiante_id"),
             Estudiante.Codigo_estudiante.label("codigo_estudiante"),
@@ -200,7 +203,8 @@ def obtener_reportes_academicos_por_docente(db: Session, user_id: int):
             RendimientoAcademico.conducta,
             ResultadoPrediccion.rendimiento,
             ResultadoPrediccion.factores_riesgo,
-            ResultadoPrediccion.observacion
+            ResultadoPrediccion.observacion,
+            RendimientoAcademico.fecha_registro.label("fecha_registro") 
         )
         .join(User, Estudiante.docente_id == User.id)
         .join(RendimientoAcademico, RendimientoAcademico.estudiante_id == Estudiante.id)
@@ -209,7 +213,13 @@ def obtener_reportes_academicos_por_docente(db: Session, user_id: int):
                    (ResultadoPrediccion.trimestre == RendimientoAcademico.trimestre) & 
                    (ResultadoPrediccion.curso == RendimientoAcademico.curso))
         .filter(User.id == user_id)
-        .all()
     )
 
-    return resultados
+    if mes and anio:
+        query = query.filter(
+            extract('month', RendimientoAcademico.fecha_registro) == mes,
+            extract('year', RendimientoAcademico.fecha_registro) == anio
+        )
+
+    return query.all()
+

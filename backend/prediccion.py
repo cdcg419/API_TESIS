@@ -1,5 +1,5 @@
 # prediccion.py
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Query
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 import predict
@@ -108,16 +108,12 @@ def predecir_rendimiento(input: PrediccionInput, db: Session = Depends(get_db),c
     if motivo_trabajo == 'Trabaja, posible bajo rendimiento':
         riesgo_contador += 1
     
-    Observacion = ""
-    if riesgo_contador >= 2:
-        Observacion = "⚠️ Atención: Existen múltiples factores de riesgo que podrían afectar negativamente el rendimiento."
-    else:
-        Observacion = "Ninguna observación según los parámetros actuales."
+    Observaciones = predict.generar_observacion(motivo_asistencia, motivo_presencia_padres, motivo_trabajo, rendimiento_alumno).split(". ")
     
     resultado = ResultadoPrediccion(
         rendimiento=rendimiento_alumno,
         factores_riesgo=", ".join(factores_riesgo),
-        observacion=Observacion,
+        observacion=Observaciones,
         estudiante_id=estudiante.id
     )
     # Verificar si ya existe un resultado para ese estudiante, curso y trimestre
@@ -130,7 +126,7 @@ def predecir_rendimiento(input: PrediccionInput, db: Session = Depends(get_db),c
     if resultado_existente:
         resultado_existente.rendimiento = rendimiento_alumno
         resultado_existente.factores_riesgo = ', '.join(factores_riesgo)
-        resultado_existente.observacion = Observacion
+        resultado_existente.observacion = "\n".join(Observaciones)  
     else:
         nuevo_resultado = ResultadoPrediccion(
             estudiante_id=input.estudiante_id,
@@ -138,7 +134,7 @@ def predecir_rendimiento(input: PrediccionInput, db: Session = Depends(get_db),c
             trimestre=input.trimestre,
             rendimiento=rendimiento_alumno,
             factores_riesgo=', '.join(factores_riesgo),
-            observacion=Observacion,
+            observacion="\n".join(Observaciones),
             #nuevo
             user_id = current_user.id
         )
@@ -153,7 +149,7 @@ def predecir_rendimiento(input: PrediccionInput, db: Session = Depends(get_db),c
         "motivo_presencia_padres": motivo_presencia_padres,
         "motivo_trabajo": motivo_trabajo,
         "factores_riesgo": factores_riesgo,
-        "Mensaje_riesgo": Observacion,
+        "Mensaje_riesgo": Observaciones,
     }
 
 @router.get("/con_resultado", response_model=List[EstudianteConResultado])
@@ -161,8 +157,8 @@ def listar_estudiantes_con_resultado(db: Session = Depends(get_db)):
     return obtener_estudiantes_con_resultado(db)
     
 @router.get("/reportes", response_model=List[ReporteAcademico])
-def reportes_academicos(current_user: User = Depends(utils.get_current_user), db: Session = Depends(get_db)):
-    reportes = obtener_reportes_academicos_por_docente(db, current_user.id)
+def reportes_academicos(current_user: User = Depends(utils.get_current_user), db: Session = Depends(get_db), mes: int = Query(None), anio: int = Query(None)):
+    reportes = obtener_reportes_academicos_por_docente(db, current_user.id, mes, anio)
     return reportes
 
     

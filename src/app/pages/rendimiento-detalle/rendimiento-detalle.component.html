@@ -1,9 +1,15 @@
-<h2 mat-dialog-title>Detalle del Rendimiento</h2>
-<mat-dialog-content>
-  <p><strong>Rendimiento:</strong> {{ data.rendimiento }}</p>
-  <p><strong>Factores de Riesgo:</strong> {{ data.factores_riesgo || 'N/A' }}</p>
-  <p><strong>Observación:</strong> {{ data.observacion_final || 'N/A' }}</p>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Cerrar</button>
-</mat-dialog-actions>
+<h2>Resultados de Predicción</h2>
+<p><strong>Rendimiento:</strong> {{ data.rendimiento }}</p>
+<p><strong>Factores de Riesgo:</strong></p>
+<ul>
+  <li *ngFor="let factor of data.factores_riesgo">{{ factor }}</li>
+</ul>
+<p><strong>Observaciones:</strong></p>
+<ul>
+  <li *ngFor="let observacion of data.observacion_final">{{ observacion }}</li>
+</ul>
+
+
+
+<button mat-button (click)="cerrar()">Cerrar</button>
+

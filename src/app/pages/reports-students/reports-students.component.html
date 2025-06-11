@@ -1,92 +1,118 @@
 <mat-toolbar color="primary" class="mat-elevation-z4">
-  <span class="logo">Predix</span>
+  <span>Predix</span>
   <span class="spacer"></span>
   <button mat-button routerLink="/register_notes_for_students">Registrar notas</button>
   <button mat-button routerLink="/my_students">Mis estudiantes</button>
   <button mat-button routerLink="/dashboard">Dashboard</button>
 </mat-toolbar>
 
-<div class="container">
-  <div class="filtros">
-    <mat-form-field appearance="fill">
-      <mat-label>Curso</mat-label>
-      <mat-select [(ngModel)]="cursoSeleccionado">
-        <mat-option value="">Todos</mat-option>
-        <mat-option *ngFor="let curso of cursos" [value]="curso">{{ curso }}</mat-option>
-      </mat-select>
-    </mat-form-field>
+<div class="filtros-container">
 
-    <mat-form-field appearance="fill">
-      <mat-label>Trimestre</mat-label>
-      <mat-select [(ngModel)]="trimestreSeleccionado">
-        <mat-option value="">Todos</mat-option>
-        <mat-option *ngFor="let t of trimestres" [value]="t">Trimestre {{ t }}</mat-option>
-      </mat-select>
-    </mat-form-field>
+ <div class="filtro">
+    <label for="codigo">Buscar por código:</label>
+    <select id="codigo" [(ngModel)]="codigoBusqueda" (change)="aplicarFiltro()">
+      <option value="">Todos</option>
+      <option *ngFor="let codigo of codigosEstudiantes" [value]="codigo">{{ codigo }}</option>
+    </select>
   </div>
+
+  <div class="filtro">
+    <label for="curso">Curso:</label>
+    <select id="curso" [(ngModel)]="cursoSeleccionado" (change)="aplicarFiltro()">
+      <option value="">Todos</option>
+      <option *ngFor="let curso of cursos" [value]="curso">{{ curso }}</option>
+    </select>
+  </div>
+
+  <div class="filtro">
+    <label for="trimestre">Trimestre:</label>
+    <select id="trimestre" [(ngModel)]="trimestreSeleccionado" (change)="aplicarFiltro()">
+      <option value="">Todos</option>
+      <option *ngFor="let t of trimestres" [value]="t">
+        {{ t === 1 ? 'Primer trimestre' : t === 2 ? 'Segundo trimestre' : 'Tercer trimestre' }}
+      </option>
+    </select>
+  </div>
+
+  <div class="filtro">
+    <label for="mes">Mes:</label>
+    <select id="mes" [(ngModel)]="mesSeleccionado" (change)="aplicarFiltro()">
+      <option value="">Todos</option>
+      <option *ngFor="let mes of meses" [value]="mes">{{ mes }}</option>
+    </select>
+  </div>
+
+  <button mat-raised-button class="btn-verde" (click)="limpiarFiltros()">
+    <mat-icon>clear</mat-icon> Limpiar filtros
+  </button>
+</div>
+
+<mat-card class="tabla-card">
+  <mat-card-title>Reporte de Rendimiento</mat-card-title>
 
   <div class="export-buttons">
-    <button mat-raised-button class="btn-exportar" (click)="exportarExcel()">
-      <mat-icon>download</mat-icon> Excel
+    <button mat-raised-button class="btn-verde" (click)="exportarExcel()">
+      <mat-icon>download</mat-icon> Exportar Excel
     </button>
-    <button mat-raised-button class="btn-exportar" (click)="exportarPDF()">
-      <mat-icon>picture_as_pdf</mat-icon> PDF
+
+    <button mat-raised-button class="btn-verde" (click)="exportarPDF()">
+      <mat-icon>picture_as_pdf</mat-icon> Exportar PDF
     </button>
   </div>
 
-  <mat-card class="tabla-card">
-    <mat-card-title>Reporte de Predicción Académica</mat-card-title>
-    <div class="tabla-container">
-      <!-- Tabla -->
-      <table mat-table [dataSource]="reportesFiltrados" matSort class="mat-elevation-z8 full-width-table">
-        <!-- AÑADIR mat-sort-header a las columnas ordenables -->
-        <ng-container matColumnDef="codigo_estudiante">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
-          <td mat-cell *matCellDef="let r">{{ r.codigo_estudiante }}</td>
-        </ng-container>
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
-        <ng-container matColumnDef="curso">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Curso</th>
-          <td mat-cell *matCellDef="let r">{{ r.curso }}</td>
-        </ng-container>
+    <!-- Columnas -->
+    <ng-container matColumnDef="codigo_estudiante">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
+      <td mat-cell *matCellDef="let r">{{ r.codigo_estudiante }}</td>
+    </ng-container>
 
-        <ng-container matColumnDef="trimestre">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Trimestre</th>
-          <td mat-cell *matCellDef="let r">{{ r.trimestre }}</td>
-        </ng-container>
+    <ng-container matColumnDef="curso">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Curso</th>
+      <td mat-cell *matCellDef="let r">{{ r.curso }}</td>
+    </ng-container>
 
-        <ng-container matColumnDef="asistencia">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Asistencia (%)</th>
-          <td mat-cell *matCellDef="let r">{{ r.asistencia }}</td>
-        </ng-container>
+    <ng-container matColumnDef="trimestre">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Trimestre</th>
+      <td mat-cell *matCellDef="let r">
+        {{ r.trimestre === 1 ? 'Primer trimestre' : r.trimestre === 2 ? 'Segundo trimestre' : 'Tercer trimestre' }}
+      </td>
+    </ng-container>
 
-        <ng-container matColumnDef="nota_trimestre">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nota</th>
-          <td mat-cell *matCellDef="let r">{{ r.nota_trimestre }}</td>
-        </ng-container>
+    <ng-container matColumnDef="asistencia">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Asistencia (%)</th>
+      <td mat-cell *matCellDef="let r">{{ r.asistencia }}</td>
+    </ng-container>
 
-        <ng-container matColumnDef="conducta">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Conducta</th>
-          <td mat-cell *matCellDef="let r">{{ r.conducta }}</td>
-        </ng-container>
+    <ng-container matColumnDef="nota_trimestre">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nota</th>
+      <td mat-cell *matCellDef="let r">{{ r.nota_trimestre }}</td>
+    </ng-container>
 
-        <ng-container matColumnDef="rendimiento">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Rendimiento</th>
-          <td mat-cell *matCellDef="let r">{{ r.rendimiento }}</td>
-        </ng-container>
+    <ng-container matColumnDef="conducta">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Conducta</th>
+      <td mat-cell *matCellDef="let r">{{ r.conducta }}</td>
+    </ng-container>
 
-        <ng-container matColumnDef="observacion">
-          <th mat-header-cell *matHeaderCellDef>Observación</th>
-          <td mat-cell *matCellDef="let r">{{ r.observacion }}</td>
-        </ng-container>
+    <ng-container matColumnDef="rendimiento">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Rendimiento</th>
+      <td mat-cell *matCellDef="let r">{{ r.rendimiento }}</td>
+    </ng-container>
 
-        <!-- Renderizado -->
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-    </div>
-  </mat-card>
-</div>
+    <ng-container matColumnDef="observacion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Observación</th>
+      <td mat-cell *matCellDef="let r">{{ r.observacion }}</td>
+    </ng-container>
+
+    <!-- Renderizado -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</mat-card>
+
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
 
 
 

@@ -6,6 +6,10 @@ mat-card {
   margin: 20px;
 }
 
+mat-toolbar {
+  background-color: #4CAF50 !important;
+  color: white;
+}
 mat-table {
   width: 100%;
 }

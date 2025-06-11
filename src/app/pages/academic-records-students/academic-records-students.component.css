@@ -4,7 +4,14 @@
 }
 
 mat-card {
-  margin: 20px;
+  margin: 30px auto; /* Espaciado superior aumentado */
+  padding: 20px;
+  max-width: 90%; /* Evitar que se pegue a los lados */
+}
+
+mat-toolbar {
+  background-color: #4CAF50 !important;
+  color: white;
 }
 
 table {
@@ -12,6 +19,7 @@ table {
   border-collapse: collapse;
 }
 /* Encabezados */
+
 th {
   background-color: #3f51b5; /* Azul Material */
   color: #4CAF50;
@@ -67,4 +75,81 @@ tr:hover {
 .text-danger {
   color: red;
   font-size: 0.9em;
+}
+
+.full-screen-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9); /* Fondo claro */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #3f51b5; /* Azul Material */
+  font-size: 22px;
+  font-weight: bold;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.mat-spinner {
+  margin-bottom: 20px;
+}
+
+.titulo-con-boton {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.boton-prediccion {
+  background-color: transparent; /* Sin fondo */
+  color: #4CAF50 !important; /* Verde forzado */
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  border: none;
+}
+
+.boton-prediccion mat-icon {
+  color: #4CAF50 !important; /* Asegura que el ícono también sea verde */
+  margin-right: 8px;
+  font-size: 22px;
+}
+
+.icon-text {
+  font-size: 16px;
+}
+
+mat-progress-bar {
+  width: 80%;
+  height: 8px; /* Reducimos la altura */
+  margin: auto;
+}
+
+.rendimiento-text {
+  font-weight: bold;
+  margin-left: 10px;
+  font-size: 16px;
+}
+
+.rendimiento-bajo .mat-progress-bar-fill {
+  background-color: #F44336 !important; /* Rojo */
+}
+
+.rendimiento-alto .mat-progress-bar-fill {
+  background-color: #4CAF50 !important; /* Verde */
+}
+
+.rendimiento-medio .mat-progress-bar-fill {
+  background-color: #FFC107 !important; /* Amarillo */
 }
