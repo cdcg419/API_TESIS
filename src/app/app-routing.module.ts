@@ -11,6 +11,8 @@ import { RegisterNotesComponent } from './pages/register-notes/register-notes.co
 import { EditStudentComponent } from './pages/edit-student/edit-student.component';
 import { AcademicRecordsStudentsComponent } from './pages/academic-records-students/academic-records-students.component';
 import { ReportsStudentsComponent } from './pages/reports-students/reports-students.component';
+import { MonthReportComponent } from './pages/month-report/month-report.component';
+import { AcademicRiskReportComponent } from './pages/academic-risk-report/academic-risk-report.component';
 import { AuthGuard } from './guard/auth.guard';
 
 const routes: Routes = [
@@ -25,6 +27,8 @@ const routes: Routes = [
   { path: 'edit-student/:id', component: EditStudentComponent, canActivate: [AuthGuard] },
   { path: 'notas/:id', component:AcademicRecordsStudentsComponent, canActivate: [AuthGuard] },
   { path: 'reports_students', component:ReportsStudentsComponent, canActivate: [AuthGuard] },
+  { path: 'monthly_reports', component:MonthReportComponent, canActivate: [AuthGuard] },
+  { path: 'risk_reports', component:AcademicRiskReportComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({

@@ -27,6 +27,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { MatSidenavModule } from '@angular/material/sidenav';
 //
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
@@ -34,6 +35,8 @@ import { EditStudentComponent } from './pages/edit-student/edit-student.componen
 import { AcademicRecordsStudentsComponent } from './pages/academic-records-students/academic-records-students.component';
 import { RendimientoDetalleComponent } from './pages/rendimiento-detalle/rendimiento-detalle.component';
 import { ReportsStudentsComponent } from './pages/reports-students/reports-students.component';
+import { MonthReportComponent } from './pages/month-report/month-report.component';
+import { AcademicRiskReportComponent } from './pages/academic-risk-report/academic-risk-report.component';
 
 
 
@@ -52,6 +55,8 @@ import { ReportsStudentsComponent } from './pages/reports-students/reports-stude
     AcademicRecordsStudentsComponent,
     RendimientoDetalleComponent,
     ReportsStudentsComponent,
+    MonthReportComponent,
+    AcademicRiskReportComponent,
   ],
   imports: [
     BrowserModule,
@@ -71,7 +76,8 @@ import { ReportsStudentsComponent } from './pages/reports-students/reports-stude
     MatPaginatorModule,
     MatSortModule,
     MatProgressSpinnerModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatSidenavModule
   ],
   providers: [
     {

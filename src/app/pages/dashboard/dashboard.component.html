@@ -1,31 +1,69 @@
-<mat-toolbar class="mat-elevation-z4 custom-toolbar">
-  <span>Predix</span>
+<!-- Barra superior -->
+<mat-toolbar class="custom-toolbar">
+  <span class="title">Predix</span>
   <span class="spacer"></span>
 
-  <!-- Icono de campana con contador -->
-  <button mat-icon-button class="icon-btn" (click)="toggleNotificaciones()" #notiBtn>
-    <mat-icon>notifications</mat-icon>
-    <span class="badge" *ngIf="alertas.length > 0">{{ alertas.length }}</span>
-  </button>
+  <div class="toolbar-icons">
+    <button mat-icon-button class="icon-btn" (click)="toggleNotificaciones()" #notiBtn>
+      <mat-icon>notifications</mat-icon>
+      <span class="badge" *ngIf="alertas.length > 0">{{ alertas.length }}</span>
+    </button>
 
-  <button mat-icon-button class="icon-btn" matTooltip="Mis estudiantes" routerLink="/my_students">
-    <mat-icon>school</mat-icon>
-  </button>
+    <button mat-icon-button matTooltip="Perfil de usuario" routerLink="/edit_user">
+      <mat-icon>person</mat-icon>
+    </button>
 
-  <button mat-icon-button class="icon-btn" matTooltip="Reportes" routerLink="/reports_students">
-    <mat-icon>description</mat-icon>
-  </button>
-
-  <button mat-icon-button class="icon-btn" matTooltip="Editar perfil" routerLink="/edit_user">
-    <mat-icon>person</mat-icon>
-  </button>
-
-  <button mat-icon-button class="icon-btn" matTooltip="Cerrar sesión" (click)="logout()">
-    <mat-icon>logout</mat-icon>
-  </button>
+    <button mat-icon-button matTooltip="Cerrar sesión" (click)="logout()">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </div>
 </mat-toolbar>
 
-<!-- Menú desplegable de notificaciones -->
+<!-- Contenedor principal -->
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav mode="side" opened class="sidenav">
+    <div class="icon-group" routerLink="/dashboard" routerLinkActive="active" matTooltip="Dashboard">
+      <mat-icon class="icon-btn">dashboard</mat-icon>
+      <span class="icon-label">Dashboard</span>
+    </div>
+
+    <div class="icon-group" routerLink="/my_students" routerLinkActive="active" matTooltip="Mis Estudiantes">
+      <mat-icon class="icon-btn">groups</mat-icon>
+      <span class="icon-label">Mis Estudiantes</span>
+    </div>
+
+    <div class="icon-group" routerLink="/registro_academico" routerLinkActive="active" matTooltip="Registro Académico">
+      <mat-icon class="icon-btn">calendar_today</mat-icon>
+      <span class="icon-label">Académico</span>
+    </div>
+
+    <div class="icon-group" routerLink="/alerta_rendimiento" routerLinkActive="active" matTooltip="Alertas de rendimiento">
+      <mat-icon class="icon-btn">warning</mat-icon>
+      <span class="icon-label">Alertas</span>
+    </div>
+
+    <div class="icon-group" routerLink="/reports_students" routerLinkActive="active" matTooltip="Reportes">
+      <mat-icon class="icon-btn">bar_chart</mat-icon>
+      <span class="icon-label">Reportes</span>
+    </div>
+
+    <button mat-button class="register-btn" routerLink="/register_student">
+      <mat-icon>person_add</mat-icon>
+      Registrar estudiante
+    </button>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="main-content">
+    <div class="main-content-body">
+      <router-outlet></router-outlet>
+    </div>
+
+    <footer class="footer">
+      <p>&copy; 2025 Predix - Todos los derechos reservados.</p>
+    </footer>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
 <div class="notificaciones-menu mat-elevation-z4" *ngIf="mostrarNotificaciones" #notiMenu>
   <h3>Notificaciones de Alerta</h3>
   <div *ngFor="let p of alertas" class="notificacion-alerta">
@@ -36,10 +74,4 @@
     <hr />
   </div>
 </div>
-
-
-<footer class="footer">
-  <p>&copy; 2025 Predix - Todos los derechos reservados.</p>
-</footer>
-
 
