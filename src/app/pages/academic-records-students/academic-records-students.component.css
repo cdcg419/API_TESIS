@@ -153,3 +153,9 @@ mat-progress-bar {
 .rendimiento-medio .mat-progress-bar-fill {
   background-color: #FFC107 !important; /* Amarillo */
 }
+
+
+.tabla-responsive {
+  overflow-x: auto;
+  width: 100%;
+}
