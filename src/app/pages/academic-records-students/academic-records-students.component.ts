@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { RegisterNotesService, RendimientoAcademico } from '../../services/register-notes.service';
+import { NotasEventService } from '../../services/notas-event.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { RendimientoDetalleComponent } from '../rendimiento-detalle/rendimiento-detalle.component';
@@ -13,7 +14,7 @@ import { RendimientoDetalleComponent } from '../rendimiento-detalle/rendimiento-
 })
 export class AcademicRecordsStudentsComponent implements OnInit{
   displayedColumns: string[] = [
-    'curso', 'trimestre', 'asistencia', 'nota_trimestre', 'conducta', 'rendimiento', 'resultados_prediccion', 'acciones'
+    'curso', 'trimestre', 'asistencia', 'nota_trimestre', 'conducta','acciones', 'rendimiento', 'resultados_prediccion'
   ];
   notas: RendimientoAcademico[] = [];
   estudianteId!: number;
@@ -27,7 +28,7 @@ export class AcademicRecordsStudentsComponent implements OnInit{
     "Verificando condiciones laborales...",
     "Generando predicción de rendimiento..."
   ];
-  constructor(private route: ActivatedRoute, private notesService: RegisterNotesService, private dialog: MatDialog) {}
+  constructor(private route: ActivatedRoute, private notesService: RegisterNotesService, private dialog: MatDialog, private notasEventService: NotasEventService ) {}
 
   ngOnInit(): void {
     this.estudianteId = Number(this.route.snapshot.paramMap.get('id'));
@@ -66,6 +67,7 @@ confirmarEdicion(nota: RendimientoAcademico): void {
 
           // Muestra una ventana emergente pidiendo volver a predecir
           alert('Debes volver a predecir el rendimiento para actualizar los datos.');
+          this.notasEventService.emitirCambio();
         },
         error: err => {
           console.error(err);
@@ -82,6 +84,7 @@ confirmarEdicion(nota: RendimientoAcademico): void {
         next: () => {
           alert('Nota eliminada');
           this.notas = this.notas.filter(n => n.id !== id);
+          this.notasEventService.emitirCambio();
         },
         error: err => {
           console.error(err);

@@ -109,11 +109,36 @@ def actualizar_registro_academico(db: Session, registro_id: int, registro_data: 
 
 def eliminar_registro_academico(db: Session, registro_id: int):
     registro = db.query(models.RendimientoAcademico).filter(models.RendimientoAcademico.id == registro_id).first()
-    if registro:
-        db.delete(registro)
+    if not registro:
+        raise HTTPException(status_code=404, detail="Registro no encontrado")
+
+    estudiante_id = registro.estudiante_id
+    curso = registro.curso
+    trimestre = registro.trimestre
+
+    # Eliminar el registro
+    db.delete(registro)
+    db.commit()
+
+    # Verificar si hay otras notas para ese estudiante, curso y trimestre
+    notas_restantes = db.query(models.RendimientoAcademico).filter_by(
+        estudiante_id=estudiante_id,
+        curso=curso,
+        trimestre=trimestre
+    ).all()
+
+    if not notas_restantes:
+        # Si no quedan notas, eliminar la predicción asociada
+        db.query(models.ResultadoPrediccion).filter_by(
+            estudiante_id=estudiante_id,
+            curso=curso,
+            trimestre=trimestre
+        ).delete()
         db.commit()
     else:
-        raise HTTPException(status_code=404, detail="Registro no encontrado")
+        # Recalcular la predicción (opcional)
+        pass
+
 
 def obtener_registro_por_id(db: Session, id: int):
     return db.query(models.RendimientoAcademico).filter(models.RendimientoAcademico.id == id).first()
@@ -222,4 +247,7 @@ def obtener_reportes_academicos_por_docente(db: Session, user_id: int, mes: int 
         )
 
     return query.all()
+
+
+
 

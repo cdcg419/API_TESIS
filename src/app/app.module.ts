@@ -38,6 +38,10 @@ import { ReportsStudentsComponent } from './pages/reports-students/reports-stude
 import { MonthReportComponent } from './pages/month-report/month-report.component';
 import { AcademicRiskReportComponent } from './pages/academic-risk-report/academic-risk-report.component';
 
+import { BaseChartDirective } from 'ng2-charts';
+import { Chart, registerables } from 'chart.js';
+
+Chart.register(...registerables);
 
 
 @NgModule({
@@ -77,7 +81,8 @@ import { AcademicRiskReportComponent } from './pages/academic-risk-report/academ
     MatSortModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
-    MatSidenavModule
+    MatSidenavModule,
+    BaseChartDirective
   ],
   providers: [
     {

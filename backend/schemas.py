@@ -158,3 +158,12 @@ class ReporteAcademico(BaseModel):
 
     class Config:
         orm_mode = True
+        
+class EstudianteRiesgoOut(BaseModel):
+    Codigo_estudiante: str
+    grado: int
+    curso: str
+    trimestre: int
+    nota_trimestre: float
+    causas_riesgo: List[str]
+    rendimiento: Optional[str]

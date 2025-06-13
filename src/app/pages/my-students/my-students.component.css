@@ -1,51 +1,112 @@
-.spacer {
-  flex: 1 1 auto;
+body {
+  background-color: #f0f2f5;
+  font-family: 'Roboto', sans-serif;
 }
 
-mat-card {
-  margin: 20px;
+
+mat-card.contenedor-tabla {
+  width: 80%;
+  margin: 40px auto;
+  padding: 24px;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+mat-card-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #2e7d32;
+}
+
+
+table.mat-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+mat-header-cell {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
+  padding: 14px;
+  border-bottom: 2px solid #c8e6c9;
+}
+
+mat-cell {
+  text-align: center;
+  padding: 12px;
+  font-size: 13px;
+  border-bottom: 1px solid #eee;
+}
+
+
+tr.mat-row:nth-child(even) mat-cell {
+  background-color: #f9f9f9;
+}
+
+
+
+.acciones-botones {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+button[mat-icon-button] {
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+}
+
+button[mat-icon-button]:hover {
+  transform: scale(1.1);
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.icono-editar {
+  color: #1976d2;
+}
+
+.icono-eliminar {
+  color: #d32f2f;
+}
+
+.icono-ver {
+  color: #388e3c;
 }
 
 mat-toolbar {
   background-color: #4CAF50 !important;
   color: white;
 }
-mat-table {
+
+mat-toolbar button {
+  color: white;
+  font-weight: 500;
+}
+
+mat-toolbar button:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.tabla-responsive {
+  overflow-x: auto;
   width: 100%;
 }
 
-mat-header-cell, mat-cell {
-  padding: 8px;
+/* Opcional: mejora la visualización del scroll */
+.tabla-responsive::-webkit-scrollbar {
+  height: 6px;
 }
-
-/* Centrar el cuadro en la página */
-.contenedor-tabla {
-  display: flex;
-  justify-content: center; /* Centra horizontalmente */
-  align-items: center; /* Centra verticalmente si es necesario */
-  margin: 40px auto; /* Agrega espacio alrededor */
-  width: 60%; /* Ajusta el tamaño del cuadro */
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* Ajustar tamaño de la tabla dentro del cuadro */
-table.mat-table {
-  width: 100%; /* Se ajusta dentro del contenedor */
-}
-
-/* Centrar los encabezados de columna */
-mat-header-cell {
-  text-align: center;
-  font-weight: bold;
-  background-color: #f5f5f5;
-  padding: 12px;
-}
-
-/* Centrar contenido de las celdas */
-mat-cell {
-  text-align: center;
-  padding: 12px;
+.tabla-responsive::-webkit-scrollbar-thumb {
+  background-color: #c8e6c9;
+  border-radius: 10px;
 }

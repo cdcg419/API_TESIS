@@ -15,12 +15,38 @@ export interface ReportePrediccion {
   fecha_registro?: string;
 }
 
+export interface EstudianteEnRiesgo {
+  Codigo_estudiante: string;
+  grado: number;
+  curso: string;
+  trimestre: number;
+  nota_trimestre: number;
+  causas_riesgo: string;
+  rendimiento: string;
+}
+
+export interface PorcentajeRiesgoCurso {
+  curso: string;
+  total_alumnos: number;
+  en_riesgo: number;
+  porcentaje_riesgo: number;
+}
+
+export interface PromedioCursoTrimestre {
+  curso: string;
+  trimestre: number;
+  promedio_nota: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class ReportsPrediccionService {
 
   private apiUrl = 'http://127.0.0.1:8000/prediccion/reportes';
+  private apiRiesgoUrl = 'http://127.0.0.1:8000/prediccion/reportes/riesgo';
+  private apiPorcentajeRiesgoUrl = 'http://127.0.0.1:8000/prediccion/reportes/porcentaje-riesgo';
+  private apipromCursoUrl= 'http://127.0.0.1:8000/prediccion/reportes/promedio';
   constructor(private http: HttpClient) {}
 
   obtenerReportes(mes?: number, anio?: number): Observable<ReportePrediccion[]> {
@@ -34,5 +60,23 @@ export class ReportsPrediccionService {
     }
 
     return this.http.get<ReportePrediccion[]>(this.apiUrl, { params });
+  }
+  obtenerEstudiantesEnRiesgo(curso?: string, trimestre?: number): Observable<EstudianteEnRiesgo[]> {
+    const params: any = {};
+    if (curso) params.curso = curso;
+    if (trimestre !== undefined) params.trimestre = trimestre;
+    return this.http.get<EstudianteEnRiesgo[]>(this.apiRiesgoUrl, { params });
+  }
+  obtenerPorcentajeRiesgoPorCurso(curso?: string, trimestre?: number): Observable<PorcentajeRiesgoCurso[]> {
+    const params: any = {};
+    if (curso) params.curso = curso;
+    if (trimestre !== undefined) params.trimestre = trimestre;
+    return this.http.get<PorcentajeRiesgoCurso[]>(this.apiPorcentajeRiesgoUrl, { params });
+  }
+  obtenerPromedioPorCursoTrimestre(curso?: string, trimestre?: number): Observable<PromedioCursoTrimestre[]> {
+    const params: any = {};
+    if (curso) params.curso = curso;
+    if (trimestre !== undefined) params.trimestre = trimestre;
+    return this.http.get<PromedioCursoTrimestre[]>(this.apipromCursoUrl, { params });
   }
 }
