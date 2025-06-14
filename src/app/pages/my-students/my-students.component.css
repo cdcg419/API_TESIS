@@ -110,3 +110,18 @@ mat-toolbar button:hover {
   background-color: #c8e6c9;
   border-radius: 10px;
 }
+
+
+.sidenav {
+  width: 200px;
+  background-color: #4CAF50;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  border-radius: 0;
+}
+
+mat-sidenav-container {
+  height: 100vh; /* Ocupa toda la pantalla */
+}

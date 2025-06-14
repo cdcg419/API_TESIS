@@ -1,0 +1,70 @@
+/* Panel lateral */
+.sidenav {
+  width: 200px;
+  background-color: #4CAF50;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  border-radius: 0;
+}
+
+.sidebar-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* Botones ícono + texto */
+.icon-group {
+  display: flex;
+  align-items: center;
+  width: 90%;
+  padding: 10px;
+  margin: 8px auto;
+  cursor: pointer;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.icon-group:hover {
+  background-color: #45a049;
+}
+
+.icon-group.active {
+  background-color: white;
+  color: #4CAF50;
+}
+
+.icon-btn {
+  color: inherit;
+  margin-right: 10px;
+}
+
+.icon-label {
+  font-size: 14px;
+  color: inherit;
+}
+
+/* Botón de registrar estudiante */
+.register-btn {
+  width: 90%;
+  margin: auto auto 30px auto;
+  background-color: white;
+  color: #4CAF50 !important;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: none;
+}
+
+.register-btn mat-icon {
+  margin-right: 5px;
+  color: #4CAF50;
+}
+
+.register-btn:hover {
+  background-color: #f1f1f1;
+}

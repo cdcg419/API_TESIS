@@ -42,6 +42,10 @@ import { BaseChartDirective } from 'ng2-charts';
 import { Chart, registerables } from 'chart.js';
 import { HistoryAcademicReportComponent } from './pages/history-academic-report/history-academic-report.component';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { SidenavComponent } from './pages/sidenav/sidenav.component';
+
+
+
 Chart.register(...registerables);
 
 
@@ -63,6 +67,7 @@ Chart.register(...registerables);
     MonthReportComponent,
     AcademicRiskReportComponent,
     HistoryAcademicReportComponent,
+    SidenavComponent,
   ],
   imports: [
     BrowserModule,

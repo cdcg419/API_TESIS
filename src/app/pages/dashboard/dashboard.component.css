@@ -13,7 +13,7 @@ html, body {
 .custom-toolbar {
   height: 64px;
   width: 100%;
-  background-color: #4CAF50;
+  background-color: #4CAF50 !important;
   color: white;
   display: flex;
   align-items: center;
@@ -28,7 +28,13 @@ html, body {
 .toolbar-icons {
   display: flex;
   align-items: center;
+  color: white;
   gap: 10px;
+}
+
+mat-toolbar button {
+  color: white;
+  font-weight: 500;
 }
 
 /* Separador para empujar íconos a la derecha */
@@ -158,3 +164,4 @@ html, body {
   font-size: 14px;
   margin-bottom: 12px;
 }
+

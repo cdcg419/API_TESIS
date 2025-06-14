@@ -1,5 +1,8 @@
 <!-- Barra superior -->
 <mat-toolbar class="custom-toolbar">
+  <button mat-icon-button (click)="sidenav.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
   <span class="title">Predix</span>
   <span class="spacer"></span>
 
@@ -21,41 +24,11 @@
 
 <!-- Contenedor principal -->
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav mode="side" opened class="sidenav">
-    <div class="icon-group" routerLink="/dashboard" routerLinkActive="active" matTooltip="Dashboard">
-      <mat-icon class="icon-btn">dashboard</mat-icon>
-      <span class="icon-label">Dashboard</span>
-    </div>
-
-    <div class="icon-group" routerLink="/my_students" routerLinkActive="active" matTooltip="Mis Estudiantes">
-      <mat-icon class="icon-btn">groups</mat-icon>
-      <span class="icon-label">Mis Estudiantes</span>
-    </div>
-
-    <div class="icon-group" routerLink="/register_notes_for_students" routerLinkActive="active" matTooltip="Registro Académico">
-      <mat-icon class="icon-btn">calendar_today</mat-icon>
-      <span class="icon-label">Académico</span>
-    </div>
-
-    <div class="icon-group" routerLink="/reports_students" routerLinkActive="active" matTooltip="Reportes">
-      <mat-icon class="icon-btn">bar_chart</mat-icon>
-      <span class="icon-label">Reportes</span>
-    </div>
-
-    <button mat-button class="register-btn" routerLink="/register_student">
-      <mat-icon>person_add</mat-icon>
-      Registrar estudiante
-    </button>
+  <mat-sidenav #sidenav mode="side" class="sidenav">
+    <app-sidenav></app-sidenav>
   </mat-sidenav>
-
-  <mat-sidenav-content class="main-content">
-    <div class="main-content-body">
-      <router-outlet></router-outlet>
-    </div>
-
-    <footer class="footer">
-      <p>&copy; 2025 Predix - Todos los derechos reservados.</p>
-    </footer>
+  <mat-sidenav-content>
+    <!-- lo que va en el otro lateral -->
   </mat-sidenav-content>
 </mat-sidenav-container>
 

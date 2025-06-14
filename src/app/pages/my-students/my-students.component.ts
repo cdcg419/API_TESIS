@@ -1,9 +1,10 @@
-import { Component,OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { RegisterNotesService, EstudianteInfo} from '../../services/register-notes.service';
 import { Router } from '@angular/router';
 import { StudentService } from '../../services/student.service';
 import { MatDialog } from '@angular/material/dialog';
-
+import { MatSidenav } from '@angular/material/sidenav';
+import { PrediccionService, ResultadoPrediccion } from '../../services/prediccion.service';
 @Component({
   selector: 'app-my-students',
   standalone: false,
@@ -13,11 +14,22 @@ import { MatDialog } from '@angular/material/dialog';
 export class MyStudentsComponent implements OnInit{
   displayedColumns: string[] = ['Codigo del estudiante', 'grado', 'presencia_padres', 'trabaja', 'acciones'];
   dataSource: EstudianteInfo[] = [];
+  predicciones: ResultadoPrediccion[] = [];
+  alertas: ResultadoPrediccion[] = [];
+  mostrarNotificaciones = false;
+
+  @ViewChild('notiMenu') notiMenu!: ElementRef;
+  @ViewChild('notiBtn') notiBtn!: ElementRef;
+  @ViewChild('sidenav') sidenav!: MatSidenav;
 
   constructor(private registerNotesService: RegisterNotesService, private router: Router,  private studentService: StudentService,private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.loadStudents();
+  }
+
+  toggleSidenav() {
+    this.sidenav.toggle();
   }
 
   loadStudents(): void {
@@ -66,4 +78,5 @@ export class MyStudentsComponent implements OnInit{
   const nombres = ['Primer grado', 'Segundo grado', 'Tercer grado', 'Cuarto grado', 'Quinto grado', 'Sexto grado'];
   return nombres[grado - 1] || 'Grado desconocido';
   }
+
 }

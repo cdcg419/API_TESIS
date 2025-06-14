@@ -7,6 +7,11 @@ mat-toolbar {
   color: white;
 }
 
+mat-toolbar button {
+  color: white;
+  font-weight: 500;
+}
+
 .botonera {
   display: flex;
   justify-content: center;
@@ -28,3 +33,19 @@ mat-toolbar {
   color: white !important;
   box-shadow: 0 3px 6px rgba(0, 128, 0, 0.3);
 }
+
+.sidenav {
+  width: 200px;
+  background-color: #4CAF50;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  border-radius: 0;
+}
+
+mat-sidenav-container {
+  height: 100vh; /* Ocupa toda la pantalla */
+}
+
+

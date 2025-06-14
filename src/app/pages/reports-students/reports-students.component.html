@@ -1,4 +1,7 @@
 <mat-toolbar color="primary" class="mat-elevation-z4">
+  <button mat-icon-button (click)="sidenav.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
   <span>Predix</span>
   <span class="spacer"></span>
   <button mat-button routerLink="/register_notes_for_students">Registrar notas</button>
@@ -6,34 +9,44 @@
   <button mat-button routerLink="/dashboard">Dashboard</button>
 </mat-toolbar>
 
-<div class="botonera">
-  <button mat-raised-button  [ngClass]="{'btn-verde': activo === 'month'}" (click)="toggleReports_month()">
-    <mat-icon>calendar_view_day</mat-icon> Reportes Mensuales
-  </button>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #sidenav mode="side" class="sidenav">
+    <app-sidenav></app-sidenav>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div class="botonera">
+      <button mat-raised-button  [ngClass]="{'btn-verde': activo === 'month'}" (click)="toggleReports_month()">
+        <mat-icon>calendar_view_day</mat-icon> Reportes Mensuales
+      </button>
 
-  <button mat-raised-button [ngClass]="{'btn-verde': activo === 'warning'}" (click)="toggleReports_warning()">
-    <mat-icon>warning</mat-icon> Riesgo académico
-  </button>
+      <button mat-raised-button [ngClass]="{'btn-verde': activo === 'warning'}" (click)="toggleReports_warning()">
+        <mat-icon>warning</mat-icon> Riesgo académico
+      </button>
 
-  <button mat-raised-button [ngClass]="{'btn-verde': activo === 'academic'}" (click)="toggleReports_academic()">
-    <mat-icon>history</mat-icon> Historial académico
-  </button>
-</div>
+      <button mat-raised-button [ngClass]="{'btn-verde': activo === 'academic'}" (click)="toggleReports_academic()">
+        <mat-icon>history</mat-icon> Historial académico
+      </button>
+    </div>
 
-<!-- Reportes mensuales -->
-<div *ngIf="showReports_month">
-  <app-month-report></app-month-report>
-</div>
+    <!-- Reportes mensuales -->
+    <div *ngIf="showReports_month">
+      <app-month-report></app-month-report>
+    </div>
 
-<!-- Riesgo académico -->
-<div *ngIf="showReports_warning">
-  <app-academic-risk-report></app-academic-risk-report>
-</div>
+    <!-- Riesgo académico -->
+    <div *ngIf="showReports_warning">
+      <app-academic-risk-report></app-academic-risk-report>
+    </div>
 
-<!-- Historial académico general-->
-<div *ngIf="showReports_academic">
-  <app-history-academic-report></app-history-academic-report>
-</div>
+    <!-- Historial académico general-->
+    <div *ngIf="showReports_academic">
+      <app-history-academic-report></app-history-academic-report>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+
+
 
 
 
