@@ -1,0 +1,119 @@
+<div class="container mt-4">
+  <h2>Historial Académico del Estudiante</h2>
+
+  <div class="filtros-container">
+
+    <div class="filtro">
+      <label for="codigo">Buscar por código:</label>
+      <select id="codigo" [(ngModel)]="codigoFiltro" (change)="filtrarHistorial()">
+        <option *ngFor="let codigo of codigosEstudiantes" [value]="codigo">{{ codigo }}</option>
+      </select>
+    </div>
+
+    <div class="filtro">
+      <label for="curso">Curso:</label>
+      <select id="curso" [(ngModel)]="cursoFiltro" (change)="filtrarHistorial()">
+        <option *ngFor="let curso of cursosDisponibles" [value]="curso">{{ curso }}</option>
+      </select>
+    </div>
+
+    <div class="filtro">
+      <label for="trimestre">Trimestre:</label>
+      <select id="trimestre" [(ngModel)]="trimestreSeleccionado" (change)="filtrarHistorial()">
+        <option *ngFor="let t of trimestres" [value]="t">
+          {{ t === 1 ? 'Primer trimestre' : t === 2 ? 'Segundo trimestre' : 'Tercer trimestre' }}
+        </option>
+      </select>
+    </div>
+
+    <button mat-raised-button class="btn-verde" (click)="limpiarFiltros()">
+      <mat-icon>clear</mat-icon> Limpiar filtros
+    </button>
+  </div>
+
+<mat-card class="mat-elevation-z8 mt-3">
+  <mat-card-header>
+    <mat-card-title>Historial Académico del Estudiante</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div style="padding: 16px;">
+      <table mat-table [dataSource]="historialFiltrado" matSort class="mat-elevation-z8">
+        <!-- Código del Estudiante -->
+        <ng-container matColumnDef="Codigo_estudiante">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
+          <td mat-cell *matCellDef="let row">{{ row.Codigo_estudiante }}</td>
+        </ng-container>
+
+        <!-- Curso -->
+        <ng-container matColumnDef="curso">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Curso</th>
+          <td mat-cell *matCellDef="let row">{{ row.curso }}</td>
+        </ng-container>
+
+        <!-- Trimestre -->
+        <ng-container matColumnDef="trimestre">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Trimestre</th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.trimestre === 1 ? 'Primer trimestre' : row.trimestre === 2 ? 'Segundo trimestre' : 'Tercer trimestre' }}
+          </td>
+        </ng-container>
+
+        <!-- Asistencia -->
+        <ng-container matColumnDef="asistencia">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Asistencia</th>
+          <td mat-cell *matCellDef="let row">{{ row.asistencia }}%</td>
+        </ng-container>
+
+        <!-- Nota -->
+        <ng-container matColumnDef="nota">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nota</th>
+          <td mat-cell *matCellDef="let row">{{ row.nota }}</td>
+        </ng-container>
+
+        <!-- Conducta -->
+        <ng-container matColumnDef="conducta">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Conducta</th>
+          <td mat-cell *matCellDef="let row">{{ row.conducta }}</td>
+        </ng-container>
+
+        <!-- Rendimiento -->
+        <ng-container matColumnDef="rendimiento">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Rendimiento</th>
+          <td mat-cell *matCellDef="let row">{{ row.rendimiento }}</td>
+        </ng-container>
+
+        <!-- Encabezados y filas -->
+        <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+      </table>
+
+      <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+
+      <div *ngIf="historialFiltrado.data.length === 0" class="mt-4 text-muted">
+        No hay registros para el trimestre seleccionado.
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+
+<mat-card class="mat-elevation-z8 mt-3">
+  <mat-card-header>
+    <mat-card-title>Linea de Tiempo del estudiante</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div style="display: flex; justify-content: center; align-items: center; padding: 16px; width: 600px; height: 500px; margin: auto;">
+      <canvas baseChart
+              [data]="lineChartData"
+              [type]="'line'"
+              [options]="lineChartOptions"
+              #chart>
+      </canvas>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+
+

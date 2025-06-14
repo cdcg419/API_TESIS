@@ -6,13 +6,19 @@
   <button mat-button routerLink="/dashboard">Dashboard</button>
 </mat-toolbar>
 
-<button mat-raised-button class="btn-verde" (click)="toggleReports_month()">
-  <mat-icon>history</mat-icon> Historial de predicciones
-</button>
+<div class="botonera">
+  <button mat-raised-button  [ngClass]="{'btn-verde': activo === 'month'}" (click)="toggleReports_month()">
+    <mat-icon>calendar_view_day</mat-icon> Reportes Mensuales
+  </button>
 
-<button mat-raised-button class="btn-verde" (click)="toggleReports_warning()">
-  <mat-icon>warning</mat-icon> Riesgo académico
-</button>
+  <button mat-raised-button [ngClass]="{'btn-verde': activo === 'warning'}" (click)="toggleReports_warning()">
+    <mat-icon>warning</mat-icon> Riesgo académico
+  </button>
+
+  <button mat-raised-button [ngClass]="{'btn-verde': activo === 'academic'}" (click)="toggleReports_academic()">
+    <mat-icon>history</mat-icon> Historial académico
+  </button>
+</div>
 
 <!-- Reportes mensuales -->
 <div *ngIf="showReports_month">
@@ -22,6 +28,11 @@
 <!-- Riesgo académico -->
 <div *ngIf="showReports_warning">
   <app-academic-risk-report></app-academic-risk-report>
+</div>
+
+<!-- Historial académico general-->
+<div *ngIf="showReports_academic">
+  <app-history-academic-report></app-history-academic-report>
 </div>
 
 

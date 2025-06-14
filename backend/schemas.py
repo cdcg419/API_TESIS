@@ -167,3 +167,16 @@ class EstudianteRiesgoOut(BaseModel):
     nota_trimestre: float
     causas_riesgo: List[str]
     rendimiento: Optional[str]
+    
+class HistorialPrediccionResponse(BaseModel):
+    Codigo_estudiante: str
+    curso: str
+    trimestre: int
+    nota: float
+    asistencia: float
+    conducta: float
+    rendimiento: str
+    fecha_prediccion: datetime
+
+    class Config:
+        orm_mode = True

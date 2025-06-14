@@ -13,6 +13,7 @@ import { AcademicRecordsStudentsComponent } from './pages/academic-records-stude
 import { ReportsStudentsComponent } from './pages/reports-students/reports-students.component';
 import { MonthReportComponent } from './pages/month-report/month-report.component';
 import { AcademicRiskReportComponent } from './pages/academic-risk-report/academic-risk-report.component';
+import { HistoryAcademicReportComponent } from './pages/history-academic-report/history-academic-report.component';
 import { AuthGuard } from './guard/auth.guard';
 
 const routes: Routes = [
@@ -29,6 +30,7 @@ const routes: Routes = [
   { path: 'reports_students', component:ReportsStudentsComponent, canActivate: [AuthGuard] },
   { path: 'monthly_reports', component:MonthReportComponent, canActivate: [AuthGuard] },
   { path: 'risk_reports', component:AcademicRiskReportComponent, canActivate: [AuthGuard] },
+{ path: 'historial-academico/:id', component: HistoryAcademicReportComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({

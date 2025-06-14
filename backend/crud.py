@@ -83,11 +83,24 @@ def obtener_estudiante_por_id_y_docente(db: Session, estudiante_id: int, docente
 ################################### NOTAS DEL ESTUDIANTE ########################################
 
 def crear_registro_academico(db: Session, registro: schemas.RendimientoAcademicoCreate):
+    # Verificar si ya existe un registro para este estudiante, curso y trimestre
+    existe_registro = db.query(models.RendimientoAcademico).filter(
+        models.RendimientoAcademico.estudiante_id == registro.estudiante_id,
+        models.RendimientoAcademico.curso == registro.curso,
+        models.RendimientoAcademico.trimestre == registro.trimestre
+    ).first()
+
+    if existe_registro:
+        raise HTTPException(status_code=400, detail="El estudiante ya tiene una nota registrada para este curso y trimestre.")
+
+    # Si no existe, lo insertamos en la base de datos
     db_registro = models.RendimientoAcademico(**registro.dict())
     db.add(db_registro)
     db.commit()
     db.refresh(db_registro)
+    
     return db_registro
+
 
 def obtener_registros_por_estudiante(db: Session, estudiante_id: int):
     return db.query(models.RendimientoAcademico).filter(
@@ -97,15 +110,30 @@ def obtener_registros_por_estudiante(db: Session, estudiante_id: int):
 def obtener_registros_por_estudiante(db: Session, estudiante_id: int):
     return db.query(models.RendimientoAcademico).filter(models.RendimientoAcademico.estudiante_id == estudiante_id).all()
 
-def actualizar_registro_academico(db: Session, registro_id: int, registro_data: schemas.RendimientoAcademicoCreate):
+def actualizar_registro_academico(db: Session, registro_id: int, registro_data: schemas.RendimientoAcademicoUpdate):
     registro = db.query(models.RendimientoAcademico).filter(models.RendimientoAcademico.id == registro_id).first()
-    if registro:
-        for key, value in registro_data.dict().items():
-            setattr(registro, key, value)
-        db.commit()
-        db.refresh(registro)
-        return registro
-    raise HTTPException(status_code=404, detail="Registro no encontrado")
+
+    if not registro:
+        raise HTTPException(status_code=404, detail="Registro no encontrado")
+
+    # Validar si ya existe otro registro con el mismo estudiante, curso y trimestre
+    existe_registro = db.query(models.RendimientoAcademico).filter(
+        models.RendimientoAcademico.estudiante_id == registro.estudiante_id,  # Usamos el estudiante actual
+        models.RendimientoAcademico.curso == registro_data.curso,
+        models.RendimientoAcademico.trimestre == registro_data.trimestre,
+        models.RendimientoAcademico.id != registro_id  # Excluimos el registro que estamos editando
+    ).first()
+
+    if existe_registro:
+        raise HTTPException(status_code=400, detail="Ya existe una nota para este estudiante en este curso y trimestre.")
+
+    # Si no hay conflicto, se actualiza
+    for key, value in registro_data.dict().items():
+        setattr(registro, key, value)
+
+    db.commit()
+    db.refresh(registro)
+    return registro
 
 def eliminar_registro_academico(db: Session, registro_id: int):
     registro = db.query(models.RendimientoAcademico).filter(models.RendimientoAcademico.id == registro_id).first()

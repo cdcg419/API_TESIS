@@ -38,6 +38,17 @@ export interface PromedioCursoTrimestre {
   promedio_nota: number;
 }
 
+export interface HistorialPrediccion {
+  Codigo_estudiante: string;
+  curso: string;
+  trimestre: number;
+  nota: number;
+  asistencia: number;
+  conducta: number;
+  rendimiento: string;
+  fecha_prediccion: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -47,6 +58,7 @@ export class ReportsPrediccionService {
   private apiRiesgoUrl = 'http://127.0.0.1:8000/prediccion/reportes/riesgo';
   private apiPorcentajeRiesgoUrl = 'http://127.0.0.1:8000/prediccion/reportes/porcentaje-riesgo';
   private apipromCursoUrl= 'http://127.0.0.1:8000/prediccion/reportes/promedio';
+  private apiHistorialUrl = 'http://127.0.0.1:8000/prediccion/historial';
   constructor(private http: HttpClient) {}
 
   obtenerReportes(mes?: number, anio?: number): Observable<ReportePrediccion[]> {
@@ -78,5 +90,8 @@ export class ReportsPrediccionService {
     if (curso) params.curso = curso;
     if (trimestre !== undefined) params.trimestre = trimestre;
     return this.http.get<PromedioCursoTrimestre[]>(this.apipromCursoUrl, { params });
+  }
+  obtenerHistorialPredicciones(): Observable<HistorialPrediccion[]> {
+    return this.http.get<HistorialPrediccion[]>(this.apiHistorialUrl);
   }
 }

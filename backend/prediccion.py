@@ -1,5 +1,5 @@
 # prediccion.py
-from fastapi import APIRouter, HTTPException, Depends, Query
+from fastapi import APIRouter, HTTPException, status, Depends, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from pydantic import BaseModel
@@ -13,7 +13,7 @@ from models import Estudiante, RendimientoAcademico, ResultadoPrediccion, User
 from database import get_db
 from crud import obtener_estudiantes_con_resultado
 from typing import List
-from schemas import EstudianteConResultado, ReporteAcademico, EstudianteRiesgoOut
+from schemas import EstudianteConResultado, ReporteAcademico, EstudianteRiesgoOut, HistorialPrediccionResponse
 from crud import obtener_reportes_academicos_por_docente
 import utils
 
@@ -290,4 +290,36 @@ def obtener_promedio_por_curso_trimestre(
     ]
 
     return resultados
-    
+
+@router.get("/historial")
+def obtener_historial_estudiantes(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(utils.get_current_user)
+):
+    registros = (
+        db.query(Estudiante.Codigo_estudiante, RendimientoAcademico, ResultadoPrediccion)  # Código incluido aquí
+        .join(RendimientoAcademico, Estudiante.id == RendimientoAcademico.estudiante_id)
+        .join(ResultadoPrediccion,
+            (RendimientoAcademico.estudiante_id == ResultadoPrediccion.estudiante_id) &
+            (RendimientoAcademico.curso == ResultadoPrediccion.curso) &
+            (RendimientoAcademico.trimestre == ResultadoPrediccion.trimestre))
+        .filter(Estudiante.docente_id == current_user.id)  # Filtra por docente autenticado
+        .order_by(ResultadoPrediccion.fecha_registro.desc())
+        .all()
+    )
+
+
+    resultado = []
+    for Codigo_estudiante, rendimiento, prediccion in registros:  # ← Extraemos código correctamente
+        resultado.append(HistorialPrediccionResponse(
+            Codigo_estudiante=Codigo_estudiante,  # ← Usamos la variable correcta
+            curso=rendimiento.curso,
+            trimestre=rendimiento.trimestre,
+            nota=rendimiento.nota_trimestre,
+            asistencia=rendimiento.asistencia,
+            conducta=rendimiento.conducta,
+            rendimiento=prediccion.rendimiento,
+            fecha_prediccion=prediccion.fecha_registro
+        ))
+
+    return resultado

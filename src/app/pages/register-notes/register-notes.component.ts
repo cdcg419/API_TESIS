@@ -43,7 +43,14 @@ export class RegisterNotesComponent {
   registrarNotas(): void {
     this.notesService.registrarNotas(this.notas).subscribe({
       next: () => alert('Nota registrada correctamente'),
-      error: (err) => console.error('Error al registrar nota:', err)
+      error: (err) => {
+        if (err.status === 400 && err.error.detail.includes('Ya existe una nota')) {
+          alert('Error: El estudiante ya tiene una nota registrada para este curso y trimestre.');
+        } else {
+          alert('Error al registrar nota. Inténtalo nuevamente.');
+        }
+        console.error('Error al registrar nota:', err);
+      }
     });
   }
   cursos: string[] = [

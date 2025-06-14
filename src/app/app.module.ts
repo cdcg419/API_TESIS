@@ -40,7 +40,8 @@ import { AcademicRiskReportComponent } from './pages/academic-risk-report/academ
 
 import { BaseChartDirective } from 'ng2-charts';
 import { Chart, registerables } from 'chart.js';
-
+import { HistoryAcademicReportComponent } from './pages/history-academic-report/history-academic-report.component';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 Chart.register(...registerables);
 
 
@@ -61,6 +62,7 @@ Chart.register(...registerables);
     ReportsStudentsComponent,
     MonthReportComponent,
     AcademicRiskReportComponent,
+    HistoryAcademicReportComponent,
   ],
   imports: [
     BrowserModule,
@@ -93,4 +95,8 @@ Chart.register(...registerables);
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor() {
+    Chart.register(ChartDataLabels); // 🔥 REGISTRO DEL PLUGIN
+  }
+}

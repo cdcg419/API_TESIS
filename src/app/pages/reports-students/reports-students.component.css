@@ -7,7 +7,24 @@ mat-toolbar {
   color: white;
 }
 
+.botonera {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.botonera button {
+  background-color: #e0e0e0;
+  color: #333;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease;
+}
+
+/* ✅ Solo el botón activo se verá verde */
 .btn-verde {
   background-color: #4CAF50 !important;
   color: white !important;
+  box-shadow: 0 3px 6px rgba(0, 128, 0, 0.3);
 }
