@@ -119,3 +119,61 @@ def generar_observacion(motivo_asistencia, motivo_presencia_padres, motivo_traba
             observacion.append("💼 Balancear trabajo y estudio es clave para mantener el alto desempeño.")
 
     return " ".join(observacion) if observacion else "✅ Sin riesgos significativos."
+
+
+#nuevo
+def proyectar_rendimiento_anual(rendimientos):
+    # Map: 'Bajo' = 0, 'Medio' = 1, 'Alto' = 2
+    mapa_valor = {'Bajo': 0, 'Medio': 1, 'Alto': 2}
+    valores = [mapa_valor.get(r, None) for r in rendimientos if r in mapa_valor]
+    if not valores:
+        return None
+
+    if valores.count(0) >= 2:
+        return 'Bajo'
+
+    if len(valores) == 3 and valores == sorted(valores) and len(set(valores)) == 3:
+        return 'Alto'
+
+    if len(valores) >= 2 and valores[0] == 2 and valores[-1] == 0:
+        return 'Medio'
+
+    ponderado = (valores[0] * 0.4 + valores[1] * 0.6) if len(valores) == 2 else sum(valores) / len(valores)
+
+    if ponderado >= 1.8:
+        return 'Alto'
+    elif ponderado >= 1:
+        return 'Medio'
+    else:
+        return 'Bajo'
+    
+def proyectar_nota_anual(notas):
+    """Calcula el rendimiento final del año basado en las notas trimestrales."""
+    
+    if not notas:  # Evita errores si la lista está vacía
+        return None  
+
+    # Inicializamos promedio
+    promedio = None  
+
+    if len(notas) == 1:
+        promedio = notas[0]  # 🔹 Asignar la nota directamente como promedio
+    elif len(notas) == 2:
+        promedio = round((notas[0] * 0.5 + notas[1] * 0.5), 2)  # 🔹 Misma ponderación y redondeo
+    elif len(notas) == 3:
+        promedio = round(sum(notas) / 3, 2)  # 🔹 Promedio final anual con redondeo
+
+    else:
+        return None  
+
+    # 🔹 Imprimir el promedio para depuración
+
+    # Ajustamos los umbrales correctamente
+    if promedio < 11.5:
+        rendimiento = "Bajo"
+    elif 11.5 <= promedio < 16.5:  # 🔹 Ajustamos el límite superior para evitar falsos "Medio"
+        rendimiento = "Medio"
+    else:
+        rendimiento = "Alto"
+
+    return rendimiento

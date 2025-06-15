@@ -208,7 +208,8 @@ def obtener_estudiantes_con_resultado(db: Session):
             ResultadoPrediccion.curso,
             ResultadoPrediccion.rendimiento,
             ResultadoPrediccion.factores_riesgo,
-            ResultadoPrediccion.observacion
+            ResultadoPrediccion.observacion,
+            ResultadoPrediccion.mensaje_umbral
             
         )
         .join(ResultadoPrediccion, Estudiante.id == ResultadoPrediccion.estudiante_id)

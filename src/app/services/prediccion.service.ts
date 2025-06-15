@@ -10,6 +10,7 @@ export interface ResultadoPrediccion {
   rendimiento: string;
   factores_riesgo: string;
   observacion: string | string[];
+  mensaje_umbral: string;
 }
 
 @Injectable({

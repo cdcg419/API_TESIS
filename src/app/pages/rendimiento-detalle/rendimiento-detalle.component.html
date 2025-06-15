@@ -9,6 +9,10 @@
   <li *ngFor="let observacion of data.observacion_final">{{ observacion }}</li>
 </ul>
 
+<p><strong>Proyecciones:</strong></p>
+<ul>
+  <li>{{ data.mensaje_umbral_final }}</li>
+</ul>
 
 
 <button mat-button (click)="cerrar()">Cerrar</button>

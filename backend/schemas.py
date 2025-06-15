@@ -105,8 +105,10 @@ class ResultadoPrediccionCreate(BaseModel):
     rendimiento: str
     factores_riesgo: Optional[str]
     observacion: Optional[str]
+    #nuevo#
+    mensaje_umbral: Optional[str] 
+    
     estudiante_id: int
-    #nuevo
     user_id: int
 
 class ResultadoPrediccionOut(ResultadoPrediccionCreate):
@@ -124,6 +126,7 @@ class EstudianteConResultado(BaseModel):
     rendimiento: Optional[str]
     factores_riesgo: Optional[str]
     observacion: Optional[str]
+    mensaje_umbral: Optional[str] 
 
     class Config:
         orm_mode = True
@@ -136,6 +139,7 @@ class ResultadoPrediccionOut(BaseModel):
     rendimiento: str
     factores_riesgo: str | None = None
     observacion: str | None = None
+    mensaje_umbral: str | None = None
 
     class Config:
         orm_mode = True

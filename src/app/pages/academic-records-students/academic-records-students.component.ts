@@ -54,8 +54,6 @@ export class AcademicRecordsStudentsComponent implements OnInit{
   }, Math.max(this.pasosCarga.length * 1200, 3000)); // Garantiza al menos 3 segundos de carga
 }
 
-
-
 confirmarEdicion(nota: RendimientoAcademico): void {
   if (confirm('¿Estás seguro de aplicar los cambios?')) {
       this.notesService.actualizarNota(nota.id, nota).subscribe({
@@ -100,6 +98,7 @@ confirmarEdicion(nota: RendimientoAcademico): void {
       nota.rendimiento = res.rendimiento;
       nota.factores_riesgo = res.factores_riesgo;
       nota.Mensaje_riesgo = res.Mensaje_riesgo;
+      nota.mensaje_umbral = res.mensaje_umbral;
     },
     error: err => {
       console.error(err);
@@ -112,7 +111,8 @@ confirmarEdicion(nota: RendimientoAcademico): void {
       data: {
         rendimiento: nota.rendimiento,
         factores_riesgo: nota.factores_riesgo,
-        observacion_final: nota.Mensaje_riesgo
+        observacion_final: nota.Mensaje_riesgo,
+        mensaje_umbral_final: nota.mensaje_umbral
       }
     });
   }

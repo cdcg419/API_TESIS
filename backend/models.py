@@ -54,6 +54,8 @@ class ResultadoPrediccion(Base):
     rendimiento = Column(String(10), nullable=False)
     factores_riesgo = Column(String(255))
     observacion = Column(String(1000))
+    
+    mensaje_umbral = Column(String(500)) 
 
     estudiante_id = Column(Integer, ForeignKey("estudiantes.id"))
     curso = Column(String(100), nullable=False)

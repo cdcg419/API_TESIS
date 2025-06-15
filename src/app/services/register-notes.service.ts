@@ -13,6 +13,7 @@ export interface RendimientoAcademico {
   rendimiento?: string;
   factores_riesgo?: string;
   Mensaje_riesgo?: string | string[];
+  mensaje_umbral?: string;
 }
 
 export interface EstudianteInfo {
