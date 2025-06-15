@@ -47,6 +47,8 @@ export interface HistorialPrediccion {
   conducta: number;
   rendimiento: string;
   fecha_prediccion: string;
+  observacion: string;
+  estudiante_id: number;
 }
 
 @Injectable({

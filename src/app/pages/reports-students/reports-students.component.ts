@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-reports-students',
@@ -6,12 +6,23 @@ import { Component} from '@angular/core';
   templateUrl: './reports-students.component.html',
   styleUrl: './reports-students.component.css'
 })
-export class ReportsStudentsComponent{
+export class ReportsStudentsComponent implements OnInit{
   showReports_month = false;
   showReports_warning = false;
   showReports_academic = false;
 
    activo: 'month' | 'warning' | 'academic' | null = null;
+
+
+  ngOnInit(): void {
+    this.showReports_academic = !this.showReports_academic;
+    if (this.showReports_academic) {
+      this.showReports_month = false;
+      this.showReports_warning = false;
+      this.activo = this.showReports_academic ? 'academic' : null;
+      // Asegura que el otro se cierre
+    }
+  }
 
   toggleReports_month() {
     this.showReports_month = !this.showReports_month;

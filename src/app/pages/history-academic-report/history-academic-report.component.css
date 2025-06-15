@@ -69,3 +69,17 @@
   border-color: #388E3C;
   box-shadow: 0 0 5px rgba(56, 142, 60, 0.5);
 }
+
+.tabla-responsive {
+  overflow-x: auto;
+  width: 100%;
+}
+
+/* Opcional: mejora la visualización del scroll */
+.tabla-responsive::-webkit-scrollbar {
+  height: 6px;
+}
+.tabla-responsive::-webkit-scrollbar-thumb {
+  background-color: #c8e6c9;
+  border-radius: 10px;
+}

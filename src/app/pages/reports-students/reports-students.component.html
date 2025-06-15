@@ -15,17 +15,19 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <div class="botonera">
-      <button mat-raised-button  [ngClass]="{'btn-verde': activo === 'month'}" (click)="toggleReports_month()">
-        <mat-icon>calendar_view_day</mat-icon> Reportes Mensuales
+
+      <button mat-raised-button [ngClass]="{'btn-verde': activo === 'academic'}" (click)="toggleReports_academic()">
+        <mat-icon>history</mat-icon> Historial académico
       </button>
 
       <button mat-raised-button [ngClass]="{'btn-verde': activo === 'warning'}" (click)="toggleReports_warning()">
         <mat-icon>warning</mat-icon> Riesgo académico
       </button>
 
-      <button mat-raised-button [ngClass]="{'btn-verde': activo === 'academic'}" (click)="toggleReports_academic()">
-        <mat-icon>history</mat-icon> Historial académico
+      <button mat-raised-button  [ngClass]="{'btn-verde': activo === 'month'}" (click)="toggleReports_month()">
+        <mat-icon>calendar_view_day</mat-icon> Reportes Mensuales
       </button>
+
     </div>
 
     <!-- Reportes mensuales -->

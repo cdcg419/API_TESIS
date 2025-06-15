@@ -177,6 +177,8 @@ class HistorialPrediccionResponse(BaseModel):
     conducta: float
     rendimiento: str
     fecha_prediccion: datetime
+    observacion: str
+    estudiante_id: int
 
     class Config:
         orm_mode = True

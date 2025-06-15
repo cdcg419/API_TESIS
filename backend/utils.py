@@ -11,7 +11,7 @@ from passlib.context import CryptContext
 # Configuración de JWT
 SECRET_KEY = "missecretoseguro"  # Cambia esto por una clave segura
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30  # Tiempo de expiración del token
+ACCESS_TOKEN_EXPIRE_MINUTES = 180  # Tiempo de expiración del token
 
 # Configuración de PassLib para el hash de contraseñas
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

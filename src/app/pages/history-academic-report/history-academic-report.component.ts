@@ -5,9 +5,14 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { BaseChartDirective } from 'ng2-charts';
+import { Router } from '@angular/router';
 import { ReportsPrediccionService, HistorialPrediccion } from '../../services/reports-prediccion.service';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-history-academic-report',
@@ -16,7 +21,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
   styleUrl: './history-academic-report.component.css'
 })
 export class HistoryAcademicReportComponent implements OnInit {
-  columnas: string[] = ['Codigo_estudiante', 'curso', 'trimestre', 'asistencia', 'nota', 'conducta', 'rendimiento'/*, 'fecha_prediccion'*/];
+  columnas: string[] = ['Codigo_estudiante', 'curso', 'trimestre', 'asistencia', 'nota', 'conducta', 'rendimiento', 'observacion', 'acciones'/*, 'fecha_prediccion'*/];
   historialCompleto: HistorialPrediccion[] = [];
   historialFiltrado = new MatTableDataSource<HistorialPrediccion>();
 
@@ -37,7 +42,8 @@ export class HistoryAcademicReportComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private reportService: ReportsPrediccionService
+    private reportService: ReportsPrediccionService,
+    private router: Router
   ) {}
 
   lineChartData: ChartConfiguration<'line'>['data'] = {
@@ -85,7 +91,14 @@ export class HistoryAcademicReportComponent implements OnInit {
     }
   };
 
+  verNotas(idEstudiante: number): void {
+    if (!idEstudiante) {
+      console.error('ID de estudiante no definido');
+      return;
+    }
 
+    this.router.navigate(['/notas', idEstudiante]);
+  }
   actualizarGrafico() {
     const datos = this.historialCompleto
       .filter(p => p.Codigo_estudiante === this.codigoFiltro && p.curso === this.cursoFiltro)
@@ -169,6 +182,49 @@ export class HistoryAcademicReportComponent implements OnInit {
     // 🔁 Limpiar gráfico
     this.lineChartData.datasets[0].data = [];
     this.chart?.update();
+  }
+
+  exportarPDF(): void {
+    const doc = new jsPDF('l', 'mm', 'a4');
+
+    // Agrega la tabla
+    autoTable(doc, {
+      head: [[
+        'Código', 'Curso', 'Trimestre', 'Asistencia',
+        'Nota', 'Conducta', 'Rendimiento', 'Observación'
+      ]],
+      body: this.historialFiltrado.data.map(r => [
+        r.Codigo_estudiante, r.curso, r.trimestre,
+        r.asistencia, r.nota, r.conducta,
+        r.rendimiento, r.observacion
+      ]),
+      styles: { fontSize: 8 },
+      headStyles: { fillColor: [76, 175, 80] },
+      startY: 15
+    });
+
+    // Usar posición fija si `previous` no está disponible
+    const graphOffsetY = 90; // ← Ajusta este valor si es necesario
+
+    const canvas = document.querySelector('canvas') as HTMLCanvasElement;
+    if (canvas) {
+      const imgData = canvas.toDataURL('image/png');
+      doc.addImage(imgData, 'PNG', 10, graphOffsetY, 250, 80); // ← ajusta ancho y alto
+    }
+
+    doc.save('historial_academico_horizontal.pdf');
+  }
+
+  exportarExcel() {
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(this.historialFiltrado.filteredData);
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Historial Académico');
+
+    // Guardar el archivo Excel
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    FileSaver.saveAs(blob, 'Historial_Academico.xlsx');
   }
 }
 

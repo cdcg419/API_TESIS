@@ -11,6 +11,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import html2canvas from 'html2canvas';
 
 @Component({
@@ -175,17 +176,28 @@ export class AcademicRiskReportComponent implements OnInit{
   }
 
   exportarPDF(): void {
-    const contenido = document.getElementById('contenido-reporte');
-    if (!contenido) return;
+    const doc = new jsPDF('l', 'mm', 'a4');
 
-    html2canvas(contenido, { scale: 2 }).then(canvas => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-      pdf.addImage(imgData, 'PNG', 0, 10, pdfWidth, pdfHeight);
-      pdf.save(`reporte_completo_${new Date().getTime()}.pdf`);
+    autoTable(doc, {
+      head: [[
+        'Código', 'Grado', 'Curso', 'Trimestre', 'Nota', 'Riesgo', 'Rendimiento'
+      ]],
+      body: this.dataSource.data.map(est => [
+        est.Codigo_estudiante, est.grado, est.curso, est.trimestre,
+        est.nota_trimestre, est.causas_riesgo, est.rendimiento
+      ]),
+      styles: { fontSize: 8 },
+      headStyles: { fillColor: [76, 175, 80] },
+      startY: 15
     });
+
+    // 📊 Agregar el gráfico después de la tabla
+    const canvas = document.querySelector('canvas') as HTMLCanvasElement;
+    if (canvas) {
+      const imgData = canvas.toDataURL('image/png');
+      doc.addImage(imgData, 'PNG', 10, 90, 250, 80); // Ajusta valores si es necesario
+    }
+
+    doc.save('reporte_riesgo_academico.pdf');
   }
 }

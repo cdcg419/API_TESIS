@@ -297,29 +297,30 @@ def obtener_historial_estudiantes(
     current_user: User = Depends(utils.get_current_user)
 ):
     registros = (
-        db.query(Estudiante.Codigo_estudiante, RendimientoAcademico, ResultadoPrediccion)  # Código incluido aquí
+        db.query(Estudiante.id ,Estudiante.Codigo_estudiante, RendimientoAcademico, ResultadoPrediccion)
         .join(RendimientoAcademico, Estudiante.id == RendimientoAcademico.estudiante_id)
         .join(ResultadoPrediccion,
             (RendimientoAcademico.estudiante_id == ResultadoPrediccion.estudiante_id) &
             (RendimientoAcademico.curso == ResultadoPrediccion.curso) &
             (RendimientoAcademico.trimestre == ResultadoPrediccion.trimestre))
-        .filter(Estudiante.docente_id == current_user.id)  # Filtra por docente autenticado
+        .filter(Estudiante.docente_id == current_user.id)
         .order_by(ResultadoPrediccion.fecha_registro.desc())
         .all()
     )
 
-
     resultado = []
-    for Codigo_estudiante, rendimiento, prediccion in registros:  # ← Extraemos código correctamente
+    for estudiante_id, Codigo_estudiante, rendimiento, prediccion in registros:
         resultado.append(HistorialPrediccionResponse(
-            Codigo_estudiante=Codigo_estudiante,  # ← Usamos la variable correcta
+            estudiante_id=estudiante_id,
+            Codigo_estudiante=Codigo_estudiante,
             curso=rendimiento.curso,
             trimestre=rendimiento.trimestre,
             nota=rendimiento.nota_trimestre,
             asistencia=rendimiento.asistencia,
             conducta=rendimiento.conducta,
             rendimiento=prediccion.rendimiento,
-            fecha_prediccion=prediccion.fecha_registro
+            fecha_prediccion=prediccion.fecha_registro,
+            observacion=prediccion.observacion  # ← Se extrae la observación
         ))
 
     return resultado

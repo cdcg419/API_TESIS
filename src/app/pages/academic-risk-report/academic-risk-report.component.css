@@ -132,3 +132,17 @@ mat-paginator {
 .tabla-pequena .mat-row {
   height: 25px; /* 🔹 Reduce la altura de las filas */
 }
+
+.tabla-responsive {
+  overflow-x: auto;
+  width: 100%;
+}
+
+/* Opcional: mejora la visualización del scroll */
+.tabla-responsive::-webkit-scrollbar {
+  height: 6px;
+}
+.tabla-responsive::-webkit-scrollbar-thumb {
+  background-color: #c8e6c9;
+  border-radius: 10px;
+}

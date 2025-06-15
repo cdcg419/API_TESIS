@@ -29,91 +29,115 @@
     <button mat-raised-button class="btn-verde" (click)="limpiarFiltros()">
       <mat-icon>clear</mat-icon> Limpiar filtros
     </button>
+
+          <button mat-raised-button class="btn-verde" (click)="exportarExcel()">
+        <mat-icon>download</mat-icon> Exportar Excel
+      </button>
+
+      <button mat-raised-button class="btn-verde" (click)="exportarPDF()">
+        <mat-icon>picture_as_pdf</mat-icon> Exportar PDF
+      </button>
+
   </div>
+<div id="contenido-reporte">
+  <mat-card class="mat-elevation-z8 mt-3">
+    <mat-card-header>
+      <mat-card-title>Historial Académico del Estudiante</mat-card-title>
+    </mat-card-header>
 
-<mat-card class="mat-elevation-z8 mt-3">
-  <mat-card-header>
-    <mat-card-title>Historial Académico del Estudiante</mat-card-title>
-  </mat-card-header>
+    <mat-card-content>
+      <div style="padding: 16px;" class="tabla-responsive">
+        <table mat-table [dataSource]="historialFiltrado" matSort class="mat-elevation-z8">
+          <!-- Código del Estudiante -->
+          <ng-container matColumnDef="Codigo_estudiante">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
+            <td mat-cell *matCellDef="let row">{{ row.Codigo_estudiante }}</td>
+          </ng-container>
 
-  <mat-card-content>
-    <div style="padding: 16px;">
-      <table mat-table [dataSource]="historialFiltrado" matSort class="mat-elevation-z8">
-        <!-- Código del Estudiante -->
-        <ng-container matColumnDef="Codigo_estudiante">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
-          <td mat-cell *matCellDef="let row">{{ row.Codigo_estudiante }}</td>
-        </ng-container>
+          <!-- Curso -->
+          <ng-container matColumnDef="curso">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Curso</th>
+            <td mat-cell *matCellDef="let row">{{ row.curso }}</td>
+          </ng-container>
 
-        <!-- Curso -->
-        <ng-container matColumnDef="curso">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Curso</th>
-          <td mat-cell *matCellDef="let row">{{ row.curso }}</td>
-        </ng-container>
+          <!-- Trimestre -->
+          <ng-container matColumnDef="trimestre">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Trimestre</th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.trimestre === 1 ? 'Primer trimestre' : row.trimestre === 2 ? 'Segundo trimestre' : 'Tercer trimestre' }}
+            </td>
+          </ng-container>
 
-        <!-- Trimestre -->
-        <ng-container matColumnDef="trimestre">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Trimestre</th>
-          <td mat-cell *matCellDef="let row">
-            {{ row.trimestre === 1 ? 'Primer trimestre' : row.trimestre === 2 ? 'Segundo trimestre' : 'Tercer trimestre' }}
-          </td>
-        </ng-container>
+          <!-- Asistencia -->
+          <ng-container matColumnDef="asistencia">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Asistencia</th>
+            <td mat-cell *matCellDef="let row">{{ row.asistencia }}%</td>
+          </ng-container>
 
-        <!-- Asistencia -->
-        <ng-container matColumnDef="asistencia">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Asistencia</th>
-          <td mat-cell *matCellDef="let row">{{ row.asistencia }}%</td>
-        </ng-container>
+          <!-- Nota -->
+          <ng-container matColumnDef="nota">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nota</th>
+            <td mat-cell *matCellDef="let row">{{ row.nota }}</td>
+          </ng-container>
 
-        <!-- Nota -->
-        <ng-container matColumnDef="nota">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nota</th>
-          <td mat-cell *matCellDef="let row">{{ row.nota }}</td>
-        </ng-container>
+          <!-- Conducta -->
+          <ng-container matColumnDef="conducta">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Conducta</th>
+            <td mat-cell *matCellDef="let row">{{ row.conducta }}</td>
+          </ng-container>
 
-        <!-- Conducta -->
-        <ng-container matColumnDef="conducta">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Conducta</th>
-          <td mat-cell *matCellDef="let row">{{ row.conducta }}</td>
-        </ng-container>
+          <!-- Rendimiento -->
+          <ng-container matColumnDef="rendimiento">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Rendimiento</th>
+            <td mat-cell *matCellDef="let row">{{ row.rendimiento }}</td>
+          </ng-container>
 
-        <!-- Rendimiento -->
-        <ng-container matColumnDef="rendimiento">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Rendimiento</th>
-          <td mat-cell *matCellDef="let row">{{ row.rendimiento }}</td>
-        </ng-container>
+          <!-- Observación -->
+          <ng-container matColumnDef="observacion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Observación</th>
+            <td mat-cell *matCellDef="let row">{{ row.observacion }}</td>
+          </ng-container>
 
-        <!-- Encabezados y filas -->
-        <tr mat-header-row *matHeaderRowDef="columnas"></tr>
-        <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
-      </table>
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button color="primary" (click)="verNotas(row.estudiante_id)">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </td>
+          </ng-container>
 
-      <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+          <!-- Encabezados y filas -->
+          <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+          <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+        </table>
 
-      <div *ngIf="historialFiltrado.data.length === 0" class="mt-4 text-muted">
-        No hay registros para el trimestre seleccionado.
+        <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+
+        <div *ngIf="historialFiltrado.data.length === 0" class="mt-4 text-muted">
+          No hay registros para el trimestre seleccionado.
+        </div>
       </div>
-    </div>
-  </mat-card-content>
-</mat-card>
+    </mat-card-content>
+  </mat-card>
+</div>
 
+  <mat-card class="mat-elevation-z8 mt-3">
+    <mat-card-header>
+      <mat-card-title>Linea de Tiempo del estudiante</mat-card-title>
+    </mat-card-header>
 
-<mat-card class="mat-elevation-z8 mt-3">
-  <mat-card-header>
-    <mat-card-title>Linea de Tiempo del estudiante</mat-card-title>
-  </mat-card-header>
-
-  <mat-card-content>
-    <div style="display: flex; justify-content: center; align-items: center; padding: 16px; width: 600px; height: 500px; margin: auto;">
-      <canvas baseChart
-              [data]="lineChartData"
-              [type]="'line'"
-              [options]="lineChartOptions"
-              #chart>
-      </canvas>
-    </div>
-  </mat-card-content>
-</mat-card>
+    <mat-card-content>
+      <div style="display: flex; justify-content: center; align-items: center; padding: 16px; width: 600px; height: 500px; margin: auto;">
+        <canvas baseChart
+                [data]="lineChartData"
+                [type]="'line'"
+                [options]="lineChartOptions"
+                #chart>
+        </canvas>
+      </div>
+    </mat-card-content>
+  </mat-card>
 
 
 
