@@ -13,6 +13,7 @@ export interface ReportePrediccion {
   factores_riesgo: string;
   observacion: string;
   fecha_registro?: string;
+  mensaje_umbral: string;
 }
 
 export interface EstudianteEnRiesgo {
@@ -23,6 +24,7 @@ export interface EstudianteEnRiesgo {
   nota_trimestre: number;
   causas_riesgo: string;
   rendimiento: string;
+  mensaje_umbral: string;
 }
 
 export interface PorcentajeRiesgoCurso {
@@ -48,6 +50,7 @@ export interface HistorialPrediccion {
   rendimiento: string;
   fecha_prediccion: string;
   observacion: string;
+  mensaje_umbral: string;
   estudiante_id: number;
 }
 

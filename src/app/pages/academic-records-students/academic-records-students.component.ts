@@ -5,6 +5,9 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { RendimientoDetalleComponent } from '../rendimiento-detalle/rendimiento-detalle.component';
 
+interface RendimientoEditable extends RendimientoAcademico {
+  editando: boolean;
+}
 
 @Component({
   selector: 'app-academic-records-students',
@@ -16,9 +19,11 @@ export class AcademicRecordsStudentsComponent implements OnInit{
   displayedColumns: string[] = [
     'curso', 'trimestre', 'asistencia', 'nota_trimestre', 'conducta','acciones', 'rendimiento', 'resultados_prediccion'
   ];
-  notas: RendimientoAcademico[] = [];
+  notas: RendimientoEditable[] = [];
   estudianteId!: number;
   cargandoDatos: boolean = false;
+  cursoFiltrado: string = '';
+  notasFiltradas: RendimientoEditable[] = [];
   mensajeCarga: string = "Preparando datos...";
   pasosCarga: string[] = [
     "Recopilando asistencia...",
@@ -33,10 +38,21 @@ export class AcademicRecordsStudentsComponent implements OnInit{
   ngOnInit(): void {
     this.estudianteId = Number(this.route.snapshot.paramMap.get('id'));
     this.notesService.obtenerNotasPorEstudiante(this.estudianteId).subscribe({
-      next: (res) => {
-      this.notas = res;
-    },});
+    next: (res) => {
+        this.notas = res.map(n => ({ ...n, editando: false }));
+        this.filtrarNotasPorCurso(); // Aplica el filtro inicial
+      }
+    });
+
+
   }
+
+  filtrarNotasPorCurso(): void {
+    this.notasFiltradas = this.cursoFiltrado
+      ? this.notas.filter(n => n.curso === this.cursoFiltrado)
+      : this.notas;
+  }
+
 
   iniciarPrediccion(): void {
   this.cargandoDatos = true;
@@ -126,6 +142,11 @@ confirmarEdicion(nota: RendimientoAcademico): void {
     if (rendimiento === "Alto") return '#4CAF50';  // Verde
     else if (rendimiento === "Medio") return '#FFC107';  // Amarillo
     else return '#F44336';  // Rojo
+  }
+
+  activarEdicion(nota: RendimientoEditable): void {
+    this.notas.forEach(n => n.editando = false);
+    nota.editando = true;
   }
 
   cursos: string[] = [

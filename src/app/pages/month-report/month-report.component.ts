@@ -16,7 +16,17 @@ import autoTable from 'jspdf-autotable';
   styleUrl: './month-report.component.css'
 })
 export class MonthReportComponent implements OnInit{
-displayedColumns: string[] = ['codigo_estudiante', 'curso', 'trimestre', 'asistencia', 'nota_trimestre', 'conducta', 'rendimiento', 'observacion'];
+  displayedColumns: string[] = [
+    'codigo_estudiante',
+    'curso',
+    'trimestre',
+    'asistencia',
+    'nota_trimestre',
+    'conducta',
+    'rendimiento',
+    'observacion',
+    'mensaje_umbral' // 🔹 Nueva columna
+  ];
   dataSource = new MatTableDataSource<ReportePrediccion>();
   reportes: ReportePrediccion[] = [];
   cursos: string[] = [];
@@ -120,7 +130,8 @@ displayedColumns: string[] = ['codigo_estudiante', 'curso', 'trimestre', 'asiste
       'Nota Trimestre': r.nota_trimestre,
       'Conducta': r.conducta,
       'Rendimiento': r.rendimiento,
-      'Observación': r.observacion
+      'Observación': r.observacion,
+      'Proyecciones y/o Resultados': r.mensaje_umbral
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(data);
@@ -132,12 +143,12 @@ displayedColumns: string[] = ['codigo_estudiante', 'curso', 'trimestre', 'asiste
   }
 
   exportarPDF(): void {
-    const doc = new jsPDF();
+    const doc = new jsPDF('l', 'mm', 'a4');
 
     autoTable(doc, {
       head: [[
         'Código', 'Curso', 'Trimestre', 'Asistencia',
-        'Nota', 'Conducta', 'Rendimiento', 'Observación'
+        'Nota', 'Conducta', 'Rendimiento', 'Observación', 'Proyecciones y/o Resultados'
       ]],
       body: this.dataSource.filteredData.map(r => [
         r.codigo_estudiante, r.curso, r.trimestre,

@@ -21,7 +21,7 @@ import html2canvas from 'html2canvas';
   styleUrl: './history-academic-report.component.css'
 })
 export class HistoryAcademicReportComponent implements OnInit {
-  columnas: string[] = ['Codigo_estudiante', 'curso', 'trimestre', 'asistencia', 'nota', 'conducta', 'rendimiento', 'observacion', 'acciones'/*, 'fecha_prediccion'*/];
+  columnas: string[] = ['Codigo_estudiante', 'curso', 'trimestre', 'asistencia', 'nota', 'conducta', 'rendimiento', 'observacion', 'mensaje_umbral', 'acciones'/*, 'fecha_prediccion'*/];
   historialCompleto: HistorialPrediccion[] = [];
   historialFiltrado = new MatTableDataSource<HistorialPrediccion>();
 
@@ -191,7 +191,7 @@ export class HistoryAcademicReportComponent implements OnInit {
     autoTable(doc, {
       head: [[
         'Código', 'Curso', 'Trimestre', 'Asistencia',
-        'Nota', 'Conducta', 'Rendimiento', 'Observación'
+        'Nota', 'Conducta', 'Rendimiento', 'Observación', 'Proyeccion y/o Resultados'
       ]],
       body: this.historialFiltrado.data.map(r => [
         r.Codigo_estudiante, r.curso, r.trimestre,

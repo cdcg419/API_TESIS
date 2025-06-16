@@ -258,6 +258,7 @@ def obtener_reportes_academicos_por_docente(db: Session, user_id: int, mes: int 
             ResultadoPrediccion.rendimiento,
             ResultadoPrediccion.factores_riesgo,
             ResultadoPrediccion.observacion,
+            ResultadoPrediccion.mensaje_umbral,
             RendimientoAcademico.fecha_registro.label("fecha_registro") 
         )
         .join(User, Estudiante.docente_id == User.id)

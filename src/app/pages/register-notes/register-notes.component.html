@@ -113,6 +113,15 @@
     </div>
   </div>
 
+  <!-- ALERTA DINÁMICA CORREGIDA -->
+      <div *ngIf="alertMessage"
+          class="alert alert-dismissible fade show"
+          role="alert"
+          [ngClass]="'alert-' + alertType">
+        {{ alertMessage }}
+        <button type="button" class="btn-close" aria-label="Close" (click)="alertMessage = ''"></button>
+      </div>
+
   <!-- Botones -->
   <div class="form-buttons">
     <button type="submit" class="btn btn-primary" [disabled]="notesForm.invalid">

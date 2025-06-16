@@ -22,6 +22,17 @@
           <mat-icon>insights</mat-icon>
           <span class="icon-text">Predecir rendimiento</span>
         </button>
+        <!-- Filtro por curso (sin Angular Material) -->
+        <div class="filtros-container">
+          <div class="filtro">
+            <label for="filtroCurso">Filtrar por curso:</label>
+            <select id="filtroCurso" [(ngModel)]="cursoFiltrado" (change)="filtrarNotasPorCurso()">
+              <option value="">Todos</option>
+              <option *ngFor="let curso of cursos" [value]="curso">{{ curso }}</option>
+            </select>
+          </div>
+        </div>
+
       </mat-card-title>
 
       <div *ngIf="cargandoDatos" class="full-screen-loader">
@@ -33,35 +44,44 @@
 
       <mat-card-content>
         <div class="tabla-responsive">
-          <table mat-table [dataSource]="notas" class="mat-elevation-z8">
+          <table mat-table [dataSource]="notasFiltradas" class="mat-elevation-z8">
 
             <!-- Curso -->
             <ng-container matColumnDef="curso">
               <th mat-header-cell *matHeaderCellDef>Curso</th>
               <td mat-cell *matCellDef="let nota">
-                <select [(ngModel)]="nota.curso" #curso="ngModel" required>
-                  <option value="" disabled selected>Seleccione curso</option>
-                  <option *ngFor="let c of cursos" [value]="c">{{ c }}</option>
-                </select>
-                <div *ngIf="curso.invalid && curso.touched" class="text-danger">
-                  El curso es requerido.
-                </div>
+                <ng-container *ngIf="nota.editando; else cursoTexto">
+                  <select [(ngModel)]="nota.curso" #curso="ngModel" required>
+                    <option value="" disabled selected>Seleccione curso</option>
+                    <option *ngFor="let c of cursos" [value]="c">{{ c }}</option>
+                  </select>
+                  <div *ngIf="curso.invalid && curso.touched" class="text-danger">
+                    El curso es requerido.
+                  </div>
+                </ng-container>
+                <ng-template #cursoTexto>{{ nota.curso }}</ng-template>
               </td>
             </ng-container>
+
 
             <!-- Trimestre -->
             <ng-container matColumnDef="trimestre">
               <th mat-header-cell *matHeaderCellDef>Trimestre</th>
               <td mat-cell *matCellDef="let nota">
-                <select [(ngModel)]="nota.trimestre" #trimestre="ngModel" required>
-                  <option value="" disabled selected>Seleccione trimestre</option>
-                  <option [value]="1">Primer Trimestre</option>
-                  <option [value]="2">Segundo Trimestre</option>
-                  <option [value]="3">Tercer Trimestre</option>
-                </select>
-                <div *ngIf="trimestre.invalid && trimestre.touched" class="text-danger">
-                  El trimestre es requerido.
-                </div>
+                <ng-container *ngIf="nota.editando; else trimestreTexto">
+                  <select [(ngModel)]="nota.trimestre" #trimestre="ngModel" required>
+                    <option value="" disabled selected>Seleccione trimestre</option>
+                    <option [value]="1">Primer Trimestre</option>
+                    <option [value]="2">Segundo Trimestre</option>
+                    <option [value]="3">Tercer Trimestre</option>
+                  </select>
+                  <div *ngIf="trimestre.invalid && trimestre.touched" class="text-danger">
+                    El trimestre es requerido.
+                  </div>
+                </ng-container>
+                <ng-template #trimestreTexto>
+                  {{ nota.trimestre === 1 ? 'Primer Trimestre' : nota.trimestre === 2 ? 'Segundo Trimestre' : 'Tercer Trimestre' }}
+                </ng-template>
               </td>
             </ng-container>
 
@@ -69,21 +89,28 @@
             <ng-container matColumnDef="asistencia">
               <th mat-header-cell *matHeaderCellDef>Asistencia (%)</th>
               <td mat-cell *matCellDef="let nota">
-                <input type="number" [(ngModel)]="nota.asistencia" required min="1" max="100" #asistencia="ngModel" class="small-input">
-                <div *ngIf="asistencia.invalid && asistencia.touched" class="text-danger">
-                  La asistencia debe estar entre 1 y 100.
-                </div>
+                <ng-container *ngIf="nota.editando; else asistenciaTexto">
+                  <input type="number" [(ngModel)]="nota.asistencia" required min="1" max="100" #asistencia="ngModel" class="small-input">
+                  <div *ngIf="asistencia.invalid && asistencia.touched" class="text-danger">
+                    La asistencia debe estar entre 1 y 100.
+                  </div>
+                </ng-container>
+                <ng-template #asistenciaTexto>{{ nota.asistencia }}%</ng-template>
               </td>
             </ng-container>
+
 
             <!-- Nota -->
             <ng-container matColumnDef="nota_trimestre">
               <th mat-header-cell *matHeaderCellDef>Nota</th>
               <td mat-cell *matCellDef="let nota">
-                <input type="number" [(ngModel)]="nota.nota_trimestre" required min="1" max="20" class="small-input" #notaTrimestre="ngModel">
-                <div *ngIf="notaTrimestre.invalid && notaTrimestre.touched" class="text-danger">
-                  La nota debe estar entre 1 y 20.
-                </div>
+                <ng-container *ngIf="nota.editando; else notaTexto">
+                  <input type="number" [(ngModel)]="nota.nota_trimestre" required min="1" max="20" #notaTrimestre="ngModel" class="small-input">
+                  <div *ngIf="notaTrimestre.invalid && notaTrimestre.touched" class="text-danger">
+                    La nota debe estar entre 1 y 20.
+                  </div>
+                </ng-container>
+                <ng-template #notaTexto>{{ nota.nota_trimestre }}</ng-template>
               </td>
             </ng-container>
 
@@ -91,12 +118,16 @@
             <ng-container matColumnDef="conducta">
               <th mat-header-cell *matHeaderCellDef>Conducta</th>
               <td mat-cell *matCellDef="let nota">
-                <input type="number" [(ngModel)]="nota.conducta" required min="1" max="20" #conducta="ngModel" class="small-input">
-                <div *ngIf="conducta.invalid && conducta.touched" class="text-danger">
-                  La conducta debe estar entre 1 y 20.
-                </div>
+                <ng-container *ngIf="nota.editando; else conductaTexto">
+                  <input type="number" [(ngModel)]="nota.conducta" required min="1" max="20" #conducta="ngModel" class="small-input">
+                  <div *ngIf="conducta.invalid && conducta.touched" class="text-danger">
+                    La conducta debe estar entre 1 y 20.
+                  </div>
+                </ng-container>
+                <ng-template #conductaTexto>{{ nota.conducta }}</ng-template>
               </td>
             </ng-container>
+
 
             <!-- Rendimiento -->
             <ng-container matColumnDef="rendimiento">
@@ -126,9 +157,22 @@
             <ng-container matColumnDef="acciones">
               <th mat-header-cell *matHeaderCellDef>Acciones</th>
               <td mat-cell *matCellDef="let nota">
-                <button *ngIf="!cargandoDatos" mat-icon-button color="primary" (click)="confirmarEdicion(nota)">
-                  <mat-icon>save</mat-icon>
+                <!-- Mostrar lápiz si no está en edición -->
+                <button *ngIf="!nota.editando && !cargandoDatos" mat-icon-button color="accent" (click)="activarEdicion(nota)">
+                  <mat-icon>edit</mat-icon>
                 </button>
+
+                <!-- Mostrar guardar y cancelar si está en edición -->
+                <ng-container *ngIf="nota.editando && !cargandoDatos">
+                  <button mat-icon-button color="primary" (click)="confirmarEdicion(nota)">
+                    <mat-icon>save</mat-icon>
+                  </button>
+                  <button mat-icon-button color="warn" (click)="nota.editando = false">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </ng-container>
+
+                <!-- Siempre mostrar eliminar -->
                 <button *ngIf="!cargandoDatos" mat-icon-button color="warn" (click)="eliminarNota(nota.id)">
                   <mat-icon>delete</mat-icon>
                 </button>

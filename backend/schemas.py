@@ -158,6 +158,7 @@ class ReporteAcademico(BaseModel):
     rendimiento: Optional[str]
     factores_riesgo: Optional[str]
     observacion: Optional[str]
+    mensaje_umbral: Optional[str]
     fecha_registro: Optional[datetime] 
 
     class Config:
@@ -171,6 +172,8 @@ class EstudianteRiesgoOut(BaseModel):
     nota_trimestre: float
     causas_riesgo: List[str]
     rendimiento: Optional[str]
+    mensaje_umbral: Optional[str]
+
     
 class HistorialPrediccionResponse(BaseModel):
     Codigo_estudiante: str
@@ -182,6 +185,7 @@ class HistorialPrediccionResponse(BaseModel):
     rendimiento: str
     fecha_prediccion: datetime
     observacion: str
+    mensaje_umbral: Optional[str] 
     estudiante_id: int
 
     class Config:

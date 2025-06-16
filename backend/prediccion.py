@@ -272,7 +272,8 @@ def obtener_estudiantes_en_riesgo(
             "trimestre": resultado.trimestre,
             "nota_trimestre": nota_trimestre,  # 🔹 Se obtiene correctamente la nota
             "causas_riesgo": [x.strip() for x in resultado.factores_riesgo.split(',') if x.strip()],
-            "rendimiento": resultado.rendimiento
+            "rendimiento": resultado.rendimiento,
+            "mensaje_umbral": resultado.mensaje_umbral
         })
 
     return estudiantes_riesgo
@@ -391,11 +392,13 @@ def obtener_historial_estudiantes(
             conducta=rendimiento.conducta,
             rendimiento=prediccion.rendimiento,
             fecha_prediccion=prediccion.fecha_registro,
-            observacion=prediccion.observacion  # ← Se extrae la observación
+            observacion=prediccion.observacion,  # ← Se extrae la observación
+            mensaje_umbral=prediccion.mensaje_umbral
         ))
 
     return resultado
-    
+
+##Extendidas de prueba
 @router.get("/proyeccion_anual_extended")
 def proyeccion_rendimiento_final_extended(estudiante_id: int, curso: str, db: Session = Depends(get_db)):
     # Obtener registros de rendimiento académico
