@@ -38,13 +38,16 @@ export class AcademicRecordsStudentsComponent implements OnInit{
   ngOnInit(): void {
     this.estudianteId = Number(this.route.snapshot.paramMap.get('id'));
     this.notesService.obtenerNotasPorEstudiante(this.estudianteId).subscribe({
-    next: (res) => {
+      next: (res) => {
         this.notas = res.map(n => ({ ...n, editando: false }));
         this.filtrarNotasPorCurso(); // Aplica el filtro inicial
+
+        // Si hay notas, inicia la predicción
+        if (this.notas.length > 0) {
+          this.iniciarPrediccion();
+        }
       }
     });
-
-
   }
 
   filtrarNotasPorCurso(): void {
@@ -52,8 +55,13 @@ export class AcademicRecordsStudentsComponent implements OnInit{
       ? this.notas.filter(n => n.curso === this.cursoFiltrado)
       : this.notas;
   }
-
-
+  validarPrediccion(): void {
+    if (this.notas.length === 0) {
+      alert('Debe registrar notas antes de predecir rendimiento.');
+      return;
+    }
+    this.iniciarPrediccion();
+  }
   iniciarPrediccion(): void {
   this.cargandoDatos = true;
   let index = 0;
