@@ -28,7 +28,93 @@
     <app-sidenav></app-sidenav>
   </mat-sidenav>
   <mat-sidenav-content>
-    <!-- lo que va en el otro lateral -->
+    <div class="dashboard-grid">
+      <!-- Indicadores superiores -->
+      <div class="dashboard-container">
+        <!-- Bloque de cursos y estudiantes en columna -->
+        <div class="dashboard-col">
+          <mat-card class="indicador-card">
+            <div class="indicador-contenido">
+              <mat-icon class="indicador-icon" color="primary">school</mat-icon>
+              <div>
+                <p class="indicador-label">Total de Cursos</p>
+                <h2>{{ totalCursos }}</h2>
+              </div>
+            </div>
+          </mat-card>
+
+          <mat-card class="indicador-card">
+            <div class="indicador-contenido">
+              <mat-icon class="indicador-icon" color="accent">groups</mat-icon>
+              <div>
+                <p class="indicador-label">Total de Estudiantes</p>
+                <h2>{{ totalEstudiantes }}</h2>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+
+        <!-- Tabla compacta al lado -->
+        <mat-card class="tabla-card small-table">
+          <h4>Estudiantes con Bajo Rendimiento</h4>
+          <label for="trimestreEstudiantes">Seleccionar Trimestre:</label>
+          <select id="trimestreEstudiantes" [(ngModel)]="trimestreEstudiantes" (change)="cargarEstudiantesBajoRendimiento()">
+            <option *ngFor="let t of trimestres" [value]="t.valor">{{ t.nombre }}</option>
+          </select>
+          <table mat-table [dataSource]="estudiantesBajoRendimiento" class="mat-elevation-z8">
+            <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef> Nombre </th>
+              <td mat-cell *matCellDef="let estudiante"> {{ estudiante.nombre }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="grado">
+              <th mat-header-cell *matHeaderCellDef> Grado </th>
+              <td mat-cell *matCellDef="let estudiante"> {{ estudiante.grado }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="curso">
+              <th mat-header-cell *matHeaderCellDef> Curso </th>
+              <td mat-cell *matCellDef="let estudiante"> {{ estudiante.curso }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="trimestre">
+              <th mat-header-cell *matHeaderCellDef> Trimestre </th>
+              <td mat-cell *matCellDef="let estudiante"> {{ estudiante.trimestre }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nivel_intervencion">
+              <th mat-header-cell *matHeaderCellDef> Intervención </th>
+              <td mat-cell *matCellDef="let estudiante"> {{ estudiante.nivel_intervencion }} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="['nombre', 'grado', 'curso', 'trimestre', 'nivel_intervencion']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['nombre', 'grado', 'curso', 'trimestre', 'nivel_intervencion'];"></tr>
+          </table>
+        </mat-card>
+      </div>
+      <h1></h1>
+      <!-- Gráficos compactos -->
+      <div class="dashboard-graficos">
+        <mat-card class="grafico-card small-card">
+          <p class="grafico-label">Distribución por Género</p>
+          <canvas id="generoChart" height="120" width="120"></canvas>
+        </mat-card>
+
+        <mat-card class="grafico-card small-card">
+          <p class="grafico-label">Estudiantes que trabajan por grado</p>
+          <canvas id="trabajoChart" height="120"></canvas>
+        </mat-card>
+      </div>
+      <h1></h1>
+        <mat-card id="grafico-rendimiento" class="grafico-card small-card">
+          <h4>Rendimiento Académico Bajo por Curso</h4>
+          <label for="trimestreRendimiento">Seleccionar Trimestre:</label>
+          <select id="trimestreRendimiento" [(ngModel)]="trimestreRendimiento" (change)="cargarGraficoRendimiento()">
+            <option *ngFor="let t of trimestres" [value]="t.valor">{{ t.nombre }}</option>
+          </select>
+          <canvas id="rendimientoChart" height="120"></canvas>
+        </mat-card>
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
 

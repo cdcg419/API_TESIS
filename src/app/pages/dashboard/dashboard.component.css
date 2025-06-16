@@ -165,3 +165,86 @@ mat-toolbar button {
   margin-bottom: 12px;
 }
 
+/*Nuevo*/
+.dashboard-container {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+}
+
+.dashboard-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Espaciado ligero entre Cursos y Estudiantes */
+  align-items: center;
+}
+
+.indicador-card {
+  width: 100%;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+}
+
+.indicador-contenido {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/*Nuevo Graficos*/
+.dashboard-graficos {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.small-card {
+  width: 45%; /* Ambos ocupan casi la mitad del espacio */
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.grafico-label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+#grafico-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#generoChart {
+  max-width: 280px; /* Ajusta el tamaño del círculo */
+  max-height: 280px;
+}
+
+#grafico-rendimiento {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80%; /* Solo este gráfico será más ancho */
+  padding: 16px;
+  margin: auto; /* Lo centra */
+}
+
+#grafico-rendimiento h4 {
+  text-align: center;
+}
+
+#grafico-rendimiento select {
+  margin-bottom: 12px;
+}
+
+#rendimientoChart {
+  max-width: 100%; /* Hace el gráfico más largo */
+  max-height: 160px;
+}
