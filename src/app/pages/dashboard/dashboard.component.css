@@ -140,14 +140,6 @@ mat-toolbar button {
   background-color: #f9f9f9;
 }
 
-/* Footer */
-.footer {
-  text-align: center;
-  margin: 10px 0;
-  color: #888;
-  font-size: 13px;
-}
-
 .notificaciones-menu {
   position: absolute;
   top: 64px; /* justo debajo del toolbar */
@@ -246,5 +238,5 @@ mat-toolbar button {
 
 #rendimientoChart {
   max-width: 100%; /* Hace el gráfico más largo */
-  max-height: 160px;
+  max-height: 200px;
 }

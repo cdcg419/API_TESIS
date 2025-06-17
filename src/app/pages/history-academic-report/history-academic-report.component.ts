@@ -21,7 +21,7 @@ import html2canvas from 'html2canvas';
   styleUrl: './history-academic-report.component.css'
 })
 export class HistoryAcademicReportComponent implements OnInit {
-  columnas: string[] = ['Codigo_estudiante', 'curso', 'trimestre', 'asistencia', 'nota', 'conducta', 'rendimiento', 'observacion', 'mensaje_umbral', 'acciones'/*, 'fecha_prediccion'*/];
+  columnas: string[] = ['Codigo_estudiante', 'grado', 'curso', 'trimestre', 'asistencia', 'nota', 'conducta', 'rendimiento', 'observacion', 'mensaje_umbral', 'acciones'/*, 'fecha_prediccion'*/];
   historialCompleto: HistorialPrediccion[] = [];
   historialFiltrado = new MatTableDataSource<HistorialPrediccion>();
 
@@ -35,6 +35,15 @@ export class HistoryAcademicReportComponent implements OnInit {
   cursosDisponibles: string[] = [];
 
   trimestres: number[] = [1, 2, 3];
+  gradoSeleccionado: number | '' = '';
+  grados = [
+    { valor: 1, nombre: 'Primer Grado' },
+    { valor: 2, nombre: 'Segundo Grado' },
+    { valor: 3, nombre: 'Tercer Grado' },
+    { valor: 4, nombre: 'Cuarto Grado' },
+    { valor: 5, nombre: 'Quinto Grado' },
+    { valor: 6, nombre: 'Sexto Grado' },
+  ];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -161,6 +170,9 @@ export class HistoryAcademicReportComponent implements OnInit {
     if (this.cursoFiltro !== '') {
       filtrado = filtrado.filter(p => p.curso === this.cursoFiltro);
     }
+    if (this.gradoSeleccionado !== '') {
+      filtrado = filtrado.filter(p => p.grado === Number(this.gradoSeleccionado));
+    }
 
     this.historialFiltrado = new MatTableDataSource(filtrado);
     this.historialFiltrado.paginator = this.paginator;
@@ -177,6 +189,7 @@ export class HistoryAcademicReportComponent implements OnInit {
     this.trimestreSeleccionado = '';
     this.codigoFiltro = '';
     this.cursoFiltro = '';
+    this.gradoSeleccionado = '';
     this.filtrarHistorial();
 
     // 🔁 Limpiar gráfico
@@ -190,7 +203,7 @@ export class HistoryAcademicReportComponent implements OnInit {
     // Agrega la tabla
     autoTable(doc, {
       head: [[
-        'Código', 'Curso', 'Trimestre', 'Asistencia',
+        'Código','Grado', 'Curso', 'Trimestre', 'Asistencia',
         'Nota', 'Conducta', 'Rendimiento', 'Observación', 'Proyeccion y/o Resultados'
       ]],
       body: this.historialFiltrado.data.map(r => [

@@ -31,6 +31,15 @@ export class AcademicRiskReportComponent implements OnInit{
   cursoSeleccionado: string = '';
   trimestreSeleccionado: number = 1;
   rendimientoSeleccionado: string = '';
+  gradoSeleccionado: number | '' = '';
+  grados = [
+    { valor: 1, nombre: 'Primer Grado' },
+    { valor: 2, nombre: 'Segundo Grado' },
+    { valor: 3, nombre: 'Tercer Grado' },
+    { valor: 4, nombre: 'Cuarto Grado' },
+    { valor: 5, nombre: 'Quinto Grado' },
+    { valor: 6, nombre: 'Sexto Grado' }
+  ];
 
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -91,6 +100,9 @@ export class AcademicRiskReportComponent implements OnInit{
       if (this.rendimientoSeleccionado) {
         data = data.filter(e => e.rendimiento === this.rendimientoSeleccionado);
       }
+      if (this.gradoSeleccionado !== '') {
+        data = data.filter(e => e.grado === +this.gradoSeleccionado);
+      }
 
       this.estudiantesEnRiesgo = data;
       this.dataSource = new MatTableDataSource<EstudianteEnRiesgo>(data);
@@ -103,13 +115,13 @@ export class AcademicRiskReportComponent implements OnInit{
   obtenerPorcentajeRiesgo(): void {
     this.reportService.obtenerPorcentajeRiesgoPorCurso(
       this.cursoSeleccionado,
-      this.trimestreSeleccionado === null ? undefined : this.trimestreSeleccionado
+      this.trimestreSeleccionado === null ? undefined : this.trimestreSeleccionado,
+      this.gradoSeleccionado === '' ? undefined : +this.gradoSeleccionado // 👈 Aquí enviamos el grado
     ).subscribe((datos: PorcentajeRiesgoCurso[]) => {
       this.barChartLabels = datos.map(d => d.curso);
       this.barChartData.datasets[0].data = datos.map(d => d.porcentaje_riesgo);
       this.barChartData.labels = this.barChartLabels;
 
-      // 🔁 Forzar actualización del gráfico
       this.chart?.update();
     });
   }
@@ -162,6 +174,7 @@ export class AcademicRiskReportComponent implements OnInit{
     this.cursoSeleccionado = '';
     this.trimestreSeleccionado = 1;
     this.rendimientoSeleccionado = '';
+    this.gradoSeleccionado = '';
     this.obtenerEstudiantes();
     this.obtenerPorcentajeRiesgo();
     this.obtenerPromedioPorCurso();

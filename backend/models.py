@@ -28,6 +28,17 @@ class Estudiante(Base):
 
     docente_id = Column(Integer, ForeignKey("users.id"))  
     docente = relationship("User", back_populates="estudiantes")  
+    registros_academicos = relationship(
+        "RendimientoAcademico",
+        back_populates="estudiante",
+        cascade="all, delete-orphan"
+    )
+
+    resultados_prediccion = relationship(
+        "ResultadoPrediccion",
+        back_populates="estudiante",
+        cascade="all, delete-orphan"
+    )
 
 ## recien agregado
 
@@ -42,7 +53,7 @@ class RendimientoAcademico(Base):
     conducta = Column(Float, nullable=False)
 
     estudiante_id = Column(Integer, ForeignKey("estudiantes.id"))
-    estudiante = relationship("Estudiante", backref="registros_academicos")
+    estudiante = relationship("Estudiante", back_populates="registros_academicos")
     
     ##
     fecha_registro = Column(DateTime, default=datetime.utcnow)
@@ -63,7 +74,7 @@ class ResultadoPrediccion(Base):
     
     user_id = Column(Integer, ForeignKey("users.id"))
 
-    estudiante = relationship("Estudiante", backref="resultados_prediccion")
+    estudiante = relationship("Estudiante", back_populates="resultados_prediccion")
     docente = relationship("User")
     
     ##

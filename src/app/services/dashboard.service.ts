@@ -47,8 +47,10 @@ export class DashboardService {
   obtenerEstudiantesTrabajan(): Observable<EstudiantesTrabajan[]> {
     return this.http.get<EstudiantesTrabajan[]>(`${this.apiUrl}/estudiantes_trabajan`);
   }
-  obtenerRendimientoBajo(trimestre: number): Observable<RendimientoBajo[]> {
-    return this.http.get<RendimientoBajo[]>(`${this.apiUrl}/rendimiento_bajo?trimestre=${trimestre}`);
+  obtenerRendimientoBajo(trimestre: number, grado: number): Observable<RendimientoBajo[]> {
+    return this.http.get<RendimientoBajo[]>(
+      `${this.apiUrl}/rendimiento_bajo?trimestre=${trimestre}&grado=${grado}`
+    );
   }
   obtenerEstudiantesBajoRendimiento(trimestre: number): Observable<EstudianteBajoRendimiento[]> {
   return this.http.get<EstudianteBajoRendimiento[]>(`${this.apiUrl}/estudiantes_bajo_rendimiento?trimestre=${trimestre}`);

@@ -14,6 +14,7 @@ export interface ReportePrediccion {
   observacion: string;
   fecha_registro?: string;
   mensaje_umbral: string;
+  grado: number;
 }
 
 export interface EstudianteEnRiesgo {
@@ -52,6 +53,7 @@ export interface HistorialPrediccion {
   observacion: string;
   mensaje_umbral: string;
   estudiante_id: number;
+  grado: number;
 }
 
 @Injectable({
@@ -66,7 +68,7 @@ export class ReportsPrediccionService {
   private apiHistorialUrl = 'http://127.0.0.1:8000/prediccion/historial';
   constructor(private http: HttpClient) {}
 
-  obtenerReportes(mes?: number, anio?: number): Observable<ReportePrediccion[]> {
+  obtenerReportes(mes?: number, anio?: number, grado?: number): Observable<ReportePrediccion[]> {
     let params: any = {};
 
     if (mes !== undefined) {
@@ -75,19 +77,26 @@ export class ReportsPrediccionService {
     if (anio !== undefined) {
       params.anio = anio;
     }
+    if (grado !== undefined) {
+      params.grado = grado; // 👈 Agregamos el grado al query param
+    }
 
     return this.http.get<ReportePrediccion[]>(this.apiUrl, { params });
   }
+
   obtenerEstudiantesEnRiesgo(curso?: string, trimestre?: number): Observable<EstudianteEnRiesgo[]> {
     const params: any = {};
     if (curso) params.curso = curso;
     if (trimestre !== undefined) params.trimestre = trimestre;
     return this.http.get<EstudianteEnRiesgo[]>(this.apiRiesgoUrl, { params });
   }
-  obtenerPorcentajeRiesgoPorCurso(curso?: string, trimestre?: number): Observable<PorcentajeRiesgoCurso[]> {
+  obtenerPorcentajeRiesgoPorCurso(curso?: string, trimestre?: number, grado?: number): Observable<PorcentajeRiesgoCurso[]> {
     const params: any = {};
+
     if (curso) params.curso = curso;
     if (trimestre !== undefined) params.trimestre = trimestre;
+    if (grado !== undefined) params.grado = grado; // 👈 Nuevo parámetro
+
     return this.http.get<PorcentajeRiesgoCurso[]>(this.apiPorcentajeRiesgoUrl, { params });
   }
   obtenerPromedioPorCursoTrimestre(curso?: string, trimestre?: number): Observable<PromedioCursoTrimestre[]> {

@@ -233,7 +233,8 @@ def obtener_predicciones_por_docente(db: Session, docente_id: int):
             "trimestre": r.trimestre,
             "rendimiento": r.rendimiento,
             "factores_riesgo": r.factores_riesgo,
-            "observacion": r.observacion
+            "observacion": r.observacion,
+            "mensaje_umbral": r.mensaje_umbral
         }
         for r in resultados
     ]
@@ -242,7 +243,7 @@ def obtener_predicciones_por_docente(db: Session, docente_id: int):
 
 from sqlalchemy import extract
 
-def obtener_reportes_academicos_por_docente(db: Session, user_id: int, mes: int = None, anio: int = None):
+def obtener_reportes_academicos_por_docente(db: Session, user_id: int, mes: int = None, anio: int = None, grado: int = None):
     query = (
         db.query(
             Estudiante.id.label("estudiante_id"),
@@ -275,6 +276,9 @@ def obtener_reportes_academicos_por_docente(db: Session, user_id: int, mes: int 
             extract('month', RendimientoAcademico.fecha_registro) == mes,
             extract('year', RendimientoAcademico.fecha_registro) == anio
         )
+    
+    if grado:
+        query = query.filter(Estudiante.grado == grado)
 
     return query.all()
 

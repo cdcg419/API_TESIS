@@ -11,6 +11,13 @@
     </div>
 
     <div class="filtro">
+      <label for="grado">Grado:</label>
+      <select id="grado" [(ngModel)]="gradoSeleccionado" (change)="filtrarHistorial()">
+        <option *ngFor="let g of grados" [value]="g.valor">{{ g.nombre }}</option>
+      </select>
+    </div>
+
+    <div class="filtro">
       <label for="curso">Curso:</label>
       <select id="curso" [(ngModel)]="cursoFiltro" (change)="filtrarHistorial()">
         <option *ngFor="let curso of cursosDisponibles" [value]="curso">{{ curso }}</option>
@@ -52,6 +59,22 @@
           <ng-container matColumnDef="Codigo_estudiante">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
             <td mat-cell *matCellDef="let row">{{ row.Codigo_estudiante }}</td>
+          </ng-container>
+
+          <!-- Grado -->
+          <ng-container matColumnDef="grado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Grado</th>
+            <td mat-cell *matCellDef="let row">
+              {{
+                row.grado === 1 ? 'Primer Grado' :
+                row.grado === 2 ? 'Segundo Grado' :
+                row.grado === 3 ? 'Tercer Grado' :
+                row.grado === 4 ? 'Cuarto Grado' :
+                row.grado === 5 ? 'Quinto Grado' :
+                row.grado === 6 ? 'Sexto Grado' :
+                (row.grado ?? '-')  // muestra el número si es desconocido, o '-' si no viene nada
+              }}
+            </td>
           </ng-container>
 
           <!-- Curso -->

@@ -18,6 +18,7 @@ import autoTable from 'jspdf-autotable';
 export class MonthReportComponent implements OnInit{
   displayedColumns: string[] = [
     'codigo_estudiante',
+    'grado',
     'curso',
     'trimestre',
     'asistencia',
@@ -43,6 +44,15 @@ export class MonthReportComponent implements OnInit{
   trimestreSeleccionado: number | '' = '';
   mesSeleccionado: number | '' = '';
   anioSeleccionado: number | '' = '';
+  gradoSeleccionado: number | '' = '';
+  grados = [
+    { valor: 1, nombre: 'Primer Grado' },
+    { valor: 2, nombre: 'Segundo Grado' },
+    { valor: 3, nombre: 'Tercer Grado' },
+    { valor: 4, nombre: 'Cuarto Grado' },
+    { valor: 5, nombre: 'Quinto Grado' },
+    { valor: 6, nombre: 'Sexto Grado' }
+  ];
 
   meses: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   anios: number[] = [];
@@ -55,7 +65,8 @@ export class MonthReportComponent implements OnInit{
   cargarReportes(): void {
     this.reportsService.obtenerReportes(
       this.mesSeleccionado ? +this.mesSeleccionado : undefined,
-      this.anioSeleccionado ? +this.anioSeleccionado : undefined
+      this.anioSeleccionado ? +this.anioSeleccionado : undefined,
+      this.gradoSeleccionado ? +this.gradoSeleccionado : undefined
     ).subscribe({
       next: (data) => {
         this.reportes = data;
@@ -84,17 +95,18 @@ export class MonthReportComponent implements OnInit{
 
   aplicarFiltro(): void {
     this.dataSource.filterPredicate = (data: ReportePrediccion, filter: string) => {
-      const [curso, trimestre, mes, anio, codigo] = filter.split('|');
+      const [curso, trimestre, mes, anio, codigo, grado] = filter.split('|');
       const cumpleCurso = !curso || data.curso === curso;
       const cumpleTrimestre = !trimestre || data.trimestre.toString() === trimestre;
       const cumpleMes = !mes || new Date(data.fecha_registro!).getMonth() + 1 === +mes;
       const cumpleAnio = !anio || new Date(data.fecha_registro!).getFullYear() === +anio;
       const cumpleCodigo = !codigo || data.codigo_estudiante === codigo;
+      const cumpleGrado = !grado || data.grado?.toString() === grado;
 
-      return cumpleCurso && cumpleTrimestre && cumpleMes && cumpleAnio && cumpleCodigo;
+      return cumpleCurso && cumpleTrimestre && cumpleMes && cumpleAnio && cumpleCodigo && cumpleGrado;
     };
 
-    const filtro = `${this.cursoSeleccionado}|${this.trimestreSeleccionado}|${this.mesSeleccionado}|${this.anioSeleccionado}|${this.codigoBusqueda}`;
+    const filtro = `${this.cursoSeleccionado}|${this.trimestreSeleccionado}|${this.mesSeleccionado}|${this.anioSeleccionado}|${this.codigoBusqueda}|${this.gradoSeleccionado}`;
     this.dataSource.filter = filtro;
 
     if (this.dataSource.paginator) {
@@ -124,6 +136,7 @@ export class MonthReportComponent implements OnInit{
   exportarExcel(): void {
     const data = this.dataSource.filteredData.map(r => ({
       'Código': r.codigo_estudiante,
+      'Grado' : r.grado,
       'Curso': r.curso,
       'Trimestre': r.trimestre,
       'Asistencia': r.asistencia,
@@ -147,7 +160,7 @@ export class MonthReportComponent implements OnInit{
 
     autoTable(doc, {
       head: [[
-        'Código', 'Curso', 'Trimestre', 'Asistencia',
+        'Código', 'Grado', 'Curso', 'Trimestre', 'Asistencia',
         'Nota', 'Conducta', 'Rendimiento', 'Observación', 'Proyecciones y/o Resultados'
       ]],
       body: this.dataSource.filteredData.map(r => [
@@ -167,6 +180,7 @@ export class MonthReportComponent implements OnInit{
     this.mesSeleccionado = '';
     this.anioSeleccionado = '';
     this.codigoBusqueda = '';
+    this.gradoSeleccionado = '';
     this.aplicarFiltro();
   }
 }

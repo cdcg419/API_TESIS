@@ -137,13 +137,13 @@ def predecir_rendimiento(input: PrediccionInput, db: Session = Depends(get_db), 
         mensaje_umbral = f"En base a los datos de los tres trimestres en {input.curso}, el resultado final del año es '{rendimiento_actual}'."
 
     elif rendimiento_alumno == "Bajo":
-        mensaje_umbral = f"En base a los datos del primer trimestre en {input.curso}, se recomienda que para el segundo trimestre el estudiante obtenga al menos {nota_requerida_medio} para **subir** su rendimiento a 'Medio'."
+        mensaje_umbral = f"En base a los datos del primer trimestre en {input.curso}, se recomienda que para el segundo trimestre el estudiante obtenga al menos {nota_requerida_medio} para subir su rendimiento a 'Medio'."
 
     elif rendimiento_alumno == "Medio":
         if input.trimestre == 1:
-            mensaje_umbral = f"En base a los datos del primer trimestre en {input.curso}, se recomienda que para el segundo trimestre el estudiante obtenga al menos {nota_requerida_medio} para **mantenerse** en 'Medio'."
+            mensaje_umbral = f"En base a los datos del primer trimestre en {input.curso}, se recomienda que para el segundo trimestre el estudiante obtenga al menos {nota_requerida_medio} para mantenerse en 'Medio'."
         elif input.trimestre == 2:
-            mensaje_umbral = f"En base a los datos del segundo trimestre en {input.curso}, se recomienda que para el tercer trimestre el estudiante obtenga al menos {nota_requerida_medio} para **mantenerse** en 'Medio'."
+            mensaje_umbral = f"En base a los datos del segundo trimestre en {input.curso}, se recomienda que para el tercer trimestre el estudiante obtenga al menos {nota_requerida_medio} para mantenerse en 'Medio'."
 
         try:
             if float(nota_requerida_alto) > 20:
@@ -227,8 +227,8 @@ def listar_estudiantes_con_resultado(db: Session = Depends(get_db)):
     return obtener_estudiantes_con_resultado(db)
     
 @router.get("/reportes", response_model=List[ReporteAcademico])
-def reportes_academicos(current_user: User = Depends(utils.get_current_user), db: Session = Depends(get_db), mes: int = Query(None), anio: int = Query(None)):
-    reportes = obtener_reportes_academicos_por_docente(db, current_user.id, mes, anio)
+def reportes_academicos(current_user: User = Depends(utils.get_current_user), db: Session = Depends(get_db), mes: int = Query(None), anio: int = Query(None), grado: int = Query(None)):
+    reportes = obtener_reportes_academicos_por_docente(db, current_user.id, mes, anio, grado)
     return reportes
 
 @router.get("/reportes/riesgo", response_model=list[EstudianteRiesgoOut])
@@ -283,7 +283,8 @@ def obtener_porcentaje_riesgo_por_curso(
     current_user: User = Depends(utils.get_current_user),
     db: Session = Depends(get_db),
     curso: str = Query(None),
-    trimestre: int = Query(None)
+    trimestre: int = Query(None),
+    grado: int = Query(None)
 ):
     # Subconsulta: total de alumnos por curso del docente
     total_query = db.query(
@@ -308,6 +309,9 @@ def obtener_porcentaje_riesgo_por_curso(
     if trimestre:
         total_query = total_query.filter(ResultadoPrediccion.trimestre == trimestre)
         riesgo_query = riesgo_query.filter(ResultadoPrediccion.trimestre == trimestre)
+    if grado:
+        total_query = total_query.filter(Estudiante.grado == grado)
+        riesgo_query = riesgo_query.filter(Estudiante.grado == grado)
 
     total_query = total_query.group_by(ResultadoPrediccion.curso).all()
     riesgo_query = riesgo_query.group_by(ResultadoPrediccion.curso).all()
@@ -369,7 +373,7 @@ def obtener_historial_estudiantes(
     current_user: User = Depends(utils.get_current_user)
 ):
     registros = (
-        db.query(Estudiante.id ,Estudiante.Codigo_estudiante, RendimientoAcademico, ResultadoPrediccion)
+        db.query(Estudiante.id ,Estudiante.Codigo_estudiante, Estudiante.grado, RendimientoAcademico, ResultadoPrediccion)
         .join(RendimientoAcademico, Estudiante.id == RendimientoAcademico.estudiante_id)
         .join(ResultadoPrediccion,
             (RendimientoAcademico.estudiante_id == ResultadoPrediccion.estudiante_id) &
@@ -381,10 +385,11 @@ def obtener_historial_estudiantes(
     )
 
     resultado = []
-    for estudiante_id, Codigo_estudiante, rendimiento, prediccion in registros:
+    for estudiante_id, Codigo_estudiante, grado, rendimiento, prediccion in registros:
         resultado.append(HistorialPrediccionResponse(
             estudiante_id=estudiante_id,
             Codigo_estudiante=Codigo_estudiante,
+            grado=grado,
             curso=rendimiento.curso,
             trimestre=rendimiento.trimestre,
             nota=rendimiento.nota_trimestre,

@@ -112,6 +112,9 @@
           <select id="trimestreRendimiento" [(ngModel)]="trimestreRendimiento" (change)="cargarGraficoRendimiento()">
             <option *ngFor="let t of trimestres" [value]="t.valor">{{ t.nombre }}</option>
           </select>
+          <select [(ngModel)]="gradoRendimiento" (change)="cargarGraficoRendimiento()">
+            <option *ngFor="let g of grados" [value]="g.valor">{{ g.nombre }}</option>
+          </select>
           <canvas id="rendimientoChart" height="120"></canvas>
         </mat-card>
     </div>
@@ -124,7 +127,7 @@
     <p><strong>Estudiante:</strong> {{ p.Codigo_estudiante }}</p>
     <p><strong>Curso:</strong> {{ p.curso }} | <strong>Trimestre:</strong> {{ p.trimestre }}</p>
     <p><strong>Rendimiento:</strong> {{ p.rendimiento }}</p>
-    <p><strong>Observación:</strong> {{ p.observacion }}</p>
+    <p><strong>Mensaje Umbral:</strong> {{ p.mensaje_umbral }}</p>
     <hr />
   </div>
 </div>

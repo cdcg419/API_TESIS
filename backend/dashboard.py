@@ -82,6 +82,7 @@ def obtener_estudiantes_trabajan_por_grado(
 @router.get("/rendimiento_bajo")
 def obtener_rendimiento_bajo(
     trimestre: int,
+    grado: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(utils.get_current_user)
 ):
@@ -89,10 +90,9 @@ def obtener_rendimiento_bajo(
         RendimientoAcademico.curso,
         func.count(RendimientoAcademico.id).label("total"),
         func.sum((RendimientoAcademico.nota_trimestre < 12).cast(Integer)).label("bajo_rendimiento")
-    ).filter(
-        RendimientoAcademico.estudiante_id.in_(
-            db.query(Estudiante.id).filter(Estudiante.docente_id == current_user.id)
-        ),
+    ).join(Estudiante, RendimientoAcademico.estudiante_id == Estudiante.id).filter(
+        Estudiante.docente_id == current_user.id,
+        Estudiante.grado == grado,
         RendimientoAcademico.trimestre == trimestre
     ).group_by(RendimientoAcademico.curso).order_by(
         func.sum((RendimientoAcademico.nota_trimestre < 12).cast(Integer)).desc()

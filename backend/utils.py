@@ -16,7 +16,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 180  # Tiempo de expiración del token
 # Configuración de PassLib para el hash de contraseñas
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 # Función para cifrar la contraseña
 def hash_password(password: str) -> str:

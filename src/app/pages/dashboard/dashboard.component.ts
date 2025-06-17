@@ -35,8 +35,15 @@ export class DashboardComponent implements OnInit{
   trimestreEstudiantes = 1;
   trimestreRendimiento = 1;
   estudiantesBajoRendimiento: any[] = [];
-
-
+  gradoRendimiento = 1;
+  grados = [
+    { valor: 1, nombre: 'Primer Grado' },
+    { valor: 2, nombre: 'Segundo Grado' },
+    { valor: 3, nombre: 'Tercer Grado' },
+    { valor: 4, nombre: 'Cuarto Grado' },
+    { valor: 5, nombre: 'Quinto Grado' },
+    { valor: 6, nombre: 'Sexto Grado' }
+  ];
 
   constructor(private authService: AuthService, private router: Router, private studentService: StudentService, private prediccionService: PrediccionService, private dashboardService: DashboardService ) {}
 
@@ -55,7 +62,7 @@ export class DashboardComponent implements OnInit{
         this.predicciones = res;
         this.alertas = res.filter(p =>
           //p.observacion?.includes('⚠️ Atención: Existen múltiples factores de riesgo que podrían afectar negativamente el rendimiento.')
-          ["Medio", "Bajo"].includes(p.rendimiento)
+          ["Medio", "Bajo"].includes(p.rendimiento),
         );
       },
       error: (err) => {
@@ -93,10 +100,12 @@ export class DashboardComponent implements OnInit{
   }
 
   cargarGraficoRendimiento(): void {
-    this.dashboardService.obtenerRendimientoBajo(this.trimestreRendimiento).subscribe({
-      next: (res) => this.generarGraficoRendimiento(res),
-      error: (err) => console.error('Error al obtener datos de rendimiento bajo:', err),
-    });
+    this.dashboardService
+      .obtenerRendimientoBajo(this.trimestreRendimiento, this.gradoRendimiento)
+      .subscribe({
+        next: (res) => this.generarGraficoRendimiento(res),
+        error: (err) => console.error('Error al obtener datos de rendimiento bajo:', err),
+      });
   }
 
   generarGraficoRendimiento(data: { curso: string; porcentaje: number }[]): void {
@@ -192,10 +201,5 @@ export class DashboardComponent implements OnInit{
       this.mostrarNotificaciones = false;
     }
   }
-
-
-
-
-
 
 }

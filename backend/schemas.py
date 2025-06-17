@@ -177,6 +177,7 @@ class EstudianteRiesgoOut(BaseModel):
     
 class HistorialPrediccionResponse(BaseModel):
     Codigo_estudiante: str
+    grado: int
     curso: str
     trimestre: int
     nota: float
