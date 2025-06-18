@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Detalles de {{ data.codigo_estudiante }}</h2>
+<mat-dialog-content>
+  <p><strong>Promedio de asistencia:</strong> {{ data.asistencia_promedio }}%</p>
+  <p><strong>Calificación promedio:</strong> {{ data.calificacion_promedio }}</p>
+  <p><strong>Rendimiento:</strong> {{ data.rendimiento }}</p>
+  <p><strong>Cursos en riesgo:</strong> {{ data.cursos_en_riesgo.join(', ') || 'Ninguno' }}</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cerrar()">Cerrar</button>
+</mat-dialog-actions>

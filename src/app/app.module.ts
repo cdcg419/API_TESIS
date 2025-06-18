@@ -28,6 +28,7 @@ import { MatSortModule } from '@angular/material/sort';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatDividerModule } from '@angular/material/divider';
 //
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
@@ -43,6 +44,8 @@ import { Chart, registerables } from 'chart.js';
 import { HistoryAcademicReportComponent } from './pages/history-academic-report/history-academic-report.component';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { SidenavComponent } from './pages/sidenav/sidenav.component';
+import { RankingReportsComponent } from './pages/ranking-reports/ranking-reports.component';
+import { EstudianteDetalleDialogComponent } from './pages/estudiante-detalle-dialog/estudiante-detalle-dialog.component';
 
 
 
@@ -68,6 +71,8 @@ Chart.register(...registerables);
     AcademicRiskReportComponent,
     HistoryAcademicReportComponent,
     SidenavComponent,
+    RankingReportsComponent,
+    EstudianteDetalleDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -89,7 +94,8 @@ Chart.register(...registerables);
     MatProgressSpinnerModule,
     MatProgressBarModule,
     MatSidenavModule,
-    BaseChartDirective
+    BaseChartDirective,
+    MatDividerModule
   ],
   providers: [
     {

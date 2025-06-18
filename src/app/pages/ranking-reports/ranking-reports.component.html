@@ -1,0 +1,84 @@
+<div class="contenedor-ranking">
+  <h2>Ranking de Estudiantes - Trimestre {{ trimestreSeleccionado }}</h2>
+
+    <div class="filtros-container">
+      <div class="filtro">
+        <label for="trimestre">Trimestre:</label>
+        <select id="trimestre" [(ngModel)]="trimestreSeleccionado" (change)="obtenerRanking()">
+          <option *ngFor="let t of trimestres" [value]="t.value">
+            {{ t.label }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filtro">
+        <label for="grado">Grado:</label>
+        <select id="grado" [(ngModel)]="gradoSeleccionado" (change)="obtenerRanking()">
+          <option *ngFor="let g of grados" [value]="g.value">
+            {{ g.label }}
+          </option>
+        </select>
+      </div>
+
+      <button mat-raised-button class="btn-verde" (click)="limpiarFiltros()">
+        <mat-icon>clear</mat-icon> Limpiar filtros
+      </button>
+
+      <button mat-raised-button class="btn-verde" (click)="exportarExcel()">
+        <mat-icon>download</mat-icon> Exportar Excel
+      </button>
+
+      <button mat-raised-button class="btn-verde" (click)="exportarPDF()">
+        <mat-icon>picture_as_pdf</mat-icon> Exportar PDF
+      </button>
+    </div>
+
+<div class="tabla-responsive">
+
+  <mat-card class="tabla-card" *ngIf="ranking.length > 0">
+    <mat-card-title>Ranking de Estudiantes</mat-card-title>
+    <mat-card-content>
+      <mat-table [dataSource]="ranking">
+
+        <!-- Código Estudiante -->
+        <ng-container matColumnDef="codigo_estudiante">
+          <mat-header-cell *matHeaderCellDef> Código </mat-header-cell>
+          <mat-cell *matCellDef="let e"> {{ e.codigo_estudiante }} </mat-cell>
+        </ng-container>
+
+        <!-- Asistencia Promedio -->
+        <ng-container matColumnDef="asistencia_promedio">
+          <mat-header-cell *matHeaderCellDef> Promedio de Asistencia (%) </mat-header-cell>
+          <mat-cell *matCellDef="let e"> {{ e.asistencia_promedio | number:'1.0-0' }}% </mat-cell>
+        </ng-container>
+
+        <!-- Calificación Promedio -->
+        <ng-container matColumnDef="calificacion_promedio">
+          <mat-header-cell *matHeaderCellDef> Promedio de Calificación </mat-header-cell>
+          <mat-cell *matCellDef="let e"> {{ e.calificacion_promedio | number:'1.1-1' }} </mat-cell>
+        </ng-container>
+
+        <!-- Rendimiento -->
+        <ng-container matColumnDef="rendimiento">
+          <mat-header-cell *matHeaderCellDef> Rendimiento </mat-header-cell>
+          <mat-cell *matCellDef="let e"> {{ e.rendimiento }} </mat-cell>
+        </ng-container>
+
+        <!-- Cursos en Riesgo -->
+        <ng-container matColumnDef="cursos_en_riesgo">
+          <mat-header-cell *matHeaderCellDef> Cursos en Riesgo </mat-header-cell>
+          <mat-cell *matCellDef="let e"> {{ e.cursos_en_riesgo.join(', ') }} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="columnasTabla"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: columnasTabla;" (click)="abrirDialogoDetalle(row)" style="cursor: pointer;"></mat-row>
+
+      </mat-table>
+    </mat-card-content>
+  </mat-card>
+
+  <p *ngIf="ranking.length === 0 && !cargando">No hay estudiantes en el ranking para este trimestre.</p>
+  <p *ngIf="cargando">Cargando datos del ranking...</p>
+
+</div>
+

@@ -191,3 +191,16 @@ class HistorialPrediccionResponse(BaseModel):
 
     class Config:
         orm_mode = True
+        
+##########################################
+
+class EstudianteRanking(BaseModel):
+    codigo_estudiante: str
+    asistencia_promedio: float
+    calificacion_promedio: float
+    rendimiento: str
+    cursos_en_riesgo: list[str]
+
+class RankingEstudiantesResponse(BaseModel):
+    trimestre: int
+    estudiantes: list[EstudianteRanking]

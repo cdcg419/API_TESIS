@@ -6,8 +6,7 @@ import models, schemas
 import joblib
 from passlib.context import CryptContext
 from utils import hash_password
-from models import RendimientoAcademico
-from models import Estudiante, ResultadoPrediccion, User
+from models import Estudiante, ResultadoPrediccion, User, RendimientoAcademico
 
 ################################### USUARIO - DOCENTE ########################################
 
@@ -283,5 +282,70 @@ def obtener_reportes_academicos_por_docente(db: Session, user_id: int, mes: int 
     return query.all()
 
 
+##########################nuevo del nuevo
+
+def obtener_ranking_por_trimestre(db: Session, docente_id: int, trimestre: int, grado: int | None = None):
+    filtros = [
+        Estudiante.docente_id == docente_id,
+        ResultadoPrediccion.trimestre == trimestre
+    ]
+    if grado is not None:
+        filtros.append(Estudiante.grado == grado)
+
+    resultados = db.query(ResultadoPrediccion).\
+        join(ResultadoPrediccion.estudiante).\
+        filter(*filtros).\
+        options(joinedload(ResultadoPrediccion.estudiante)).\
+        all()
+
+    agrupado = {}
+
+    for r in resultados:
+        codigo = r.estudiante.Codigo_estudiante
+
+        # Buscar asistencia desde RendimientoAcademico
+        asistencia_registro = db.query(RendimientoAcademico).filter(
+            RendimientoAcademico.estudiante_id == r.estudiante_id,
+            RendimientoAcademico.trimestre == trimestre,
+            RendimientoAcademico.curso == r.curso
+        ).first()
+        asistencia_valor = asistencia_registro.asistencia if asistencia_registro else 0
+
+        # Buscar nota desde RendimientoAcademico también
+        nota_valor = asistencia_registro.nota_trimestre if asistencia_registro else 0
+
+        if codigo not in agrupado:
+            agrupado[codigo] = {
+                "codigo_estudiante": codigo,
+                "asistencias": [],
+                "notas": [],
+                "cursos_en_riesgo": [],
+                "rendimientos": []
+            }
+
+        agrupado[codigo]["asistencias"].append(asistencia_valor)
+        agrupado[codigo]["notas"].append(nota_valor)
+        agrupado[codigo]["rendimientos"].append(r.rendimiento)
+
+        if r.rendimiento == "Bajo":
+            agrupado[codigo]["cursos_en_riesgo"].append(r.curso)
+
+    estudiantes = []
+    for datos in agrupado.values():
+        asistencia_prom = sum(datos["asistencias"]) / len(datos["asistencias"]) if datos["asistencias"] else 0
+        calificacion_prom = sum(datos["notas"]) / len(datos["notas"]) if datos["notas"] else 0
+        rendimiento_final = max(set(datos["rendimientos"]), key=datos["rendimientos"].count)
+
+        estudiantes.append({
+            "codigo_estudiante": datos["codigo_estudiante"],
+            "asistencia_promedio": round(asistencia_prom, 2),
+            "calificacion_promedio": round(calificacion_prom, 2),
+            "rendimiento": rendimiento_final,
+            "cursos_en_riesgo": datos["cursos_en_riesgo"]
+        })
+
+    estudiantes.sort(key=lambda x: x["calificacion_promedio"])
+
+    return estudiantes
 
 

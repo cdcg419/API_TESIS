@@ -28,6 +28,10 @@
         <mat-icon>calendar_view_day</mat-icon> Reportes Mensuales
       </button>
 
+      <button mat-raised-button [ngClass]="{ 'btn-verde': activo === 'ranking' }" (click)="toggleReports_ranking()">
+        <mat-icon>bar_chart</mat-icon> Ranking de Estudiantes
+      </button>
+
     </div>
 
     <!-- Reportes mensuales -->
@@ -43,6 +47,11 @@
     <!-- Historial académico general-->
     <div *ngIf="showReports_academic">
       <app-history-academic-report></app-history-academic-report>
+    </div>
+
+    <!-- Ranking de estudiantes -->
+    <div *ngIf="showReports_ranking">
+      <app-ranking-reports></app-ranking-reports>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

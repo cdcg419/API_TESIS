@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
 
 export interface ReportePrediccion {
   codigo_estudiante: string;
@@ -56,6 +57,20 @@ export interface HistorialPrediccion {
   grado: number;
 }
 
+export interface EstudianteRanking {
+  codigo_estudiante: string;
+  asistencia_promedio: number;
+  calificacion_promedio: number;
+  rendimiento: string;
+  cursos_en_riesgo: string[];
+}
+
+export interface RankingEstudiantesResponse {
+  trimestre: number;
+  estudiantes: EstudianteRanking[];
+}
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -90,6 +105,7 @@ export class ReportsPrediccionService {
     if (trimestre !== undefined) params.trimestre = trimestre;
     return this.http.get<EstudianteEnRiesgo[]>(this.apiRiesgoUrl, { params });
   }
+
   obtenerPorcentajeRiesgoPorCurso(curso?: string, trimestre?: number, grado?: number): Observable<PorcentajeRiesgoCurso[]> {
     const params: any = {};
 
@@ -99,13 +115,23 @@ export class ReportsPrediccionService {
 
     return this.http.get<PorcentajeRiesgoCurso[]>(this.apiPorcentajeRiesgoUrl, { params });
   }
+
   obtenerPromedioPorCursoTrimestre(curso?: string, trimestre?: number): Observable<PromedioCursoTrimestre[]> {
     const params: any = {};
     if (curso) params.curso = curso;
     if (trimestre !== undefined) params.trimestre = trimestre;
     return this.http.get<PromedioCursoTrimestre[]>(this.apipromCursoUrl, { params });
   }
+
   obtenerHistorialPredicciones(): Observable<HistorialPrediccion[]> {
     return this.http.get<HistorialPrediccion[]>(this.apiHistorialUrl);
+  }
+
+  obtenerRankingEstudiantes(trimestre: number, grado?: number): Observable<RankingEstudiantesResponse> {
+    let params = new HttpParams().set('trimestre', trimestre.toString());
+    if (grado !== undefined) {
+      params = params.set('grado', grado.toString());
+    }
+    return this.http.get<RankingEstudiantesResponse>(`${this.apiUrl}/ranking`, { params });
   }
 }

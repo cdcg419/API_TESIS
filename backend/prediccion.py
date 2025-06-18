@@ -13,8 +13,8 @@ from models import Estudiante, RendimientoAcademico, ResultadoPrediccion, User
 from database import get_db
 from crud import obtener_estudiantes_con_resultado
 from typing import List
-from schemas import EstudianteConResultado, ReporteAcademico, EstudianteRiesgoOut, HistorialPrediccionResponse
-from crud import obtener_reportes_academicos_por_docente
+from schemas import EstudianteConResultado, ReporteAcademico, EstudianteRiesgoOut, HistorialPrediccionResponse, RankingEstudiantesResponse
+from crud import obtener_reportes_academicos_por_docente, obtener_ranking_por_trimestre
 import utils
 
 router = APIRouter(
@@ -403,6 +403,26 @@ def obtener_historial_estudiantes(
 
     return resultado
 
+############
+
+@router.get("/reportes/ranking", response_model=RankingEstudiantesResponse)
+def ranking_estudiantes(
+    trimestre: int,
+    grado: int | None = None,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(utils.get_current_user)
+):
+    estudiantes = obtener_ranking_por_trimestre(db, current_user.id, trimestre, grado)
+    return {
+        "trimestre": trimestre,
+        "estudiantes": estudiantes
+    }
+
+
+
+
+
+
 ##Extendidas de prueba
 @router.get("/proyeccion_anual_extended")
 def proyeccion_rendimiento_final_extended(estudiante_id: int, curso: str, db: Session = Depends(get_db)):
@@ -446,7 +466,7 @@ def proyeccion_rendimiento_final_extended(estudiante_id: int, curso: str, db: Se
         "rendimientos_trimestrales": rendimientos,
         "proyeccion_final_simulada": escenarios
     }
-    
+
 @router.get("/proyeccion_nota_extended")
 def proyeccion_nota_final_extended(estudiante_id: int, curso: str, db: Session = Depends(get_db)):
     registros = db.query(RendimientoAcademico).filter_by(estudiante_id=estudiante_id, curso=curso).order_by(RendimientoAcademico.trimestre.asc()).all()
