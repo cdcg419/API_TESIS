@@ -190,15 +190,26 @@ mat-toolbar button {
   display: flex;
   gap: 16px;
   justify-content: center;
+  align-items: stretch;
   flex-wrap: wrap;
 }
 
 .small-card {
-  width: 45%; /* Ambos ocupan casi la mitad del espacio */
-  padding: 16px;
+  width: 48%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  justify-content: space-between;
+  height: auto;
+  flex-grow: 1;
+}
+
+.small-card {
+  height: 340px;
+}
+
+.small-card {
+  min-height: 280px;
+  overflow: hidden;
 }
 
 .grafico-label {
@@ -214,18 +225,8 @@ mat-toolbar button {
 }
 
 #generoChart {
-  max-width: 280px; /* Ajusta el tamaño del círculo */
-  max-height: 280px;
-}
-
-#grafico-rendimiento {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 80%; /* Solo este gráfico será más ancho */
-  padding: 16px;
-  margin: auto; /* Lo centra */
+  max-width: 300px; /* Ajusta el tamaño del círculo */
+  max-height: 300px;
 }
 
 #grafico-rendimiento h4 {
@@ -236,7 +237,155 @@ mat-toolbar button {
   margin-bottom: 12px;
 }
 
+
+
+.tabla-scrollable {
+  max-height: 180px; /* Ajusta este valor según el alto deseado */
+  overflow-y: auto;
+}
+
+/* Opcional: estiliza scrollbar solo si necesitas que luzca más sutil */
+.tabla-scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tabla-scrollable::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+
+.genero-layout {
+  padding: 16px;
+}
+
+.genero-contenido {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.info-genero {
+  display: flex;
+  flex-direction: column;
+}
+
+.grafico-label {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.leyenda-genero {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.leyenda-genero li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.color-hombre,
+.color-mujer {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;
+  border-radius: 50%;
+}
+
+.color-hombre {
+  background-color: green;
+}
+
+.color-mujer {
+  background-color: pink;
+}
+
+.grafico-genero canvas {
+  width: 240px;
+  height: 240px;
+}
+
+@media (max-width: 768px) {
+  .small-card {
+    width: 100%;
+  }
+}
+
+.grafico-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#graficoTrabajoContainer {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+}
+
+#trabajoChart {
+  width: 100%;
+  height: 100%;
+  max-height: 250px; /* Ajusta según necesidad */
+}
+
+
+.filtros-rendimiento {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.filtros-rendimiento label {
+  font-weight: 500;
+  margin-right: 4px;
+}
+
+.filtros-rendimiento select {
+  min-width: 150px;
+}
+
+
+.full-chart-card {
+  width: 100%;
+  padding: 20px;
+}
+
+.encabezado-rendimiento {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.encabezado-rendimiento h4 {
+  margin: 0;
+}
+
+.filtros-rendimiento {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.filtros-rendimiento label {
+  font-weight: 500;
+  font-size: 14px;
+}
+
 #rendimientoChart {
-  max-width: 100%; /* Hace el gráfico más largo */
-  max-height: 200px;
+  width: 100%;
+  height: 195px;
+  max-height: 195px;
 }

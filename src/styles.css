@@ -1,4 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
+html, body {
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.main-content {
+  min-height: 100vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+body, html {
+  overflow: hidden;
+}
+
+.main-content {
+  overflow: hidden;
+}

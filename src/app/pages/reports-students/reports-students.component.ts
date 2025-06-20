@@ -1,5 +1,5 @@
-import { Component, OnInit} from '@angular/core';
-
+import { Component, OnInit, AfterViewInit, ViewChild} from '@angular/core';
+import { MatSidenav } from '@angular/material/sidenav';
 @Component({
   selector: 'app-reports-students',
   standalone: false,
@@ -11,6 +11,8 @@ export class ReportsStudentsComponent implements OnInit{
   showReports_warning = false;
   showReports_academic = false;
   showReports_ranking = false;
+
+  @ViewChild('sidenav') sidenav!: MatSidenav;
 
   activo: 'month' | 'warning' | 'academic' | 'ranking' | null = null;
 
@@ -24,6 +26,12 @@ export class ReportsStudentsComponent implements OnInit{
       this.activo = this.showReports_academic ? 'academic' : null;
       // Asegura que el otro se cierre
     }
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.sidenav.open(); // 👈 se abre automáticamente
+    }, 0);
   }
 
   toggleReports_month() {

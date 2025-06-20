@@ -1,10 +1,12 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { StudentService } from '../../services/student.service';
 import { PrediccionService, ResultadoPrediccion } from '../../services/prediccion.service';
 import { DashboardService } from '../../services/dashboard.service';
 import { Chart } from 'chart.js/auto';
+import { MatSidenav } from '@angular/material/sidenav';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -19,6 +21,8 @@ export class DashboardComponent implements OnInit{
 
   @ViewChild('notiMenu') notiMenu!: ElementRef;
   @ViewChild('notiBtn') notiBtn!: ElementRef;
+  @ViewChild('sidenav') sidenav!: MatSidenav;
+
 
   trimestres = [
     { valor: 1, nombre: 'Primer Trimestre' },
@@ -88,6 +92,11 @@ export class DashboardComponent implements OnInit{
     this.cargarGraficoRendimiento();
     this.cargarEstudiantesBajoRendimiento();
   }
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.sidenav.open(); // 👈 se abre automáticamente
+    }, 0);
+  }
 
   cargarEstudiantesBajoRendimiento(): void {
     this.dashboardService.obtenerEstudiantesBajoRendimiento(this.trimestreEstudiantes).subscribe({
@@ -135,28 +144,27 @@ export class DashboardComponent implements OnInit{
   }
 
   generarGraficoGenero(data: { hombres: number; mujeres: number }): void {
-  const ctx = document.getElementById('generoChart') as HTMLCanvasElement;
+    const ctx = document.getElementById('generoChart') as HTMLCanvasElement;
 
-  if (this.generoChart) {
-    this.generoChart.destroy();
-  }
-
-  this.generoChart = new Chart(ctx, {
-    type: 'pie',
-    data: {
-      labels: ['Hombres', 'Mujeres'],
-      datasets: [{
-        data: [data.hombres, data.mujeres],
-        backgroundColor: ['green', 'pink']
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false, // Permite controlar el tamaño
-      layout: { padding: 10 }
+    if (this.generoChart) {
+      this.generoChart.destroy();
     }
-  });
-}
+
+    this.generoChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        datasets: [{
+          data: [data.hombres, data.mujeres],
+          backgroundColor: ['green', 'pink']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false, // Permite controlar el tamaño
+        layout: { padding: 10 }
+      }
+    });
+  }
 
   generarGraficoTrabajo(data: { grado: number; porcentaje: number }[]): void {
     const ctx = document.getElementById('trabajoChart') as HTMLCanvasElement;
