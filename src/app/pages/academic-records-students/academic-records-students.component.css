@@ -303,3 +303,16 @@ mat-toolbar button {
   box-shadow: 0 0 5px rgba(56, 142, 60, 0.5);
 }
 
+.titulo-estudiante {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.estado-estudiante {
+  font-size: 14px;
+  color: #555;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}

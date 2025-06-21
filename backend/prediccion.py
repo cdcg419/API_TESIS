@@ -137,13 +137,28 @@ def predecir_rendimiento(input: PrediccionInput, db: Session = Depends(get_db), 
         mensaje_umbral = f"En base a los datos de los tres trimestres en {input.curso}, el resultado final del año es '{rendimiento_actual}'."
 
     elif rendimiento_alumno == "Bajo":
-        mensaje_umbral = f"En base a los datos del primer trimestre en {input.curso}, se recomienda que para el segundo trimestre el estudiante obtenga al menos {nota_requerida_medio} para subir su rendimiento a 'Medio'."
+        if input.trimestre == 1:
+            mensaje_umbral = f"En base a los datos del primer trimestre en {input.curso}, se recomienda que para el segundo trimestre el estudiante obtenga al menos {nota_requerida_medio} para subir su rendimiento a 'Medio'."
+        elif input.trimestre == 2:
+            mensaje_umbral = f"En base a los datos del segundo trimestre en {input.curso}, se recomienda que para el tercer trimestre el estudiante obtenga al menos {nota_requerida_medio} para subir su rendimiento a 'Medio'."
+        else:
+            mensaje_umbral = f"No hay suficientes datos en {input.curso} para calcular una recomendación."
+
+        try:
+            if float(nota_requerida_alto) > 20:
+                mensaje_umbral += " y será necesario un esfuerzo adicional para alcanzar 'Alto'."
+            else:
+                mensaje_umbral += f" y más de {nota_requerida_alto} para alcanzar 'Alto'."
+        except ValueError:
+            mensaje_umbral += " y será necesario un esfuerzo adicional para alcanzar 'Alto'."
 
     elif rendimiento_alumno == "Medio":
         if input.trimestre == 1:
             mensaje_umbral = f"En base a los datos del primer trimestre en {input.curso}, se recomienda que para el segundo trimestre el estudiante obtenga al menos {nota_requerida_medio} para mantenerse en 'Medio'."
         elif input.trimestre == 2:
             mensaje_umbral = f"En base a los datos del segundo trimestre en {input.curso}, se recomienda que para el tercer trimestre el estudiante obtenga al menos {nota_requerida_medio} para mantenerse en 'Medio'."
+        else:
+            mensaje_umbral = f"No hay suficientes datos en {input.curso} para calcular una recomendación."
 
         try:
             if float(nota_requerida_alto) > 20:
@@ -154,16 +169,15 @@ def predecir_rendimiento(input: PrediccionInput, db: Session = Depends(get_db), 
             mensaje_umbral += " y será necesario un esfuerzo adicional para alcanzar 'Alto'."
 
     elif rendimiento_alumno == "Alto":
-        if notas[0] > 20:
-            mensaje_umbral = f"Para mantenerse en 'Alto' en {input.curso}, el estudiante debe obtener una nota incluso superior a 20."
-        else:
-            try:
-                if float(nota_requerida_alto) > 20:
-                    mensaje_umbral = f"Para mantenerse en 'Alto' en {input.curso}, será necesario un esfuerzo adicional."
-                else:
-                    mensaje_umbral = f"Para mantenerse en 'Alto' en {input.curso}, el estudiante debe obtener al menos {nota_requerida_alto}."
-            except ValueError:
+        try:
+            if notas[0] > 20:
+                mensaje_umbral = f"Para mantenerse en 'Alto' en {input.curso}, el estudiante debe obtener una nota incluso superior a 20."
+            elif float(nota_requerida_alto) > 20:
                 mensaje_umbral = f"Para mantenerse en 'Alto' en {input.curso}, será necesario un esfuerzo adicional."
+            else:
+                mensaje_umbral = f"Para mantenerse en 'Alto' en {input.curso}, el estudiante debe obtener al menos {nota_requerida_alto}."
+        except:
+            mensaje_umbral = f"Para mantenerse en 'Alto' en {input.curso}, será necesario un esfuerzo adicional."
 
     else:
         mensaje_umbral = f"No hay suficientes datos en {input.curso} para calcular una recomendación."

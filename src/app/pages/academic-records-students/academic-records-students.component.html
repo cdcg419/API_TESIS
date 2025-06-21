@@ -17,11 +17,17 @@
     <mat-card class="notas-card">
       <div style="height: 5px;"></div>
       <mat-card-title class="titulo-con-boton">
-        <span>Notas del Estudiante</span>
-        <button *ngIf="!cargandoDatos" mat-button class="boton-prediccion" (click)="validarPrediccion()">
+        <div *ngIf="codigoEstudiante">
+          <p class="titulo-estudiante">Notas del Alumno {{ codigoEstudiante }}</p>
+          <div class="estado-estudiante">
+            <span><strong>Trabajo:</strong> {{ trabaja ? 'Sí' : 'No' }}</span> |
+            <span><strong>Presencia de padres:</strong> {{ presenciaPadres }}</span>
+          </div>
+          <button *ngIf="!cargandoDatos" mat-button class="boton-prediccion" (click)="validarPrediccion()">
           <mat-icon>insights</mat-icon>
           <span class="icon-text">Predecir rendimiento</span>
         </button>
+        </div>
         <!-- Filtro por curso (sin Angular Material) -->
         <div class="filtros-container">
           <div class="filtro">

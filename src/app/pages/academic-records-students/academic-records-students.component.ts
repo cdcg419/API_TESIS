@@ -33,6 +33,11 @@ export class AcademicRecordsStudentsComponent implements OnInit{
     "Verificando condiciones laborales...",
     "Generando predicción de rendimiento..."
   ];
+  codigoEstudiante: string = '';
+  presenciaPadres: string = '';
+  trabaja: boolean = false;
+
+
   constructor(private route: ActivatedRoute, private notesService: RegisterNotesService, private dialog: MatDialog, private notasEventService: NotasEventService ) {}
 
   ngOnInit(): void {
@@ -48,6 +53,24 @@ export class AcademicRecordsStudentsComponent implements OnInit{
         }
       }
     });
+    // Obtener todos los estudiantes del docente y filtrar el código
+    // Buscar el código del estudiante
+    const docenteId = localStorage.getItem('userId');
+    if (docenteId) {
+      this.notesService.obtenerEstudiantesPorDocente(+docenteId).subscribe({
+        next: (data) => {
+          const estudiante = data.find(e => e.id === this.estudianteId);
+          if (estudiante) {
+            this.codigoEstudiante = estudiante.Codigo_estudiante;
+            this.presenciaPadres = estudiante.presencia_padres;
+            this.trabaja = estudiante.trabaja;
+          }
+        },
+        error: (err) => {
+          console.error('Error al obtener estudiantes', err);
+        }
+      });
+    }
   }
 
   filtrarNotasPorCurso(): void {
