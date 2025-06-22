@@ -54,7 +54,11 @@ export class EditUserComponent implements OnInit {
         this.showModalDatos = false; // Cerrar el modal
       },
       (error) => {
-        this.errorMessage = 'Hubo un error al actualizar los datos del usuario.';
+        if (error.status === 409 || error.error?.message?.includes('correo')) {
+          this.errorMessage = 'Este correo ya está registrado. Intenta con otro.';
+        } else {
+          this.errorMessage = 'Hubo un error al actualizar los datos del usuario.';
+        }
       }
     );
   }

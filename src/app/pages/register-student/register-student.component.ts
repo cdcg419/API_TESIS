@@ -25,14 +25,18 @@ export class RegisterStudentComponent {
 
   register() {
     this.studentService.createStudent(this.student).subscribe({
-      next: (data) => {
+      next: () => {
         this.showAlert('Estudiante registrado con éxito', 'success');
         setTimeout(() => {
           this.router.navigate(['/students']);
-        }, 2000); // redirige después de 2 segundos
+        }, 2000);
       },
       error: (err) => {
-        this.showAlert('Error al registrar estudiante', 'danger');
+        if (err.status === 409 || err.error?.detail?.includes('ya está registrado')) {
+          this.showAlert('Ese código de estudiante ya existe. Intenta con otro.', 'danger');
+        } else {
+          this.showAlert('Error al registrar estudiante', 'danger');
+        }
         console.error(err);
       }
     });

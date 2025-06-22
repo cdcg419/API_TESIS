@@ -13,23 +13,66 @@
     <div class="card">
       <div class="card-header">Datos del Usuario</div>
       <div class="card-body">
-        <form (ngSubmit)="onSaveDatos()">
+        <form #datosForm="ngForm" (ngSubmit)="onSaveDatos()">
+          <!-- Nombre -->
           <div class="form-group">
             <label for="nombre">Nombre</label>
-            <input id="nombre" [(ngModel)]="nombre" name="nombre" required />
+            <input
+              id="nombre"
+              name="nombre"
+              [(ngModel)]="nombre"
+              required
+              maxlength="100"
+              pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+              #nombreField="ngModel"
+            />
+            <div *ngIf="nombreField.invalid && nombreField.touched" class="error-message">
+              <span *ngIf="nombreField.errors?.['required']">Falta agregar el nombre.</span>
+              <span *ngIf="nombreField.errors?.['pattern']">Solo se permiten letras y espacios.</span>
+              <span *ngIf="nombreField.errors?.['maxlength']">Máximo 100 caracteres.</span>
+            </div>
           </div>
 
+          <!-- Apellido -->
           <div class="form-group">
             <label for="apellido">Apellido</label>
-            <input id="apellido" [(ngModel)]="apellido" name="apellido" required />
+            <input
+              id="apellido"
+              name="apellido"
+              [(ngModel)]="apellido"
+              required
+              maxlength="100"
+              pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+              #apellidoField="ngModel"
+            />
+            <div *ngIf="apellidoField.invalid && apellidoField.touched" class="error-message">
+              <span *ngIf="apellidoField.errors?.['required']">Falta agregar el apellido.</span>
+              <span *ngIf="apellidoField.errors?.['pattern']">Solo se permiten letras y espacios.</span>
+              <span *ngIf="apellidoField.errors?.['maxlength']">Máximo 100 caracteres.</span>
+            </div>
           </div>
 
+          <!-- Correo -->
           <div class="form-group">
             <label for="correo">Correo</label>
-            <input id="correo" [(ngModel)]="correo" name="correo" type="email" required />
+            <input
+              id="correo"
+              name="correo"
+              type="email"
+              [(ngModel)]="correo"
+              required
+              email
+              #correoField="ngModel"
+            />
+            <div *ngIf="correoField.invalid && correoField.touched" class="error-message">
+              <span *ngIf="correoField.errors?.['required']">Falta agregar el correo.</span>
+              <span *ngIf="correoField.errors?.['email']">El correo no es válido.</span>
+            </div>
           </div>
 
-          <button type="submit" class="btn-save">Guardar cambios</button>
+          <button type="submit" class="btn-save" [disabled]="datosForm.invalid">
+            Guardar cambios
+          </button>
         </form>
 
         <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
@@ -40,18 +83,51 @@
     <div class="card">
       <div class="card-header">Cambiar Contraseña</div>
       <div class="card-body">
-        <form (ngSubmit)="onSavePassword()">
+        <form #passwordForm="ngForm" (ngSubmit)="onSavePassword()">
+          <!-- Nueva contraseña -->
           <div class="form-group">
             <label for="newPassword">Nueva contraseña</label>
-            <input id="newPassword" [(ngModel)]="newPassword" name="newPassword" type="password" required />
+            <input
+              id="newPassword"
+              name="newPassword"
+              type="password"
+              [(ngModel)]="newPassword"
+              required
+              maxlength="8"
+              pattern="^(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{6,14}$"
+              #newPasswordField="ngModel"
+            />
+            <div *ngIf="newPasswordField.invalid && newPasswordField.touched" class="error-message">
+              <span *ngIf="newPasswordField.errors?.['required']">La contraseña es obligatoria.</span>
+              <span *ngIf="newPasswordField.errors?.['pattern']">
+                Debe tener 8 caracteres, al menos una mayúscula y un carácter especial.
+              </span>
+            </div>
           </div>
 
+          <!-- Confirmar nueva contraseña -->
           <div class="form-group">
             <label for="confirmPassword">Confirmar nueva contraseña</label>
-            <input id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" type="password" required />
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              [(ngModel)]="confirmPassword"
+              required
+              maxlength="8"
+              #confirmPasswordField="ngModel"
+            />
+            <div *ngIf="confirmPasswordField.invalid && confirmPasswordField.touched" class="error-message">
+              <span *ngIf="confirmPasswordField.errors?.['required']">Debes confirmar la contraseña.</span>
+            </div>
+            <div *ngIf="confirmPassword && confirmPassword !== newPassword" class="error-message">
+              Las contraseñas no coinciden.
+            </div>
           </div>
 
-          <button type="submit" class="btn-save">Actualizar Contraseña</button>
+          <button type="submit" class="btn-save" [disabled]="
+            passwordForm.invalid || newPassword !== confirmPassword
+          ">Actualizar Contraseña</button>
         </form>
 
         <p *ngIf="passwordError" class="error-message">{{ passwordError }}</p>

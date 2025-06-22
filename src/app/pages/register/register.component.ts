@@ -30,7 +30,11 @@ export class RegisterComponent {
         this.router.navigate(['/login']);
       },
       error: err => {
-        this.errorMessage = 'Error al registrar usuario';
+        if (err.status === 400 || err.error?.message?.includes('correo')) {
+          this.errorMessage = 'Este correo ya está registrado. Intenta con otro.';
+        } else {
+          this.errorMessage = 'Error al registrar usuario. Intenta nuevamente.';
+        }
         console.error(err);
       }
     });

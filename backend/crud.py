@@ -11,6 +11,18 @@ from models import Estudiante, ResultadoPrediccion, User, RendimientoAcademico
 ################################### USUARIO - DOCENTE ########################################
 
 def update_user(db: Session, user_id: int, user_data) -> models.User:
+    # Verificar si el correo ya está usado por otro usuario
+    correo_existente = db.query(models.User).filter(
+        models.User.correo == user_data.correo,
+        models.User.id != user_id  # excluir al usuario actual
+    ).first()
+
+    if correo_existente:
+        raise HTTPException(
+            status_code=409,
+            detail="El correo ya está registrado por otro usuario"
+        )
+
     db_user = db.query(models.User).filter(models.User.id == user_id).first()
     if db_user:
         db_user.nombre = user_data.nombre
@@ -20,6 +32,7 @@ def update_user(db: Session, user_id: int, user_data) -> models.User:
         db.refresh(db_user)
         return db_user
     return None
+
 
 def get_user_by_id(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()
@@ -43,11 +56,24 @@ def delete_user(db: Session, user_id: int):
 ################################### DATOS - ESTUDIANTE ########################################
 
 def crear_estudiante(db: Session, student: schemas.EstudianteCreate, docente_id: int):
+    # Verificar si el código ya existe
+    estudiante_existente = db.query(models.Estudiante).filter(
+        models.Estudiante.Codigo_estudiante == student.Codigo_estudiante
+    ).first()
+
+    if estudiante_existente:
+        raise HTTPException(
+            status_code=409,
+            detail="El código del estudiante ya está registrado"
+        )
+
+    # Crear el nuevo estudiante si no hay duplicado
     db_estudiante = models.Estudiante(**student.dict(), docente_id=docente_id)
     db.add(db_estudiante)
     db.commit()
     db.refresh(db_estudiante)
     return db_estudiante
+
 
 def obtener_estudiantes(db: Session):
     return db.query(models.Estudiante).all()
@@ -56,11 +82,25 @@ def obtener_estudiante(db: Session, estudiante_id: int):
     return db.query(models.Estudiante).filter(models.Estudiante.id == estudiante_id).first()
 
 def actualizar_estudiante(db: Session, estudiante_id: int, estudiante: schemas.EstudianteCreate):
+    # Verificar si el código ya existe en otro estudiante
+    existe_codigo = db.query(models.Estudiante).filter(
+        models.Estudiante.Codigo_estudiante == estudiante.Codigo_estudiante,
+        models.Estudiante.id != estudiante_id  # excluir al estudiante actual
+    ).first()
+
+    if existe_codigo:
+        raise HTTPException(
+            status_code=409,
+            detail="El código del estudiante ya está registrado por otro estudiante"
+        )
+
     db_estudiante = obtener_estudiante(db, estudiante_id)
     if db_estudiante is None:
         return None
+
     for key, value in estudiante.dict().items():
         setattr(db_estudiante, key, value)
+
     db.commit()
     db.refresh(db_estudiante)
     return db_estudiante

@@ -48,6 +48,11 @@ export class EditStudentComponent implements OnInit {
         this.router.navigate(['/my_students']);
       },
       error: (err) => {
+        if (err.status === 409 || err.error?.detail?.includes('código')) {
+          alert('Este código ya está registrado. Intenta con otro.');
+        } else {
+          alert('Error al actualizar estudiante');
+        }
         console.error('Error al actualizar estudiante', err);
       }
     });
