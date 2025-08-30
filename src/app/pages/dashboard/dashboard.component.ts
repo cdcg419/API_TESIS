@@ -6,6 +6,7 @@ import { PrediccionService, ResultadoPrediccion } from '../../services/prediccio
 import { DashboardService } from '../../services/dashboard.service';
 import { Chart } from 'chart.js/auto';
 import { MatSidenav } from '@angular/material/sidenav';
+import { HttpClient } from '@angular/common/http';
 
 
 @Component({
@@ -18,6 +19,11 @@ export class DashboardComponent implements OnInit{
   predicciones: ResultadoPrediccion[] = [];
   alertas: ResultadoPrediccion[] = [];
   mostrarNotificaciones = false;
+  mostrarDetalle: boolean[] = [];
+  getNombreTrimestre(numero: number): string {
+    const nombres = ['Primer Trimestre', 'Segundo Trimestre', 'Tercer Trimestre'];
+    return nombres[numero - 1] || `Trimestre ${numero}`;
+  }
 
   @ViewChild('notiMenu') notiMenu!: ElementRef;
   @ViewChild('notiBtn') notiBtn!: ElementRef;
@@ -49,7 +55,14 @@ export class DashboardComponent implements OnInit{
     { valor: 6, nombre: 'Sexto Grado' }
   ];
 
-  constructor(private authService: AuthService, private router: Router, private studentService: StudentService, private prediccionService: PrediccionService, private dashboardService: DashboardService ) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private studentService: StudentService,
+    private prediccionService: PrediccionService,
+    private dashboardService: DashboardService,
+    private http: HttpClient
+  ) {}
 
   logout(): void {
     this.authService.logout();
@@ -68,6 +81,16 @@ export class DashboardComponent implements OnInit{
           //p.observacion?.includes('⚠️ Atención: Existen múltiples factores de riesgo que podrían afectar negativamente el rendimiento.')
           ["Medio", "Bajo"].includes(p.rendimiento),
         );
+      },
+      error: (err) => {
+        console.error('Error al obtener predicciones', err);
+      }
+    });
+    this.prediccionService.obtenerPredicciones().subscribe({
+      next: (res) => {
+        this.predicciones = res;
+        this.alertas = res.filter(p => ["Medio", "Bajo"].includes(p.rendimiento));
+        this.mostrarDetalle = this.alertas.map(() => false); // todos ocultos al inicio
       },
       error: (err) => {
         console.error('Error al obtener predicciones', err);
@@ -143,6 +166,7 @@ export class DashboardComponent implements OnInit{
     });
   }
 
+
   generarGraficoGenero(data: { hombres: number; mujeres: number }): void {
     const ctx = document.getElementById('generoChart') as HTMLCanvasElement;
 
@@ -195,6 +219,28 @@ export class DashboardComponent implements OnInit{
   toggleNotificaciones(): void {
     this.mostrarNotificaciones = !this.mostrarNotificaciones;
   }
+
+  cerrarNotificacion(index: number): void {
+    const alerta = this.alertas[index];
+
+    this.http.post('http://127.0.0.1:8000/api/auth/alertas/vista', {
+      estudiante_id: alerta.estudiante_id,
+      curso: alerta.curso,
+      trimestre: alerta.trimestre
+    }).subscribe({
+      next: () => {
+        this.alertas.splice(index, 1); // Elimina la alerta del array
+      },
+      error: (err) => {
+        console.error('Error al registrar alerta vista', err);
+      }
+    });
+  }
+
+  toggleDetalle(index: number): void {
+    this.mostrarDetalle[index] = !this.mostrarDetalle[index];
+  }
+
   // Detectar clics fuera del menú de notificaciones
   @HostListener('document:click', ['$event'])
   onClickOutside(event: MouseEvent): void {
@@ -209,5 +255,4 @@ export class DashboardComponent implements OnInit{
       this.mostrarNotificaciones = false;
     }
   }
-
 }

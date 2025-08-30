@@ -352,11 +352,13 @@ def obtener_promedio_por_curso_trimestre(
     current_user: User = Depends(utils.get_current_user),
     db: Session = Depends(get_db),
     curso: str = Query(None),
-    trimestre: int = Query(None)
+    trimestre: int = Query(None),
+    grado: int = Query(None)  # 👈 nuevo parámetro
 ):
     query = db.query(
         RendimientoAcademico.curso,
         RendimientoAcademico.trimestre,
+        Estudiante.grado,  # 👈 incluir grado
         func.avg(RendimientoAcademico.nota_trimestre).label("promedio_nota")
     ).join(Estudiante).filter(
         Estudiante.docente_id == current_user.id
@@ -366,14 +368,16 @@ def obtener_promedio_por_curso_trimestre(
         query = query.filter(RendimientoAcademico.curso == curso)
     if trimestre:
         query = query.filter(RendimientoAcademico.trimestre == trimestre)
+    if grado:
+        query = query.filter(Estudiante.grado == grado)  # 👈 aplicar filtro
 
-    query = query.group_by(RendimientoAcademico.curso, RendimientoAcademico.trimestre).all()
+    query = query.group_by(RendimientoAcademico.curso, RendimientoAcademico.trimestre, Estudiante.grado).all()
 
-    # Convertir resultados en diccionarios
     resultados = [
         {
             "curso": r.curso,
             "trimestre": r.trimestre,
+            "grado": r.grado,
             "promedio_nota": round(r.promedio_nota, 2) if r.promedio_nota else 0
         }
         for r in query
@@ -431,6 +435,9 @@ def ranking_estudiantes(
         "trimestre": trimestre,
         "estudiantes": estudiantes
     }
+
+
+
 
 
 

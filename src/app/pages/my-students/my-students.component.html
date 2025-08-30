@@ -21,6 +21,39 @@
     <!-- Tabla de estudiantes -->
     <mat-card class="contenedor-tabla">
       <mat-card-title>Lista de Estudiantes</mat-card-title>
+
+      <div class="filtros-container">
+        <div class="filtro-grupo">
+
+          <!-- Filtro por código -->
+          <div class="filtro">
+            <label for="codigoInput">Filtrar por código</label>
+            <input
+              id="codigoInput"
+              type="text"
+              (keyup)="manejarFiltroCodigo($event)"
+              style="padding: 8px; font-size: 16px; border: 2px solid #ccc; border-radius: 5px; min-width: 220px;"
+            />
+          </div>
+
+          <!-- Filtro por grado -->
+          <div class="filtro">
+            <label for="gradoSelect">Filtrar por grado</label>
+            <select id="gradoSelect" (change)="manejarFiltroGrado($event)">
+              <option value="">Todos</option>
+              <option *ngFor="let grado of gradosDisponibles" [value]="grado">
+                {{ obtenerNombreGrado(grado) }}
+              </option>
+            </select>
+          </div>
+
+          <button mat-raised-button class="btn-verde" (click)="limpiarFiltros()">
+            <mat-icon>clear</mat-icon> Limpiar filtros
+          </button>
+
+        </div>
+      </div>
+
       <div class="tabla-responsive">
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
           <!-- Columnas de la tabla -->

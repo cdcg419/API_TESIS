@@ -140,11 +140,25 @@
 
 <div class="notificaciones-menu mat-elevation-z4" *ngIf="mostrarNotificaciones" #notiMenu>
   <h3>Notificaciones de Alerta</h3>
-  <div *ngFor="let p of alertas" class="notificacion-alerta">
-    <p><strong>Estudiante:</strong> {{ p.Codigo_estudiante }}</p>
-    <p><strong>Curso:</strong> {{ p.curso }} | <strong>Trimestre:</strong> {{ p.trimestre }}</p>
-    <p><strong>Rendimiento:</strong> {{ p.rendimiento }}</p>
-    <p><strong>Mensaje Umbral:</strong> {{ p.mensaje_umbral }}</p>
+  <div *ngFor="let p of alertas; let i = index" class="notificacion-alerta">
+
+    <!-- Cabecera resumida <strong>Trimestre:</strong> {{ p.trimestre }}</p> -->
+    <div class="noti-header" (click)="toggleDetalle(i)">
+      <p><strong>Estudiante:</strong> {{ p.Codigo_estudiante }}</p>
+      <p><strong>Curso:</strong> {{ p.curso }} | <!-- <strong>Trimestre:</strong> {{ p.trimestre }}</p> -->
+      <p><strong>Rendimiento:</strong> {{ p.rendimiento }}</p>
+      <button class="btn-toggle">
+        {{ mostrarDetalle[i] ? '▲' : '▼' }}
+      </button>
+    </div>
+
+    <!-- Detalle expandible -->
+    <div class="noti-detalle" *ngIf="mostrarDetalle[i]">
+      <p><strong>Trimestre:</strong> {{ getNombreTrimestre(p.trimestre) }}</p>
+      <p><strong>Mensaje:</strong> {{ p.mensaje_umbral }}</p>
+      <button class="btn-ok" (click)="cerrarNotificacion(i)">OK</button>
+    </div>
+
     <hr />
   </div>
 </div>

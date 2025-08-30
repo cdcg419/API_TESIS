@@ -16,6 +16,10 @@ export class MyStudentsComponent implements OnInit{
   dataSource: EstudianteInfo[] = [];
   predicciones: ResultadoPrediccion[] = [];
   alertas: ResultadoPrediccion[] = [];
+  estudiantesOriginales: EstudianteInfo[] = [];
+  codigoFiltro: string = '';
+  gradoFiltro: string = '';
+  gradosDisponibles: number[] = [];
   mostrarNotificaciones = false;
 
   @ViewChild('notiMenu') notiMenu!: ElementRef;
@@ -37,7 +41,9 @@ export class MyStudentsComponent implements OnInit{
     if (docenteId) {
       this.registerNotesService.obtenerEstudiantesPorDocente(+docenteId).subscribe({
         next: (data) => {
+          this.estudiantesOriginales = data;
           this.dataSource = data;
+          this.gradosDisponibles = [...new Set(data.map(e => e.grado))];
         },
         error: (err) => {
           console.error('Error al obtener estudiantes', err);
@@ -77,6 +83,42 @@ export class MyStudentsComponent implements OnInit{
   obtenerNombreGrado(grado: number): string {
   const nombres = ['Primer grado', 'Segundo grado', 'Tercer grado', 'Cuarto grado', 'Quinto grado', 'Sexto grado'];
   return nombres[grado - 1] || 'Grado desconocido';
+  }
+
+  filtrarPorCodigo(valor: string): void {
+    this.codigoFiltro = valor.trim().toLowerCase();
+    this.aplicarFiltros();
+  }
+
+  manejarFiltroCodigo(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const valor = input?.value ?? '';
+    this.filtrarPorCodigo(valor);
+  }
+
+  filtrarPorGrado(valor: string): void {
+    this.gradoFiltro = valor;
+    this.aplicarFiltros();
+  }
+
+  manejarFiltroGrado(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const valor = select?.value ?? '';
+    this.filtrarPorGrado(valor);
+  }
+
+  aplicarFiltros(): void {
+    this.dataSource = this.estudiantesOriginales.filter(est => {
+      const coincideCodigo = est.Codigo_estudiante.toLowerCase().includes(this.codigoFiltro);
+      const coincideGrado = this.gradoFiltro ? est.grado === +this.gradoFiltro : true;
+      return coincideCodigo && coincideGrado;
+    });
+  }
+
+  limpiarFiltros(): void {
+    this.codigoFiltro = '';
+    this.gradoFiltro = '';
+    this.dataSource = [...this.estudiantesOriginales];
   }
 
 }

@@ -204,3 +204,11 @@ class EstudianteRanking(BaseModel):
 class RankingEstudiantesResponse(BaseModel):
     trimestre: int
     estudiantes: list[EstudianteRanking]
+    
+############################
+
+class AlertaVistaCreate(BaseModel):
+    estudiante_id: int
+    curso: str
+    trimestre: int
+    

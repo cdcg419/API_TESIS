@@ -257,13 +257,32 @@ def obtener_estudiantes_con_resultado(db: Session):
     return resultados
 
 ##nuevo
+    
 def obtener_predicciones_por_docente(db: Session, docente_id: int):
-    resultados = db.query(ResultadoPrediccion).\
-        join(ResultadoPrediccion.estudiante).\
-        filter(Estudiante.docente_id == docente_id).\
-        options(joinedload(ResultadoPrediccion.estudiante)).\
-        all()
+    # Obtener todas las predicciones del docente
+    resultados = db.query(ResultadoPrediccion)\
+        .join(ResultadoPrediccion.estudiante)\
+        .filter(Estudiante.docente_id == docente_id)\
+        .options(joinedload(ResultadoPrediccion.estudiante))\
+        .all()
 
+    # Obtener las alertas ya vistas por el docente
+    vistas = db.query(models.AlertaVista)\
+        .filter(models.AlertaVista.docente_id == docente_id)\
+        .all()
+
+    # Filtrar las predicciones que no han sido vistas
+    filtradas = [
+        r for r in resultados
+        if not any(
+            v.estudiante_id == r.estudiante_id and
+            v.curso == r.curso and
+            v.trimestre == r.trimestre
+            for v in vistas
+        )
+    ]
+
+    # Construir la respuesta
     return [
         {
             "estudiante_id": r.estudiante_id,
@@ -275,7 +294,7 @@ def obtener_predicciones_por_docente(db: Session, docente_id: int):
             "observacion": r.observacion,
             "mensaje_umbral": r.mensaje_umbral
         }
-        for r in resultados
+        for r in filtradas
     ]
 
 ##########################################
@@ -388,4 +407,16 @@ def obtener_ranking_por_trimestre(db: Session, docente_id: int, trimestre: int, 
 
     return estudiantes
 
+############################Alertas
 
+def crear_alerta_vista(db: Session, alerta: schemas.AlertaVistaCreate, docente_id: int):
+    nueva_alerta = models.AlertaVista(
+        docente_id=docente_id,
+        estudiante_id=alerta.estudiante_id,
+        curso=alerta.curso,
+        trimestre=alerta.trimestre
+    )
+    db.add(nueva_alerta)
+    db.commit()
+    db.refresh(nueva_alerta)
+    return nueva_alerta

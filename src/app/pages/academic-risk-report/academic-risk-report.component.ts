@@ -129,7 +129,8 @@ export class AcademicRiskReportComponent implements OnInit{
   obtenerPromedioPorCurso(): void {
     this.reportService.obtenerPromedioPorCursoTrimestre(
       this.cursoSeleccionado,
-      this.trimestreSeleccionado
+      this.trimestreSeleccionado,
+      this.gradoSeleccionado === '' ? undefined : +this.gradoSeleccionado
     ).subscribe(data => {
       this.promediosPorCurso = data;
     });

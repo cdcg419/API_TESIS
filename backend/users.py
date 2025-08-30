@@ -54,3 +54,11 @@ def obtener_predicciones_docente(
     current_user: models.User = Depends(get_current_user)
 ):
     return crud.obtener_predicciones_por_docente(db, current_user.id)
+
+@router.post("/alertas/vista")
+def registrar_alerta_vista(
+    alerta: schemas.AlertaVistaCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    return crud.crear_alerta_vista(db, alerta, current_user.id)

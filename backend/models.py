@@ -84,3 +84,14 @@ class ResultadoPrediccion(Base):
         UniqueConstraint('estudiante_id', 'curso', 'trimestre', name='unique_resultado_estudiante_trimestre'),
     )
 
+class AlertaVista(Base):
+    __tablename__ = "alertas_vistas"
+
+    id = Column(Integer, primary_key=True, index=True)
+    docente_id = Column(Integer, ForeignKey("users.id"))  
+    estudiante_id = Column(Integer)
+    curso = Column(String(100))  # ← ¡Aquí está la corrección!
+    trimestre = Column(Integer)
+
+    docente = relationship("User")
+

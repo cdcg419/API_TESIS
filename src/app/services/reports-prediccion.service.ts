@@ -39,6 +39,7 @@ export interface PorcentajeRiesgoCurso {
 export interface PromedioCursoTrimestre {
   curso: string;
   trimestre: number;
+  grado: number;
   promedio_nota: number;
 }
 
@@ -116,10 +117,11 @@ export class ReportsPrediccionService {
     return this.http.get<PorcentajeRiesgoCurso[]>(this.apiPorcentajeRiesgoUrl, { params });
   }
 
-  obtenerPromedioPorCursoTrimestre(curso?: string, trimestre?: number): Observable<PromedioCursoTrimestre[]> {
+  obtenerPromedioPorCursoTrimestre(curso?: string, trimestre?: number, grado?: number): Observable<PromedioCursoTrimestre[]> {
     const params: any = {};
     if (curso) params.curso = curso;
     if (trimestre !== undefined) params.trimestre = trimestre;
+    if (grado !== undefined) params.grado = grado; // 👈 nuevo parámetro
     return this.http.get<PromedioCursoTrimestre[]>(this.apipromCursoUrl, { params });
   }
 
