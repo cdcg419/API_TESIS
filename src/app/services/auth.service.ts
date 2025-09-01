@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { HttpHeaders, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -83,6 +84,13 @@ export class AuthService {
   //Eliminar usuario
   deleteUser(userId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/delete/${userId}`);
+  }
+
+  recoverPassword(correo: string): Observable<any> {
+    const body = new HttpParams().set('correo', correo);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+
+    return this.http.post(`${this.apiUrl}/recuperar`, body.toString(), { headers });
   }
 
 }

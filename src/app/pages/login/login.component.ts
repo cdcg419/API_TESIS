@@ -17,6 +17,11 @@ export class LoginComponent {
   showModal: boolean = false;
   showPassword: boolean = false;
 
+  mostrarRecuperacion: boolean = false;
+  correoRecuperacion: string = '';
+  showRecuperacionModal: boolean = false;
+
+
   constructor(
     private authService: AuthService,
     private router: Router
@@ -53,5 +58,47 @@ export class LoginComponent {
   togglePasswordVisibility(): void {
   this.showPassword = !this.showPassword;
   }
+  /*
+  onRecoverPassword(event: Event): void {
+    event.preventDefault();
+    // Aquí puedes abrir un modal, redirigir a una vista, o mostrar un campo para ingresar el correo
+    // Ejemplo simple: mostrar un prompt
+    const correo = prompt('Ingresa tu correo para recuperar la contraseña:');
+    if (correo) {
+      this.authService.recoverPassword(correo).subscribe({
+        next: () => alert('Se ha enviado una contraseña temporal a tu correo.'),
+        error: err => alert('Error: ' + (err.error?.detail || 'No se pudo recuperar la contraseña'))
+      });
+    }
+  }*/
+
+  toggleRecuperacion(event: Event): void {
+    event.preventDefault();
+    this.showRecuperacionModal = true;
+  }
+
+  closeRecuperacionModal(): void {
+    this.showRecuperacionModal = false;
+    this.correoRecuperacion = '';
+  }
+
+  enviarRecuperacion(): void {
+    if (!this.correoRecuperacion) {
+      this.errorMessage = 'Por favor ingresa tu correo.';
+      return;
+    }
+
+    this.authService.recoverPassword(this.correoRecuperacion).subscribe({
+      next: () => {
+        alert('Se ha enviado una contraseña temporal a tu correo.');
+        this.closeRecuperacionModal();
+      },
+      error: err => {
+        this.errorMessage = err.error?.detail || 'No se pudo recuperar la contraseña';
+      }
+    });
+  }
+
+
 }
 

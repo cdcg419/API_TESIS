@@ -157,3 +157,72 @@ input:focus {
   cursor: pointer;
   font-size: 18px;
 }
+
+
+/* Modal específico para recuperación */
+.modal-content.recuperacion {
+  max-width: 400px;
+  padding: 25px;
+}
+
+.modal-content.recuperacion h2 {
+  text-align: center;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.modal-content.recuperacion label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.modal-content.recuperacion input[type="email"] {
+  width: 95%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.modal-content.recuperacion input:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-footer .btn-submit {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.modal-footer .btn-submit:hover {
+  background-color: #45a049;
+}
+
+.modal-footer .btn-close {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.modal-footer .btn-close:hover {
+  background-color: #c0392b;
+}
+

@@ -49,6 +49,43 @@ def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
             "id": db_user.id,
             "nombre": db_user.nombre,
             "apellido": db_user.apellido,
-            "correo": db_user.correo
+            "correo": db_user.correo,
+            "requiere_cambio": db_user.requiere_cambio 
         }
     }
+
+from fastapi import Form
+from utils import generar_contraseña_temporal, enviar_correo, hash_password
+
+@router.post("/recuperar")
+def recuperar_contraseña(correo: str = Form(...), db: Session = Depends(get_db)):
+    usuario = db.query(models.User).filter(models.User.correo == correo).first()
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Correo no registrado")
+
+    # Generar nueva contraseña temporal
+    nueva_clave = generar_contraseña_temporal()
+
+    # Hashearla y actualizar en la base de datos
+    usuario.contraseña = hash_password(nueva_clave)
+    usuario.requiere_cambio = True
+    db.commit()
+
+    # Preparar cuerpo del correo
+    cuerpo = f"""
+        Hola {usuario.nombre},
+
+        Tu nueva contraseña temporal es: {nueva_clave}
+
+        Por seguridad, deberás cambiarla al ingresar.
+
+        Si no solicitaste este cambio, puedes ignorar este mensaje.
+
+        Saludos,
+        El equipo de soporte
+        """
+
+    # Enviar correo
+    enviar_correo(destinatario=correo, asunto="Recuperación de contraseña", cuerpo=cuerpo)
+
+    return {"mensaje": "Se ha enviado una contraseña temporal al correo"}

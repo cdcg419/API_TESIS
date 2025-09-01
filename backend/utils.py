@@ -7,6 +7,12 @@ from jose import JWTError, jwt, ExpiredSignatureError
 import models
 from database import get_db
 from passlib.context import CryptContext
+import secrets
+
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
 
 # Configuración de JWT
 SECRET_KEY = "missecretoseguro"  # Cambia esto por una clave segura
@@ -63,3 +69,27 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     except JWTError:
         raise credentials_exception
 
+
+def generar_contraseña_temporal() -> str:
+    return secrets.token_urlsafe(8)  # Ejemplo: 'X9kLp2qZ'
+
+def enviar_correo(destinatario: str, asunto: str, cuerpo: str):
+    remitente = "predix20@gmail.com"  # 👈 Cambia esto por tu correo real
+    contraseña = "bipz bqgx wvll ftwu"  # 👈 Usa una contraseña de aplicación (no la normal)
+
+    mensaje = MIMEMultipart()
+    mensaje["From"] = remitente
+    mensaje["To"] = destinatario
+    mensaje["Subject"] = asunto
+
+    mensaje.attach(MIMEText(cuerpo, "plain"))
+
+    try:
+        servidor = smtplib.SMTP("smtp.gmail.com", 587)
+        servidor.starttls()
+        servidor.login(remitente, contraseña)
+        servidor.sendmail(remitente, destinatario, mensaje.as_string())
+        servidor.quit()
+        print("✅ Correo enviado correctamente")
+    except Exception as e:
+        print(f"❌ Error al enviar el correo: {e}")

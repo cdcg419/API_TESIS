@@ -37,6 +37,31 @@
 
   <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
   <p class="register-link">¿No tienes una cuenta? <a routerLink="/register">Regístrate aquí</a></p>
+  <p class="register-link">
+    ¿Olvidaste tu contraseña?
+    <a href="#" (click)="toggleRecuperacion($event)">Recupérala aquí</a>
+  </p>
+
+  <!-- Modal de recuperación de contraseña -->
+  <div class="modal-overlay" *ngIf="showRecuperacionModal">
+    <div class="modal-content recuperacion">
+      <h2 class="modal-title">Recuperar contraseña</h2>
+      <div class="modal-body">
+        <label for="correoRecuperacion">Ingresa tu correo electrónico</label>
+        <input
+          type="email"
+          id="correoRecuperacion"
+          [(ngModel)]="correoRecuperacion"
+          name="correoRecuperacion"
+          required
+        />
+      </div>
+      <div class="modal-footer">
+        <button class="btn-submit" (click)="enviarRecuperacion()">Enviar</button>
+        <button class="btn-close" (click)="closeRecuperacionModal()">Cerrar</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Modal -->
   <div class="modal-overlay" *ngIf="showModal">

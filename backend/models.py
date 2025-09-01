@@ -12,6 +12,7 @@ class User(Base):
     apellido = Column(String(100))
     correo = Column(String(120), unique=True, index=True)
     contraseña = Column(String(255))
+    requiere_cambio = Column(Boolean, default=False)
     estudiantes = relationship("Estudiante", back_populates="docente", cascade="all, delete-orphan")
 
 # Modelo de Estudiante 
