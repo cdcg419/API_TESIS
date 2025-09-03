@@ -7,6 +7,13 @@ import { RendimientoDetalleComponent } from '../rendimiento-detalle/rendimiento-
 
 interface RendimientoEditable extends RendimientoAcademico {
   editando: boolean;
+  _original?: {
+    curso: string;
+    trimestre: number;
+    asistencia: number;
+    nota_trimestre: number;
+    conducta: number;
+  };
 }
 
 @Component({
@@ -42,19 +49,28 @@ export class AcademicRecordsStudentsComponent implements OnInit{
 
   ngOnInit(): void {
     this.estudianteId = Number(this.route.snapshot.paramMap.get('id'));
+
+    // Suscribirse a cambios emitidos desde notasEventService
+    this.notasEventService.cambios$.subscribe(() => {
+      this.recargarNotas(); // vuelve a consultar las notas
+    });
+
+    // Cargar notas iniciales
     this.notesService.obtenerNotasPorEstudiante(this.estudianteId).subscribe({
       next: (res) => {
         this.notas = res.map(n => ({ ...n, editando: false }));
         this.filtrarNotasPorCurso(); // Aplica el filtro inicial
 
-        // Si hay notas, inicia la predicción
         if (this.notas.length > 0) {
           this.iniciarPrediccion();
         }
+      },
+      error: err => {
+        console.error('Error al obtener notas', err);
       }
     });
-    // Obtener todos los estudiantes del docente y filtrar el código
-    // Buscar el código del estudiante
+
+    // Obtener datos del estudiante
     const docenteId = localStorage.getItem('userId');
     if (docenteId) {
       this.notesService.obtenerEstudiantesPorDocente(+docenteId).subscribe({
@@ -86,23 +102,35 @@ export class AcademicRecordsStudentsComponent implements OnInit{
     this.iniciarPrediccion();
   }
   iniciarPrediccion(): void {
-  this.cargandoDatos = true;
-  let index = 0;
+    this.cargandoDatos = true;
+    let index = 0;
 
-  let intervalo = setInterval(() => {
-    this.mensajeCarga = this.pasosCarga[index];
-    index++;
-    if (index >= this.pasosCarga.length) clearInterval(intervalo);
-  }, 1200);
+    let intervalo = setInterval(() => {
+      this.mensajeCarga = this.pasosCarga[index];
+      index++;
+      if (index >= this.pasosCarga.length) clearInterval(intervalo);
+    }, 1200);
 
-  setTimeout(() => {
-    this.notas.forEach(nota => this.predecirRendimiento(nota));
-    this.cargandoDatos = false;
-  }, Math.max(this.pasosCarga.length * 1200, 3000)); // Garantiza al menos 3 segundos de carga
-}
+    setTimeout(() => {
+      this.notas.forEach(nota => this.predecirRendimiento(nota));
+      this.cargandoDatos = false;
+    }, Math.max(this.pasosCarga.length * 1200, 3000)); // Garantiza al menos 3 segundos de carga
+  }
 
-confirmarEdicion(nota: RendimientoAcademico): void {
-  if (confirm('¿Estás seguro de aplicar los cambios?')) {
+  recargarNotas(): void {
+    this.notesService.obtenerNotasPorEstudiante(this.estudianteId).subscribe({
+      next: (res) => {
+        this.notas = res.map(n => ({ ...n, editando: false }));
+        this.filtrarNotasPorCurso();
+      },
+      error: err => {
+        console.error('Error al recargar notas', err);
+      }
+    });
+  }
+
+  confirmarEdicion(nota: RendimientoEditable): void {
+    if (confirm('¿Estás seguro de aplicar los cambios?')) {
       this.notesService.actualizarNota(nota.id, nota).subscribe({
         next: () => {
           alert('Cambios aplicados correctamente');
@@ -112,7 +140,9 @@ confirmarEdicion(nota: RendimientoAcademico): void {
 
           // Muestra una ventana emergente pidiendo volver a predecir
           alert('Debes volver a predecir el rendimiento para actualizar los datos.');
-          this.notasEventService.emitirCambio();
+
+          // Salir del modo edición
+          nota.editando = false;
         },
         error: err => {
           console.error(err);
@@ -128,8 +158,12 @@ confirmarEdicion(nota: RendimientoAcademico): void {
       this.notesService.eliminarNota(id).subscribe({
         next: () => {
           alert('Nota eliminada');
+
+          // Elimina la nota del array local
           this.notas = this.notas.filter(n => n.id !== id);
-          this.notasEventService.emitirCambio();
+
+          // Aplica el filtro nuevamente
+          this.filtrarNotasPorCurso();
         },
         error: err => {
           console.error(err);
@@ -178,6 +212,28 @@ confirmarEdicion(nota: RendimientoAcademico): void {
   activarEdicion(nota: RendimientoEditable): void {
     this.notas.forEach(n => n.editando = false);
     nota.editando = true;
+
+    // Guarda solo los campos editables
+    nota._original = {
+      curso: nota.curso,
+      trimestre: nota.trimestre,
+      asistencia: nota.asistencia,
+      nota_trimestre: nota.nota_trimestre,
+      conducta: nota.conducta
+    };
+  }
+
+  cerrarEdicion(nota: RendimientoEditable): void {
+    if (nota._original) {
+      nota.curso = nota._original.curso;
+      nota.trimestre = nota._original.trimestre;
+      nota.asistencia = nota._original.asistencia;
+      nota.nota_trimestre = nota._original.nota_trimestre;
+      nota.conducta = nota._original.conducta;
+      delete nota._original;
+    }
+
+    nota.editando = false;
   }
 
   cursos: string[] = [

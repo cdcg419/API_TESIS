@@ -4,6 +4,8 @@ from sqlalchemy import extract
 from fastapi import HTTPException
 import models, schemas
 import joblib
+from datetime import datetime
+from sqlalchemy import DateTime
 from passlib.context import CryptContext
 from utils import hash_password
 from models import Estudiante, ResultadoPrediccion, User, RendimientoAcademico
@@ -122,22 +124,50 @@ def obtener_estudiante_por_id_y_docente(db: Session, estudiante_id: int, docente
 ################################### NOTAS DEL ESTUDIANTE ########################################
 
 def crear_registro_academico(db: Session, registro: schemas.RendimientoAcademicoCreate):
+    estudiante_id = registro.estudiante_id
+    curso = registro.curso
+    trimestre = registro.trimestre
+
     # Verificar si ya existe un registro para este estudiante, curso y trimestre
     existe_registro = db.query(models.RendimientoAcademico).filter(
-        models.RendimientoAcademico.estudiante_id == registro.estudiante_id,
-        models.RendimientoAcademico.curso == registro.curso,
-        models.RendimientoAcademico.trimestre == registro.trimestre
+        models.RendimientoAcademico.estudiante_id == estudiante_id,
+        models.RendimientoAcademico.curso == curso,
+        models.RendimientoAcademico.trimestre == trimestre
     ).first()
 
     if existe_registro:
         raise HTTPException(status_code=400, detail="El estudiante ya tiene una nota registrada para este curso y trimestre.")
 
-    # Si no existe, lo insertamos en la base de datos
+    # Validación de trimestres previos
+    if trimestre == 2:
+        falta_t1 = not db.query(models.RendimientoAcademico).filter(
+            models.RendimientoAcademico.estudiante_id == estudiante_id,
+            models.RendimientoAcademico.curso == curso,
+            models.RendimientoAcademico.trimestre == 1
+        ).first()
+        if falta_t1:
+            raise HTTPException(status_code=400, detail="No se puede registrar el trimestre 2 sin tener registrado el trimestre 1.")
+
+    elif trimestre == 3:
+        falta_t1 = not db.query(models.RendimientoAcademico).filter(
+            models.RendimientoAcademico.estudiante_id == estudiante_id,
+            models.RendimientoAcademico.curso == curso,
+            models.RendimientoAcademico.trimestre == 1
+        ).first()
+        falta_t2 = not db.query(models.RendimientoAcademico).filter(
+            models.RendimientoAcademico.estudiante_id == estudiante_id,
+            models.RendimientoAcademico.curso == curso,
+            models.RendimientoAcademico.trimestre == 2
+        ).first()
+        if falta_t1 or falta_t2:
+            raise HTTPException(status_code=400, detail="No se puede registrar el trimestre 3 sin tener registrados los trimestres 1 y 2.")
+
+    # Si todo está bien, lo insertamos en la base de datos
     db_registro = models.RendimientoAcademico(**registro.dict())
     db.add(db_registro)
     db.commit()
     db.refresh(db_registro)
-    
+
     return db_registro
 
 
@@ -149,45 +179,119 @@ def obtener_registros_por_estudiante(db: Session, estudiante_id: int):
 def obtener_registros_por_estudiante(db: Session, estudiante_id: int):
     return db.query(models.RendimientoAcademico).filter(models.RendimientoAcademico.estudiante_id == estudiante_id).all()
 
-def actualizar_registro_academico(db: Session, registro_id: int, registro_data: schemas.RendimientoAcademicoUpdate):
+def actualizar_registro_academico(db: Session, registro_id: int, registro_data: schemas.RendimientoAcademicoUpdate, current_user: models.User):
     registro = db.query(models.RendimientoAcademico).filter(models.RendimientoAcademico.id == registro_id).first()
-
     if not registro:
         raise HTTPException(status_code=404, detail="Registro no encontrado")
 
-    # Validar si ya existe otro registro con el mismo estudiante, curso y trimestre
+    # Validación de duplicado
     existe_registro = db.query(models.RendimientoAcademico).filter(
-        models.RendimientoAcademico.estudiante_id == registro.estudiante_id,  # Usamos el estudiante actual
+        models.RendimientoAcademico.estudiante_id == registro.estudiante_id,
         models.RendimientoAcademico.curso == registro_data.curso,
         models.RendimientoAcademico.trimestre == registro_data.trimestre,
-        models.RendimientoAcademico.id != registro_id  # Excluimos el registro que estamos editando
+        models.RendimientoAcademico.id != registro_id
     ).first()
-
     if existe_registro:
         raise HTTPException(status_code=400, detail="Ya existe una nota para este estudiante en este curso y trimestre.")
 
-    # Si no hay conflicto, se actualiza
+    # Validación de trimestres previos si se cambia el trimestre o curso
+    if registro_data.trimestre != registro.trimestre or registro_data.curso != registro.curso:
+        estudiante_id = registro.estudiante_id
+        curso_nuevo = registro_data.curso
+        trimestre_nuevo = registro_data.trimestre
+
+        if trimestre_nuevo == 2:
+            falta_t1 = not db.query(models.RendimientoAcademico).filter(
+                models.RendimientoAcademico.estudiante_id == estudiante_id,
+                models.RendimientoAcademico.curso == curso_nuevo,
+                models.RendimientoAcademico.trimestre == 1,
+                models.RendimientoAcademico.id != registro_id
+            ).first()
+            if falta_t1:
+                raise HTTPException(status_code=400, detail="No puedes cambiar al trimestre 2 sin tener registrado el trimestre 1.")
+
+        elif trimestre_nuevo == 3:
+            falta_t1 = not db.query(models.RendimientoAcademico).filter(
+                models.RendimientoAcademico.estudiante_id == estudiante_id,
+                models.RendimientoAcademico.curso == curso_nuevo,
+                models.RendimientoAcademico.trimestre == 1,
+                models.RendimientoAcademico.id != registro_id
+            ).first()
+            falta_t2 = not db.query(models.RendimientoAcademico).filter(
+                models.RendimientoAcademico.estudiante_id == estudiante_id,
+                models.RendimientoAcademico.curso == curso_nuevo,
+                models.RendimientoAcademico.trimestre == 2,
+                models.RendimientoAcademico.id != registro_id
+            ).first()
+            if falta_t1 or falta_t2:
+                raise HTTPException(status_code=400, detail="No puedes cambiar al trimestre 3 sin tener registrados los trimestres 1 y 2.")
+
+    # Guardar datos anteriores
+    trimestre_anterior = registro.trimestre
+    curso_anterior = registro.curso
+
+    # Actualizar el registro
     for key, value in registro_data.dict().items():
         setattr(registro, key, value)
-
     db.commit()
     db.refresh(registro)
+
+    # Actualizar alertas si cambió el curso o trimestre
+    if trimestre_anterior != registro.trimestre or curso_anterior != registro.curso:
+        notas_previas = db.query(models.RendimientoAcademico).filter_by(
+            estudiante_id=registro.estudiante_id,
+            curso=curso_anterior,
+            trimestre=trimestre_anterior
+        ).filter(models.RendimientoAcademico.id != registro_id).all()
+
+        if not notas_previas:
+            db.query(models.AlertaVista).filter_by(
+                docente_id=current_user.id,
+                estudiante_id=registro.estudiante_id,
+                curso=curso_anterior,
+                trimestre=trimestre_anterior
+            ).delete()
+            db.commit()
+
+        alerta = db.query(models.AlertaVista).filter_by(
+            docente_id=current_user.id,
+            estudiante_id=registro.estudiante_id,
+            curso=registro.curso,
+            trimestre=registro.trimestre
+        ).first()
+        if alerta:
+            alerta.fecha_actualizacion = datetime.utcnow()
+        else:
+            nueva_alerta = models.AlertaVista(
+                docente_id=current_user.id,
+                estudiante_id=registro.estudiante_id,
+                curso=registro.curso,
+                trimestre=registro.trimestre,
+                fecha_creacion=datetime.utcnow()
+            )
+            db.add(nueva_alerta)
+        db.commit()
+
     return registro
 
-def eliminar_registro_academico(db: Session, registro_id: int):
-    registro = db.query(models.RendimientoAcademico).filter(models.RendimientoAcademico.id == registro_id).first()
+def eliminar_registro_academico(db: Session, registro_id: int, current_user: models.User):
+    registro = db.query(models.RendimientoAcademico).filter(
+        models.RendimientoAcademico.id == registro_id
+    ).first()
+
     if not registro:
         raise HTTPException(status_code=404, detail="Registro no encontrado")
 
     estudiante_id = registro.estudiante_id
     curso = registro.curso
     trimestre = registro.trimestre
+    docente_id = current_user.id  
 
-    # Eliminar el registro
+    # Eliminar el registro académico
     db.delete(registro)
     db.commit()
 
-    # Verificar si hay otras notas para ese estudiante, curso y trimestre
+    # Verificar si quedan otras notas para ese estudiante en ese curso y trimestre
     notas_restantes = db.query(models.RendimientoAcademico).filter_by(
         estudiante_id=estudiante_id,
         curso=curso,
@@ -195,16 +299,28 @@ def eliminar_registro_academico(db: Session, registro_id: int):
     ).all()
 
     if not notas_restantes:
-        # Si no quedan notas, eliminar la predicción asociada
+        # Eliminar la predicción asociada
         db.query(models.ResultadoPrediccion).filter_by(
             estudiante_id=estudiante_id,
             curso=curso,
             trimestre=trimestre
         ).delete()
+
+        # Eliminar la alerta asociada
+        db.query(models.AlertaVista).filter_by(
+            docente_id=docente_id,
+            estudiante_id=estudiante_id,
+            curso=curso,
+            trimestre=trimestre
+        ).delete()
+
         db.commit()
     else:
-        # Recalcular la predicción (opcional)
+        # Opcional: recalcular predicción si quedan notas
         pass
+
+    return {"detail": "Registro eliminado correctamente"}
+
 
 
 def obtener_registro_por_id(db: Session, id: int):
@@ -410,13 +526,30 @@ def obtener_ranking_por_trimestre(db: Session, docente_id: int, trimestre: int, 
 ############################Alertas
 
 def crear_alerta_vista(db: Session, alerta: schemas.AlertaVistaCreate, docente_id: int):
-    nueva_alerta = models.AlertaVista(
+    # Buscar si ya existe una alerta para ese docente, estudiante, curso y trimestre
+    alerta_existente = db.query(models.AlertaVista).filter_by(
         docente_id=docente_id,
         estudiante_id=alerta.estudiante_id,
         curso=alerta.curso,
         trimestre=alerta.trimestre
-    )
-    db.add(nueva_alerta)
-    db.commit()
-    db.refresh(nueva_alerta)
-    return nueva_alerta
+    ).first()
+
+    if alerta_existente:
+        # Si existe, actualiza campos si es necesario
+        alerta_existente.fecha_actualizacion = datetime.utcnow()  # si tienes este campo
+        db.commit()
+        db.refresh(alerta_existente)
+        return alerta_existente
+    else:
+        # Si no existe, crea una nueva
+        nueva_alerta = models.AlertaVista(
+            docente_id=docente_id,
+            estudiante_id=alerta.estudiante_id,
+            curso=alerta.curso,
+            trimestre=alerta.trimestre,
+            fecha_creacion=datetime.utcnow()  # si aplica
+        )
+        db.add(nueva_alerta)
+        db.commit()
+        db.refresh(nueva_alerta)
+        return nueva_alerta

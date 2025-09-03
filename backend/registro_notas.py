@@ -5,6 +5,8 @@ from database import get_db
 import schemas, models, crud
 from typing import List
 
+from utils import get_current_user
+
 router = APIRouter(
     prefix="/registro-academico",
     tags=["Registro Académico"]
@@ -49,14 +51,19 @@ def listar_estudiantes(db: Session = Depends(get_db)):
 @router.put("/{registro_id}", response_model=schemas.RendimientoAcademicoOut)
 def actualizar_registro_academico(
     registro_id: int,
-    registro: schemas.RendimientoAcademicoUpdate,
-    db: Session = Depends(get_db)
+    registro_data: schemas.RendimientoAcademicoUpdate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
 ):
-    return crud.actualizar_registro_academico(db, registro_id, registro)
+    return crud.actualizar_registro_academico(db, registro_id, registro_data, current_user)
 
 @router.delete("/{registro_id}")
-def eliminar_registro_academico(registro_id: int, db: Session = Depends(get_db)):
-    crud.eliminar_registro_academico(db, registro_id)
+def eliminar_registro_academico(
+    registro_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)  # ← agregar esto
+):
+    crud.eliminar_registro_academico(db, registro_id, current_user)
     return {"mensaje": "Registro eliminado exitosamente"}
 
 #nuevo

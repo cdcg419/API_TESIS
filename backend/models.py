@@ -94,5 +94,8 @@ class AlertaVista(Base):
     curso = Column(String(100))  # ← ¡Aquí está la corrección!
     trimestre = Column(Integer)
 
+    fecha_creacion = Column(DateTime, default=datetime.utcnow)
+    fecha_actualizacion = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
     docente = relationship("User")
 

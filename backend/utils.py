@@ -74,8 +74,8 @@ def generar_contraseña_temporal() -> str:
     return secrets.token_urlsafe(8)  # Ejemplo: 'X9kLp2qZ'
 
 def enviar_correo(destinatario: str, asunto: str, cuerpo: str):
-    remitente = "predix20@gmail.com"  # 👈 Cambia esto por tu correo real
-    contraseña = "bipz bqgx wvll ftwu"  # 👈 Usa una contraseña de aplicación (no la normal)
+    remitente = "predix20@gmail.com"  
+    contraseña = "bipz bqgx wvll ftwu"  
 
     mensaje = MIMEMultipart()
     mensaje["From"] = remitente
