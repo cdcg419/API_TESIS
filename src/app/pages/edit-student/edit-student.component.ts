@@ -17,6 +17,8 @@ export class EditStudentComponent implements OnInit {
     presencia_padres: '',
     trabaja: false
   };
+  alertMessage: string = '';
+  alertType: string = ''; // 'success', 'danger', etc.
 
   studentId!: number;
 
@@ -43,19 +45,31 @@ export class EditStudentComponent implements OnInit {
 
   onSubmit(): void {
     this.studentService.updateStudent(this.studentId, this.student).subscribe({
-      next: () => {
-        alert('Estudiante actualizado correctamente');
+
+       next: () => {
+          this.showAlert('Estudiante actualizado correctamente', 'success');
+        setTimeout(() => {
         this.router.navigate(['/my_students']);
+        }, 2000);
       },
       error: (err) => {
         if (err.status === 409 || err.error?.detail?.includes('código')) {
           alert('Este código ya está registrado. Intenta con otro.');
         } else {
-          alert('Error al actualizar estudiante');
+          this.showAlert('Error al actualizar estudiante', 'danger');
         }
         console.error('Error al actualizar estudiante', err);
       }
     });
   }
-}
 
+  private showAlert(message: string, type: string) {
+    this.alertMessage = message;
+    this.alertType = type;
+
+    // Auto cerrar después de 5 segundos
+    setTimeout(() => {
+      this.alertMessage = '';
+    }, 5000);
+  }
+}

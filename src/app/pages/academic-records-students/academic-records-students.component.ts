@@ -66,7 +66,7 @@ export class AcademicRecordsStudentsComponent implements OnInit{
         }
       },
       error: err => {
-        console.error('Error al obtener notas', err);
+        console.error('Error al cargar las notas del estudiante. Intente nuevamente.', err);
       }
     });
 
@@ -96,7 +96,7 @@ export class AcademicRecordsStudentsComponent implements OnInit{
   }
   validarPrediccion(): void {
     if (this.notas.length === 0) {
-      alert('Debe registrar notas antes de predecir rendimiento.');
+      alert('Error al procesar la predicción. Intente nuevamente.');
       return;
     }
     this.iniciarPrediccion();
@@ -114,7 +114,7 @@ export class AcademicRecordsStudentsComponent implements OnInit{
     setTimeout(() => {
       this.notas.forEach(nota => this.predecirRendimiento(nota));
       this.cargandoDatos = false;
-    }, Math.max(this.pasosCarga.length * 1200, 3000)); // Garantiza al menos 3 segundos de carga
+    }, Math.max(this.pasosCarga.length * 1200, 3000));
   }
 
   recargarNotas(): void {
@@ -130,18 +130,17 @@ export class AcademicRecordsStudentsComponent implements OnInit{
   }
 
   confirmarEdicion(nota: RendimientoEditable): void {
+    if (!this.validarNota(nota)) {
+      alert('Hay campos inválidos. Corrige los errores antes de guardar.');
+      return;
+    }
+
     if (confirm('¿Estás seguro de aplicar los cambios?')) {
       this.notesService.actualizarNota(nota.id, nota).subscribe({
         next: () => {
           alert('Cambios aplicados correctamente');
-
-          // Oculta la barra de progreso eliminando el valor de rendimiento
           nota.rendimiento = undefined;
-
-          // Muestra una ventana emergente pidiendo volver a predecir
           alert('Debes volver a predecir el rendimiento para actualizar los datos.');
-
-          // Salir del modo edición
           nota.editando = false;
         },
         error: err => {
@@ -150,6 +149,16 @@ export class AcademicRecordsStudentsComponent implements OnInit{
         }
       });
     }
+  }
+
+  validarNota(nota: RendimientoEditable): boolean {
+    return (
+      typeof nota.curso === 'string' && nota.curso.trim() !== '' &&
+      Number(nota.trimestre) >= 1 && Number(nota.trimestre) <= 3 &&
+      Number(nota.asistencia) >= 1 && Number(nota.asistencia) <= 100 &&
+      Number(nota.nota_trimestre) >= 1 && Number(nota.nota_trimestre) <= 20 &&
+      Number(nota.conducta) >= 1 && Number(nota.conducta) <= 20
+    );
   }
 
 

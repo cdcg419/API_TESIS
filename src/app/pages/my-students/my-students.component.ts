@@ -64,7 +64,7 @@ export class MyStudentsComponent implements OnInit{
           this.loadStudents(); // recarga la lista
         },
         error: (err) => {
-          console.error('Error al eliminar estudiante', err);
+          console.error('Error al eliminar estudiante. Por favor, intente de nuevo.', err);
           alert('No se pudo eliminar el estudiante');
         }
       });

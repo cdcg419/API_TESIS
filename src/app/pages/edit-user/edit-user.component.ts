@@ -18,10 +18,9 @@ export class EditUserComponent implements OnInit {
   confirmPassword: string = '';
   passwordError: string = '';
   passwordSuccess: string = '';
-
-  // Variables para manejar la visibilidad de los modales
   showModalDatos: boolean = false;
   showModalPassword: boolean = false;
+  showModalDelete: boolean = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -57,7 +56,7 @@ export class EditUserComponent implements OnInit {
         if (error.status === 409 || error.error?.message?.includes('correo')) {
           this.errorMessage = 'Este correo ya está registrado. Intenta con otro.';
         } else {
-          this.errorMessage = 'Hubo un error al actualizar los datos del usuario.';
+          this.errorMessage = 'Error al actualizar datos, intente nuevamente';
         }
       }
     );
@@ -97,7 +96,7 @@ export class EditUserComponent implements OnInit {
 
       },
       (error) => {
-        this.passwordError = 'Error al actualizar la contraseña.';
+        this.passwordError = 'Error al actualizar datos, intente nuevamente';
         this.passwordSuccess = '';
       }
     );
@@ -107,20 +106,36 @@ export class EditUserComponent implements OnInit {
   cancelSavePassword(): void {
     this.showModalPassword = false;
   }
-  onDeleteAccount(): void {
-    const confirmed = window.confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.');
 
-    if (confirmed) {
-      this.authService.deleteUser(this.userId).subscribe(
-        (response) => {
-          alert('Tu cuenta ha sido eliminada.');
-          this.router.navigate(['/login']);  // Redirigir al login después de eliminar la cuenta
-        },
-        (error) => {
-          this.errorMessage = 'Hubo un error al eliminar tu cuenta.';
-        }
-      );
-    }
+  // Abre el modal de confirmación para eliminar la cuenta.
+  onDeleteAccount(): void {
+    this.showModalDelete = true;
+  }
+
+  // Lógica para confirmar la eliminación de la cuenta.
+  confirmDeleteAccount(): void {
+    this.authService.deleteUser(this.userId).subscribe(
+      () => {
+        alert('Tu cuenta ha sido eliminada.'); // Puedes cambiar esto por un modal de éxito
+        this.router.navigate(['/login']);
+        this.showModalDelete = false; // Cierra el modal de confirmación
+      },
+      (error) => {
+        this.errorMessage = 'No se pudo eliminar la cuenta. Intente nuevamente.';
+        this.showModalDelete = false; // Cierra el modal aunque haya un error
+      }
+    );
+  }
+
+  // Cierra el modal de confirmación sin realizar la eliminación.
+  cancelDeleteAccount(): void {
+    this.showModalDelete = false;
   }
 }
+
+
+
+
+
+
 

@@ -94,7 +94,7 @@
               [(ngModel)]="newPassword"
               required
               maxlength="8"
-              pattern="^(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{6,14}$"
+              pattern="^(?=.[A-Z])(?=.[^a-zA-Z0-9]).{6,14}$"
               #newPasswordField="ngModel"
             />
             <div *ngIf="newPasswordField.invalid && newPasswordField.touched" class="error-message">
@@ -155,6 +155,15 @@
         <button (click)="confirmSavePassword()" class="btn-confirm">Confirmar</button>
         <button (click)="cancelSavePassword()" class="btn-cancel">Cancelar</button>
       </div>
+    </div>
+  </div>
+  <div *ngIf="showModalDelete" class="modal">
+  <div class="modal-content">
+    <h3>¿Estás seguro de que deseas eliminar tu cuenta?</h3>
+    <p>Esta acción no se puede deshacer.</p>
+    <div class="modal-buttons">
+      <button (click)="confirmDeleteAccount()" class="btn-confirm">Eliminar</button>
+      <button (click)="cancelDeleteAccount()" class="btn-cancel">Cancelar</button>
     </div>
   </div>
 </div>

@@ -6,7 +6,7 @@
       <input type="email" id="email" [(ngModel)]="email" name="email" required />
     </div>
 
-     <div class="form-group password-group">
+    <div class="form-group password-group">
       <label for="password">Contraseña</label>
       <div class="password-wrapper">
         <input
@@ -22,12 +22,18 @@
       </div>
     </div>
 
+    <p class="register-link">
+      ¿Olvidaste tu contraseña?
+      <a href="#" (click)="toggleRecuperacion($event)">Recupérala aquí</a>
+    </p>
+
     <div class="form-group checkbox-group">
       <input type="checkbox" id="terms" [(ngModel)]="acceptedTerms" name="terms"/>
-        <label for="terms" class="checkbox-label">
-         Acepto los <a href="#" (click)="openModal($event)">términos y condiciones</a>
-        </label>
+      <label for="terms" class="checkbox-label">
+        Acepto los <a href="#" (click)="openModal($event)">términos y condiciones</a>
+      </label>
     </div>
+
     <div *ngIf="showTermsError" class="error-message">
       Debes aceptar los términos y condiciones para continuar.
     </div>
@@ -36,11 +42,8 @@
   </form>
 
   <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
   <p class="register-link">¿No tienes una cuenta? <a routerLink="/register">Regístrate aquí</a></p>
-  <p class="register-link">
-    ¿Olvidaste tu contraseña?
-    <a href="#" (click)="toggleRecuperacion($event)">Recupérala aquí</a>
-  </p>
 
   <!-- Modal de recuperación de contraseña -->
   <div class="modal-overlay" *ngIf="showRecuperacionModal">
