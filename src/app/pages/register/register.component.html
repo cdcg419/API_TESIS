@@ -81,13 +81,20 @@
       </div>
     </div>
 
-    <button type="submit" class="btn-submit" [disabled]="registerForm.invalid">Registrar</button>
+  <button type="submit" class="btn-submit" [disabled]="registerForm.invalid">Registrar</button>
   </form>
-
-  <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
 
   <p class="login-link">¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión aquí</a></p>
 </div>
 
-
+<div class="modal" [ngClass]="{'show-modal': showModal}">
+  <div class="modal-content" [ngClass]="{'success-modal': modalType === 'success', 'error-modal': modalType === 'error'}">
+    <span class="close-button" (click)="closeModal()">&times;</span>
+    <div class="modal-icon">
+      <span *ngIf="modalType === 'success'" class="success-icon">&#10004;</span>
+      <span *ngIf="modalType === 'error'" class="error-icon">&#10006;</span>
+    </div>
+    <p>{{ modalMessage }}</p>
+  </div>
+</div>
 
