@@ -74,7 +74,7 @@
             Guardar cambios
           </button>
         </form>
-
+        <p *ngIf="datosSuccess" class="success-message">{{ datosSuccess }}</p>
         <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
       </div>
     </div>
@@ -94,7 +94,7 @@
               [(ngModel)]="newPassword"
               required
               maxlength="8"
-              pattern="^(?=.[A-Z])(?=.[^a-zA-Z0-9]).{6,14}$"
+              pattern="^(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8}$"
               #newPasswordField="ngModel"
             />
             <div *ngIf="newPasswordField.invalid && newPasswordField.touched" class="error-message">

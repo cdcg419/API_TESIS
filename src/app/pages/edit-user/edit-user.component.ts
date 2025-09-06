@@ -21,6 +21,7 @@ export class EditUserComponent implements OnInit {
   showModalDatos: boolean = false;
   showModalPassword: boolean = false;
   showModalDelete: boolean = false;
+  datosSuccess: string = '';
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -48,11 +49,12 @@ export class EditUserComponent implements OnInit {
     };
 
     this.authService.updateUser(this.userId, updatedUser).subscribe(
-      (response) => {
-        this.router.navigate(['/login']);  // Redirigir al login
-        this.showModalDatos = false; // Cerrar el modal
+      () => {
+        this.datosSuccess = 'Datos actualizados correctamente.';
+        this.errorMessage = '';
       },
       (error) => {
+        this.datosSuccess = '';
         if (error.status === 409 || error.error?.message?.includes('correo')) {
           this.errorMessage = 'Este correo ya está registrado. Intenta con otro.';
         } else {
