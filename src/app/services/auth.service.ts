@@ -66,9 +66,26 @@ export class AuthService {
   }
 
   // Cerrar sesión
-  logout(): void {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('user_data');  // Eliminar los datos del usuario al cerrar sesión
+  logout(): Observable<any> {
+    const token = this.getToken();
+
+    if (!token) {
+      // Si no hay token, simplemente limpia y retorna un observable vacío
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('user_data');
+      return of({ mensaje: 'Sesión cerrada localmente' });
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
+    return this.http.post(`${this.apiUrl}/logout`, {}, { headers }).pipe(
+      tap(() => {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user_data');
+      })
+    );
   }
 
   // Verificar autenticación

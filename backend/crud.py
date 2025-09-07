@@ -51,9 +51,11 @@ def update_user_password(db: Session, user_id: int, new_password: str):
 
 def delete_user(db: Session, user_id: int):
     db_user = db.query(models.User).filter(models.User.id == user_id).first()
-    if db_user:
-        db.delete(db_user)
-        db.commit()
+    if not db_user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    db.delete(db_user)
+    db.commit()
         
 ################################### DATOS - ESTUDIANTE ########################################
 

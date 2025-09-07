@@ -65,8 +65,28 @@ export class DashboardComponent implements OnInit{
   ) {}
 
   logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        console.error('Error al cerrar la sesión:', err);
+        alert('Ocurrió un error al cerrar la sesión. Intentando nuevamente...');
+
+        // Reintento automático
+        setTimeout(() => {
+          this.authService.logout().subscribe({
+            next: () => {
+              this.router.navigate(['/login']);
+            },
+            error: (err2) => {
+              console.error('Segundo intento fallido:', err2);
+              alert('No se pudo cerrar la sesión. Por favor, inténtalo más tarde.');
+            }
+          });
+        }, 2000);
+      }
+    });
   }
   ngOnInit(): void {
     this.authService.isAuthenticated().subscribe(isAuthenticated => {
