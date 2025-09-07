@@ -14,7 +14,8 @@ class User(Base):
     contraseña = Column(String(255))
     requiere_cambio = Column(Boolean, default=False)
     estudiantes = relationship("Estudiante", back_populates="docente", cascade="all, delete-orphan")
-
+    alertas = relationship("AlertaVista", back_populates="docente", cascade="all, delete-orphan")
+    
 # Modelo de Estudiante 
 class Estudiante(Base):
     __tablename__ = "estudiantes"
@@ -89,13 +90,14 @@ class AlertaVista(Base):
     __tablename__ = "alertas_vistas"
 
     id = Column(Integer, primary_key=True, index=True)
-    docente_id = Column(Integer, ForeignKey("users.id"))  
+    docente_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))  # ← importante
     estudiante_id = Column(Integer)
-    curso = Column(String(100))  # ← ¡Aquí está la corrección!
+    curso = Column(String(100))
     trimestre = Column(Integer)
 
     fecha_creacion = Column(DateTime, default=datetime.utcnow)
     fecha_actualizacion = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    docente = relationship("User")
+    docente = relationship("User", back_populates="alertas")
+
 

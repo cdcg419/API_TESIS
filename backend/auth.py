@@ -4,7 +4,9 @@ from sqlalchemy.orm import Session
 from database import get_db
 import models, schemas, crud
 from utils import create_access_token
-from utils import hash_password, verify_password
+from utils import hash_password, verify_password, get_current_user
+from fastapi import Form
+from utils import generar_contraseña_temporal, enviar_correo, hash_password
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -54,8 +56,10 @@ def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
         }
     }
 
-from fastapi import Form
-from utils import generar_contraseña_temporal, enviar_correo, hash_password
+@router.post("/logout")
+def logout(usuario: schemas.UserOut = Depends(get_current_user)):
+    return {"mensaje": f"Sesión cerrada correctamente para {usuario.correo}"}
+
 
 @router.post("/recuperar")
 def recuperar_contraseña(correo: str = Form(...), db: Session = Depends(get_db)):
