@@ -80,7 +80,7 @@ export class MonthReportComponent implements OnInit{
         this.codigosEstudiantes = [...new Set(data.map(r => r.codigo_estudiante))]; // Extrae códigos únicos
       },
       error: (err) => {
-        console.error('Error al obtener reportes', err);
+        console.error('Error al generar el reporte. Intente de nuevo', err);
       }
     });
   }

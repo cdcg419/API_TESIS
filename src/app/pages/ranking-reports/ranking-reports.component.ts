@@ -46,7 +46,7 @@ export class RankingReportsComponent implements OnInit{
         this.cargando = false;
       },
       error: (err) => {
-        console.error('Error al obtener ranking:', err);
+        console.error('Error al generar el ranking. Por favor, intente de nuevo.', err);
         this.cargando = false;
       }
     });

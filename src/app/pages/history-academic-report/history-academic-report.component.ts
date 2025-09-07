@@ -151,7 +151,7 @@ export class HistoryAcademicReportComponent implements OnInit {
         this.filtrarHistorial();
       },
       error: (err) => {
-        console.error('Error al obtener historial', err);
+        console.error('Error al cargar el historial de predicciones. Intente nuevamente.', err);
       }
     });
   }

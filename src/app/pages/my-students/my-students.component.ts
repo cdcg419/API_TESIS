@@ -46,7 +46,7 @@ export class MyStudentsComponent implements OnInit{
           this.gradosDisponibles = [...new Set(data.map(e => e.grado))];
         },
         error: (err) => {
-          console.error('Error al obtener estudiantes', err);
+          console.error('Error al cargar la lista de estudiantes. Por favor, intente de nuevo.', err);
         }
       });
     }
