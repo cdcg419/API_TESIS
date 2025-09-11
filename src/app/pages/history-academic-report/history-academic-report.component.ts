@@ -36,6 +36,7 @@ export class HistoryAcademicReportComponent implements OnInit {
 
   trimestres: number[] = [1, 2, 3];
   gradoSeleccionado: number | '' = '';
+
   grados = [
     { valor: 1, nombre: 'Primer Grado' },
     { valor: 2, nombre: 'Segundo Grado' },
@@ -44,6 +45,9 @@ export class HistoryAcademicReportComponent implements OnInit {
     { valor: 5, nombre: 'Quinto Grado' },
     { valor: 6, nombre: 'Sexto Grado' },
   ];
+  mensajeSinHistorial: string = '';
+  mensajeErrorHistorial: string = '';
+  filtroAplicado: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -140,18 +144,21 @@ export class HistoryAcademicReportComponent implements OnInit {
 
 
   cargarHistorial(): void {
+    this.mensajeSinHistorial = '';
+    this.mensajeErrorHistorial = '';
+
     this.reportService.obtenerHistorialPredicciones().subscribe({
       next: (data) => {
         this.historialCompleto = data;
 
-        // Cargar valores únicos para los filtros
         this.codigosEstudiantes = Array.from(new Set(data.map(d => d.Codigo_estudiante)));
         this.cursosDisponibles = Array.from(new Set(data.map(d => d.curso)));
 
         this.filtrarHistorial();
       },
       error: (err) => {
-        console.error('Error al cargar el historial de predicciones. Intente nuevamente.', err);
+        console.error('Error al cargar el historial de predicciones:', err);
+        this.mensajeErrorHistorial = 'Error al cargar el historial de predicciones. Intente nuevamente.';
       }
     });
   }

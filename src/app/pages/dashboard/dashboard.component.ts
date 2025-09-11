@@ -54,6 +54,7 @@ export class DashboardComponent implements OnInit{
     { valor: 5, nombre: 'Quinto Grado' },
     { valor: 6, nombre: 'Sexto Grado' }
   ];
+  mensajeErrorDashboard: string = '';
 
   constructor(
     private authService: AuthService,
@@ -98,7 +99,6 @@ export class DashboardComponent implements OnInit{
       next: (res) => {
         this.predicciones = res;
         this.alertas = res.filter(p =>
-          //p.observacion?.includes('⚠️ Atención: Existen múltiples factores de riesgo que podrían afectar negativamente el rendimiento.')
           ["Medio", "Bajo"].includes(p.rendimiento),
         );
       },
@@ -110,27 +110,53 @@ export class DashboardComponent implements OnInit{
       next: (res) => {
         this.predicciones = res;
         this.alertas = res.filter(p => ["Medio", "Bajo"].includes(p.rendimiento));
-        this.mostrarDetalle = this.alertas.map(() => false); // todos ocultos al inicio
+        this.mostrarDetalle = this.alertas.map(() => false);
+        this.mensajeErrorDashboard = ''; // Limpia el mensaje si todo va bien
       },
       error: (err) => {
         console.error('Error al obtener predicciones', err);
+        this.mensajeErrorDashboard = 'No se pudo cargar la información. Intente nuevamente.';
       }
     });
     this.dashboardService.obtenerTotalCursosAsignados().subscribe({
-      next: (res) => this.totalCursos = res,
-      error: (err) => console.error('Error al obtener cursos asignados:', err),
+      next: (res) => {
+        this.totalCursos = res;
+        this.mensajeErrorDashboard = '';
+      },
+      error: (err) => {
+        console.error('Error al obtener cursos asignados:', err);
+        this.mensajeErrorDashboard = 'No se pudo cargar la información. Intente nuevamente.';
+      }
     });
     this.dashboardService.obtenerTotalEstudiantes().subscribe({
-      next: (res) => this.totalEstudiantes = res,
-      error: (err) => console.error('Error al obtener total de estudiantes:', err),
+      next: (res) => {
+        this.totalEstudiantes = res;
+        this.mensajeErrorDashboard = '';
+      },
+      error: (err) => {
+        console.error('Error al obtener total de estudiantes:', err);
+        this.mensajeErrorDashboard = 'No se pudo cargar la información. Intente nuevamente.';
+      }
     });
     this.dashboardService.obtenerDistribucionGenero().subscribe({
-      next: (res) => this.generarGraficoGenero(res),
-      error: (err) => console.error('Error al obtener datos de género:', err),
+      next: (res) => {
+        this.generarGraficoGenero(res);
+        this.mensajeErrorDashboard = '';
+      },
+      error: (err) => {
+        console.error('Error al obtener datos de género:', err);
+        this.mensajeErrorDashboard = 'No se pudo cargar la información. Intente nuevamente.';
+      }
     });
     this.dashboardService.obtenerEstudiantesTrabajan().subscribe({
-      next: (res) => this.generarGraficoTrabajo(res),
-      error: (err) => console.error('Error al obtener datos de estudiantes trabajadores:', err),
+      next: (res) => {
+        this.generarGraficoTrabajo(res);
+        this.mensajeErrorDashboard = '';
+      },
+      error: (err) => {
+        console.error('Error al obtener datos de estudiantes trabajadores:', err);
+        this.mensajeErrorDashboard = 'No se pudo cargar la información. Intente nuevamente.';
+      }
     });
     this.cargarGraficoRendimiento();
     this.cargarEstudiantesBajoRendimiento();
@@ -143,11 +169,17 @@ export class DashboardComponent implements OnInit{
 
   cargarEstudiantesBajoRendimiento(): void {
     this.dashboardService.obtenerEstudiantesBajoRendimiento(this.trimestreEstudiantes).subscribe({
-      next: (res) => this.estudiantesBajoRendimiento = res.map(e => ({
-        ...e,
-        trimestre: this.trimestres.find(t => t.valor === e.trimestre)?.nombre || 'Desconocido'
-      })),
-      error: (err) => console.error('Error al obtener estudiantes con bajo rendimiento:', err),
+      next: (res) => {
+        this.estudiantesBajoRendimiento = res.map(e => ({
+          ...e,
+          trimestre: this.trimestres.find(t => t.valor === e.trimestre)?.nombre || 'Desconocido'
+        }));
+        this.mensajeErrorDashboard = '';
+      },
+      error: (err) => {
+        console.error('Error al obtener estudiantes con bajo rendimiento:', err);
+        this.mensajeErrorDashboard = 'No se pudo cargar la información. Intente nuevamente.';
+      }
     });
   }
 
@@ -155,8 +187,14 @@ export class DashboardComponent implements OnInit{
     this.dashboardService
       .obtenerRendimientoBajo(this.trimestreRendimiento, this.gradoRendimiento)
       .subscribe({
-        next: (res) => this.generarGraficoRendimiento(res),
-        error: (err) => console.error('Error al obtener datos de rendimiento bajo:', err),
+        next: (res) => {
+          this.generarGraficoRendimiento(res);
+          this.mensajeErrorDashboard = '';
+        },
+        error: (err) => {
+          console.error('Error al obtener datos de rendimiento bajo:', err);
+          this.mensajeErrorDashboard = 'No se pudo cargar la información. Intente nuevamente.';
+        }
       });
   }
 

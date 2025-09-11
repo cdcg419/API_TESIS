@@ -41,6 +41,16 @@
 
       </mat-card-title>
 
+      <!-- Mensaje de error técnico -->
+      <div *ngIf="mensajeErrorCarga" class="mensaje-error">
+        <mat-icon color="warn">error</mat-icon> {{ mensajeErrorCarga }}
+      </div>
+
+      <!-- Mensaje si no hay datos filtrados -->
+      <div *ngIf="mensajeSinDatos && !mensajeErrorCarga" class="mensaje-info">
+        <mat-icon color="primary">info</mat-icon> {{ mensajeSinDatos }}
+      </div>
+
       <div *ngIf="cargandoDatos" class="full-screen-loader">
         <mat-spinner diameter="50"></mat-spinner>
         <h2>{{ mensajeCarga }}</h2>

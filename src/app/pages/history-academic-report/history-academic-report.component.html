@@ -46,6 +46,18 @@
       </button>
 
   </div>
+
+
+<!-- Mensaje de error técnico -->
+<div *ngIf="mensajeErrorHistorial" class="mensaje-error">
+  <mat-icon color="warn">error</mat-icon> {{ mensajeErrorHistorial }}
+</div>
+
+<!-- Mensaje si no hay datos filtrados -->
+<div *ngIf="historialFiltrado.data.length === 0 && !mensajeErrorHistorial" class="mensaje-info">
+  <mat-icon color="primary">info</mat-icon> No se encontraron registros para los filtros seleccionados.
+</div>
+
 <div id="contenido-reporte">
   <mat-card class="mat-elevation-z8 mt-3">
     <mat-card-header>
@@ -142,10 +154,6 @@
         </table>
 
         <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
-
-        <div *ngIf="historialFiltrado.data.length === 0" class="mt-4 text-muted">
-          No hay registros para el trimestre seleccionado.
-        </div>
       </div>
     </mat-card-content>
   </mat-card>

@@ -54,6 +54,16 @@
         </div>
       </div>
 
+      <!-- Mensaje de error técnico -->
+      <div *ngIf="mensajeErrorEstudiantes" class="mensaje-error">
+        <mat-icon color="warn">error</mat-icon> {{ mensajeErrorEstudiantes }}
+      </div>
+
+      <!-- Mensaje si no hay estudiantes -->
+      <div *ngIf="mensajeSinEstudiantes && !mensajeErrorEstudiantes" class="mensaje-info">
+        <mat-icon color="primary">info</mat-icon> {{ mensajeSinEstudiantes }}
+      </div>
+
       <div class="tabla-responsive">
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
           <!-- Columnas de la tabla -->

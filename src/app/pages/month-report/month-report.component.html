@@ -38,13 +38,26 @@
     <label for="mes">Mes:</label>
     <select id="mes" [(ngModel)]="mesSeleccionado" (change)="aplicarFiltro()">
       <option value="">Todos</option>
-      <option *ngFor="let mes of meses" [value]="mes">{{ mes }}</option>
+      <option *ngFor="let mes of mesesNombre" [value]="mes.valor">{{ mes.nombre }}</option>
     </select>
   </div>
 
   <button mat-raised-button class="btn-verde" (click)="limpiarFiltros()">
     <mat-icon>clear</mat-icon> Limpiar filtros
   </button>
+</div>
+
+<!-- Mensajes de estado del reporte -->
+<div *ngIf="mensajeSinDatos" class="mensaje-info">
+  <mat-icon color="primary">info</mat-icon> {{ mensajeSinDatos }}
+</div>
+
+<div *ngIf="mensajeError" class="mensaje-error">
+  <mat-icon color="warn">error</mat-icon> {{ mensajeError }}
+</div>
+
+<div *ngIf="tablaVaciaPorFiltro" class="mensaje-info">
+  <mat-icon color="primary">info</mat-icon> No se encontraron datos para los filtros seleccionados.
 </div>
 
 <mat-card class="tabla-card">

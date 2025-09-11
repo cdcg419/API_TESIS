@@ -40,6 +40,8 @@ export class AcademicRiskReportComponent implements OnInit{
     { valor: 5, nombre: 'Quinto Grado' },
     { valor: 6, nombre: 'Sexto Grado' }
   ];
+  mensajeSinEstudiantes: string = '';
+  mensajeErrorEstudiantes: string = '';
 
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -63,7 +65,7 @@ export class AcademicRiskReportComponent implements OnInit{
     scales: {
       y: {
         beginAtZero: true,
-        max: 100, // 🔹 Esto asegura que el eje Y siempre llegue hasta 100%
+        max: 100, // Esto asegura que el eje Y siempre llegue hasta 100%
         ticks: { stepSize: 10 }
       }
     }
@@ -92,23 +94,35 @@ export class AcademicRiskReportComponent implements OnInit{
   }
 
   obtenerEstudiantes(): void {
+    this.mensajeSinEstudiantes = '';
+    this.mensajeErrorEstudiantes = '';
+
     this.reportService.obtenerEstudiantesEnRiesgo(
       this.cursoSeleccionado,
       this.trimestreSeleccionado === null ? undefined : this.trimestreSeleccionado
-    ).subscribe(data => {
-      // Si hay filtro por rendimiento, lo aplicamos
-      if (this.rendimientoSeleccionado) {
-        data = data.filter(e => e.rendimiento === this.rendimientoSeleccionado);
-      }
-      if (this.gradoSeleccionado !== '') {
-        data = data.filter(e => e.grado === +this.gradoSeleccionado);
-      }
+    ).subscribe({
+      next: (data) => {
+        if (this.rendimientoSeleccionado) {
+          data = data.filter(e => e.rendimiento === this.rendimientoSeleccionado);
+        }
+        if (this.gradoSeleccionado !== '') {
+          data = data.filter(e => e.grado === +this.gradoSeleccionado);
+        }
 
-      this.estudiantesEnRiesgo = data;
-      this.dataSource = new MatTableDataSource<EstudianteEnRiesgo>(data);
-      this.dataSource.paginator = this.paginator;
+        this.estudiantesEnRiesgo = data;
+        this.dataSource = new MatTableDataSource<EstudianteEnRiesgo>(data);
+        this.dataSource.paginator = this.paginator;
 
-      this.cursos = [...new Set(data.map(est => est.curso))];
+        this.cursos = [...new Set(data.map(est => est.curso))];
+
+        if (data.length === 0) {
+          this.mensajeSinEstudiantes = 'No hay estudiantes en riesgo para los filtros seleccionados.';
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar la lista de estudiantes en riesgo:', err);
+        this.mensajeErrorEstudiantes = 'Error al cargar la lista de estudiantes en riesgo. Intente nuevamente.';
+      }
     });
   }
 
@@ -116,7 +130,7 @@ export class AcademicRiskReportComponent implements OnInit{
     this.reportService.obtenerPorcentajeRiesgoPorCurso(
       this.cursoSeleccionado,
       this.trimestreSeleccionado === null ? undefined : this.trimestreSeleccionado,
-      this.gradoSeleccionado === '' ? undefined : +this.gradoSeleccionado // 👈 Aquí enviamos el grado
+      this.gradoSeleccionado === '' ? undefined : +this.gradoSeleccionado
     ).subscribe((datos: PorcentajeRiesgoCurso[]) => {
       this.barChartLabels = datos.map(d => d.curso);
       this.barChartData.datasets[0].data = datos.map(d => d.porcentaje_riesgo);
@@ -135,21 +149,6 @@ export class AcademicRiskReportComponent implements OnInit{
       this.promediosPorCurso = data;
     });
   }
-
-
-  /*obtenerPorcentajeRiesgo(): void {
-    this.reportService.obtenerPorcentajeRiesgoPorCurso(
-      this.cursoSeleccionado,
-      this.trimestreSeleccionado === null ? undefined : this.trimestreSeleccionado,
-    ).subscribe((datos: PorcentajeRiesgoCurso[]) => {
-      this.barChartLabels = datos.map(d => d.curso);
-      this.barChartData.datasets[0].data = datos.map(d => d.porcentaje_riesgo);
-      this.barChartData.labels = this.barChartLabels;
-
-      // 🔁 Forzar actualización del gráfico
-      this.chart?.update();
-    });
-  }*/
 
   eliminarNota(id: number): void {
     this.registerNotesService.eliminarNota(id).subscribe({

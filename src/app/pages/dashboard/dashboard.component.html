@@ -20,6 +20,12 @@
 </mat-toolbar>
 
 <!-- Contenedor principal -->
+ <!-- Mensaje de error general del dashboard -->
+<div *ngIf="mensajeErrorDashboard" class="mensaje-error-dashboard">
+  <mat-icon color="warn">error</mat-icon>
+  {{ mensajeErrorDashboard }}
+</div>
+
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #sidenav mode="side" class="sidenav">
     <app-sidenav></app-sidenav>

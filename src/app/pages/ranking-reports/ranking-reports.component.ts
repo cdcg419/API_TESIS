@@ -15,7 +15,8 @@ export class RankingReportsComponent implements OnInit{
   ranking: EstudianteRanking[] = [];
   estudianteSeleccionado: EstudianteRanking | null = null;
   cargando = false;
-
+  mensajeSinRanking: string = '';
+  mensajeErrorRanking: string = '';
   trimestres = [
     { value: 1, label: 'Primer trimestre' },
     { value: 2, label: 'Segundo trimestre' },
@@ -39,14 +40,22 @@ export class RankingReportsComponent implements OnInit{
 
   obtenerRanking(): void {
     this.cargando = true;
+    this.mensajeSinRanking = '';
+    this.mensajeErrorRanking = '';
+
     this.reporteService.obtenerRankingEstudiantes(this.trimestreSeleccionado, this.gradoSeleccionado!).subscribe({
       next: (res) => {
         this.ranking = res.estudiantes;
         this.estudianteSeleccionado = null;
         this.cargando = false;
+
+        if (this.ranking.length === 0) {
+          this.mensajeSinRanking = 'No se encontraron estudiantes para los filtros seleccionados.';
+        }
       },
       error: (err) => {
-        console.error('Error al generar el ranking. Por favor, intente de nuevo.', err);
+        console.error('Error al generar el ranking:', err);
+        this.mensajeErrorRanking = 'Error al generar el ranking. Por favor, intente de nuevo.';
         this.cargando = false;
       }
     });
