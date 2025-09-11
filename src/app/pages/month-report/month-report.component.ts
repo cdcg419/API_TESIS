@@ -53,8 +53,25 @@ export class MonthReportComponent implements OnInit{
     { valor: 5, nombre: 'Quinto Grado' },
     { valor: 6, nombre: 'Sexto Grado' }
   ];
+  mensajeSinDatos: string = '';
+  mensajeError: string = '';
+  tablaVaciaPorFiltro: boolean = false;
 
-  meses: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  //meses: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  mesesNombre: { valor: number, nombre: string }[] = [
+    { valor: 1, nombre: 'Enero' },
+    { valor: 2, nombre: 'Febrero' },
+    { valor: 3, nombre: 'Marzo' },
+    { valor: 4, nombre: 'Abril' },
+    { valor: 5, nombre: 'Mayo' },
+    { valor: 6, nombre: 'Junio' },
+    { valor: 7, nombre: 'Julio' },
+    { valor: 8, nombre: 'Agosto' },
+    { valor: 9, nombre: 'Septiembre' },
+    { valor: 10, nombre: 'Octubre' },
+    { valor: 11, nombre: 'Noviembre' },
+    { valor: 12, nombre: 'Diciembre' }
+  ];
   anios: number[] = [];
 
   constructor(private reportsService: ReportsPrediccionService) {}
@@ -74,13 +91,23 @@ export class MonthReportComponent implements OnInit{
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
 
+        // Limpiar mensajes previos
+        this.mensajeSinDatos = '';
+        this.mensajeError = '';
+
+        // Mostrar mensaje si no hay datos
+        if (data.length === 0) {
+          this.mensajeSinDatos = 'No se encontraron datos para los filtros seleccionados.';
+        }
+
         // Opciones para selects
         this.cursos = [...new Set(data.map(r => r.curso))];
         this.anios = [...new Set(data.map(r => new Date(r.fecha_registro!).getFullYear()))];
-        this.codigosEstudiantes = [...new Set(data.map(r => r.codigo_estudiante))]; // Extrae códigos únicos
+        this.codigosEstudiantes = [...new Set(data.map(r => r.codigo_estudiante))];
       },
       error: (err) => {
-        console.error('Error al generar el reporte. Intente de nuevo', err);
+        console.error('Error al generar el reporte:', err);
+        this.mensajeError = 'Error al generar el reporte. Intente de nuevo.';
       }
     });
   }
@@ -112,6 +139,9 @@ export class MonthReportComponent implements OnInit{
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+
+    // Verificar si la tabla está vacía por el filtro
+    this.tablaVaciaPorFiltro = this.dataSource.filteredData.length === 0;
   }
 
   filtrarCodigos(): void {

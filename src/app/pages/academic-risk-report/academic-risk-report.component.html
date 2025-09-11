@@ -52,6 +52,15 @@
   </div>
 </div>
 
+<!-- Mensajes de estado -->
+<div *ngIf="mensajeSinEstudiantes" class="mensaje-info">
+  <mat-icon color="primary">info</mat-icon> {{ mensajeSinEstudiantes }}
+</div>
+
+<div *ngIf="mensajeErrorEstudiantes" class="mensaje-error">
+  <mat-icon color="warn">error</mat-icon> {{ mensajeErrorEstudiantes }}
+</div>
+
 <div id="contenido-reporte">
 
   <!-- 📊 MatCard para el gráfico -->

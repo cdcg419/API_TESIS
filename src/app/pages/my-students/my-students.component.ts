@@ -21,6 +21,8 @@ export class MyStudentsComponent implements OnInit{
   gradoFiltro: string = '';
   gradosDisponibles: number[] = [];
   mostrarNotificaciones = false;
+  mensajeSinEstudiantes: string = '';
+  mensajeErrorEstudiantes: string = '';
 
   @ViewChild('notiMenu') notiMenu!: ElementRef;
   @ViewChild('notiBtn') notiBtn!: ElementRef;
@@ -37,6 +39,9 @@ export class MyStudentsComponent implements OnInit{
   }
 
   loadStudents(): void {
+    this.mensajeSinEstudiantes = '';
+    this.mensajeErrorEstudiantes = '';
+
     const docenteId = localStorage.getItem('userId');
     if (docenteId) {
       this.registerNotesService.obtenerEstudiantesPorDocente(+docenteId).subscribe({
@@ -44,9 +49,14 @@ export class MyStudentsComponent implements OnInit{
           this.estudiantesOriginales = data;
           this.dataSource = data;
           this.gradosDisponibles = [...new Set(data.map(e => e.grado))];
+
+          if (data.length === 0) {
+            this.mensajeSinEstudiantes = 'No hay estudiantes registrados en la lista.';
+          }
         },
         error: (err) => {
-          console.error('Error al cargar la lista de estudiantes. Por favor, intente de nuevo.', err);
+          console.error('Error al cargar la lista de estudiantes:', err);
+          this.mensajeErrorEstudiantes = 'Error al cargar la lista de estudiantes. Por favor, intente de nuevo.';
         }
       });
     }

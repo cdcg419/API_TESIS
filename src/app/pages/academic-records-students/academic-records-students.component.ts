@@ -43,6 +43,8 @@ export class AcademicRecordsStudentsComponent implements OnInit{
   codigoEstudiante: string = '';
   presenciaPadres: string = '';
   trabaja: boolean = false;
+  mensajeSinDatos: string = '';
+  mensajeErrorCarga: string = '';
 
 
   constructor(private route: ActivatedRoute, private notesService: RegisterNotesService, private dialog: MatDialog, private notasEventService: NotasEventService ) {}
@@ -59,14 +61,20 @@ export class AcademicRecordsStudentsComponent implements OnInit{
     this.notesService.obtenerNotasPorEstudiante(this.estudianteId).subscribe({
       next: (res) => {
         this.notas = res.map(n => ({ ...n, editando: false }));
-        this.filtrarNotasPorCurso(); // Aplica el filtro inicial
+        this.filtrarNotasPorCurso();
 
-        if (this.notas.length > 0) {
+        this.mensajeSinDatos = '';
+        this.mensajeErrorCarga = '';
+
+        if (this.notas.length === 0) {
+          this.mensajeSinDatos = 'No se encontraron datos para los criterios seleccionados.';
+        } else {
           this.iniciarPrediccion();
         }
       },
       error: err => {
-        console.error('Error al cargar las notas del estudiante. Intente nuevamente.', err);
+        console.error('Error al cargar las notas del estudiante:', err);
+        this.mensajeErrorCarga = 'Error al generar el historial académico. Intente de nuevo.';
       }
     });
 
@@ -93,6 +101,11 @@ export class AcademicRecordsStudentsComponent implements OnInit{
     this.notasFiltradas = this.cursoFiltrado
       ? this.notas.filter(n => n.curso === this.cursoFiltrado)
       : this.notas;
+    if (this.notasFiltradas.length === 0 && this.notas.length > 0) {
+      this.mensajeSinDatos = 'No se encontraron datos para los criterios seleccionados.';
+    } else {
+      this.mensajeSinDatos = '';
+    }
   }
   validarPrediccion(): void {
     if (this.notas.length === 0) {

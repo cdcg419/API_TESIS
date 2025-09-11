@@ -33,7 +33,16 @@
       </button>
     </div>
 
-<div class="tabla-responsive">
+  <!-- Mensajes de estado del ranking -->
+  <div *ngIf="mensajeSinRanking" class="mensaje-info">
+    <mat-icon color="primary">info</mat-icon> {{ mensajeSinRanking }}
+  </div>
+
+  <div *ngIf="mensajeErrorRanking" class="mensaje-error">
+    <mat-icon color="warn">error</mat-icon> {{ mensajeErrorRanking }}
+  </div>
+
+  <div class="tabla-responsive">
 
   <mat-card class="tabla-card" *ngIf="ranking.length > 0">
     <mat-card-title>Ranking de Estudiantes</mat-card-title>
@@ -76,8 +85,6 @@
       </mat-table>
     </mat-card-content>
   </mat-card>
-
-  <p *ngIf="ranking.length === 0 && !cargando">No hay estudiantes en el ranking para este trimestre.</p>
   <p *ngIf="cargando">Cargando datos del ranking...</p>
 
 </div>
