@@ -79,39 +79,58 @@ export class RankingReportsComponent implements OnInit{
 
   exportarExcel(): void {
     import("xlsx").then(xlsx => {
-      const worksheet = xlsx.utils.json_to_sheet(this.ranking);
-      const workbook = { Sheets: { data: worksheet }, SheetNames: ["data"] };
-      const excelBuffer = xlsx.write(workbook, { bookType: "xlsx", type: "array" });
-      const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `ranking_estudiantes.xlsx`;
-      a.click();
-      window.URL.revokeObjectURL(url);
+      try {
+        const worksheet = xlsx.utils.json_to_sheet(this.ranking);
+        const workbook = { Sheets: { data: worksheet }, SheetNames: ["data"] };
+        const excelBuffer = xlsx.write(workbook, { bookType: "xlsx", type: "array" });
+        const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `ranking_estudiantes.xlsx`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error('Error al exportar Excel:', error);
+        alert('Exportación fallida, intente de nuevo.');
+      }
+    }).catch(error => {
+      console.error('Error al cargar módulo XLSX:', error);
+      alert('Exportación fallida, intente de nuevo.');
     });
   }
 
   exportarPDF(): void {
     import("jspdf").then(jsPDF => {
       import("jspdf-autotable").then(module => {
-        const jsPDFInstance = new jsPDF.default();
-        const autoTable = module.default;
+        try {
+          const jsPDFInstance = new jsPDF.default();
+          const autoTable = module.default;
 
-        autoTable(jsPDFInstance, {
-          head: [['Código', 'Promedio de Asistencia (%)', 'Promedio de Calificación', 'Rendimiento', 'Cursos en riesgo']],
-          body: this.ranking.map(e => [
-            e.codigo_estudiante,
-            `${e.asistencia_promedio}%`,
-            e.calificacion_promedio,
-            e.rendimiento,
-            e.cursos_en_riesgo.join(', ')
-          ]),
-          startY: 20
-        });
+          autoTable(jsPDFInstance, {
+            head: [['Código', 'Promedio de Asistencia (%)', 'Promedio de Calificación', 'Rendimiento', 'Cursos en riesgo']],
+            body: this.ranking.map(e => [
+              e.codigo_estudiante,
+              `${e.asistencia_promedio}%`,
+              e.calificacion_promedio,
+              e.rendimiento,
+              e.cursos_en_riesgo.join(', ')
+            ]),
+            startY: 20
+          });
 
-        jsPDFInstance.save("ranking_estudiantes.pdf");
+          jsPDFInstance.save("ranking_estudiantes.pdf");
+        } catch (error) {
+          console.error('Error al exportar PDF:', error);
+          alert('Exportación fallida, intente de nuevo.');
+        }
+      }).catch(error => {
+        console.error('Error al cargar módulo AutoTable:', error);
+        alert('Exportación fallida, intente de nuevo.');
       });
+    }).catch(error => {
+      console.error('Error al cargar módulo jsPDF:', error);
+      alert('Exportación fallida, intente de nuevo.');
     });
   }
 }

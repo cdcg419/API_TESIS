@@ -74,7 +74,16 @@ export class AcademicRecordsStudentsComponent implements OnInit{
       },
       error: err => {
         console.error('Error al cargar las notas del estudiante:', err);
-        this.mensajeErrorCarga = 'Error al generar el historial académico. Intente de nuevo.';
+
+        if (err.status === 404) {
+          // A1: sin datos
+          this.mensajeSinDatos = 'No hay notas registradas para este estudiante.';
+          this.mensajeErrorCarga = '';
+        } else {
+          // A2: error técnico
+          this.mensajeErrorCarga = 'Error al generar el historial académico. Intente de nuevo.';
+          this.mensajeSinDatos = '';
+        }
       }
     });
 

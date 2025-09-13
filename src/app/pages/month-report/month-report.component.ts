@@ -164,45 +164,55 @@ export class MonthReportComponent implements OnInit{
 
 
   exportarExcel(): void {
-    const data = this.dataSource.filteredData.map(r => ({
-      'Código': r.codigo_estudiante,
-      'Grado' : r.grado,
-      'Curso': r.curso,
-      'Trimestre': r.trimestre,
-      'Asistencia': r.asistencia,
-      'Nota Trimestre': r.nota_trimestre,
-      'Conducta': r.conducta,
-      'Rendimiento': r.rendimiento,
-      'Observación': r.observacion,
-      'Proyecciones y/o Resultados': r.mensaje_umbral
-    }));
+    try {
+      const data = this.dataSource.filteredData.map(r => ({
+        'Código': r.codigo_estudiante,
+        'Grado': r.grado,
+        'Curso': r.curso,
+        'Trimestre': r.trimestre,
+        'Asistencia': r.asistencia,
+        'Nota Trimestre': r.nota_trimestre,
+        'Conducta': r.conducta,
+        'Rendimiento': r.rendimiento,
+        'Observación': r.observacion,
+        'Proyecciones y/o Resultados': r.mensaje_umbral
+      }));
 
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = { Sheets: { 'Reporte': worksheet }, SheetNames: ['Reporte'] };
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = { Sheets: { 'Reporte': worksheet }, SheetNames: ['Reporte'] };
+      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
 
-    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-    FileSaver.saveAs(blob, 'reporte_prediccion.xlsx');
+      const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+      FileSaver.saveAs(blob, 'reporte_prediccion.xlsx');
+    } catch (error) {
+      console.error('Error al exportar Excel:', error);
+      alert('Exportación fallida, intente de nuevo.');
+    }
   }
 
   exportarPDF(): void {
-    const doc = new jsPDF('l', 'mm', 'a4');
+    try {
+      const doc = new jsPDF('l', 'mm', 'a4');
 
-    autoTable(doc, {
-      head: [[
-        'Código', 'Grado', 'Curso', 'Trimestre', 'Asistencia',
-        'Nota', 'Conducta', 'Rendimiento', 'Observación', 'Proyecciones y/o Resultados'
-      ]],
-      body: this.dataSource.filteredData.map(r => [
-        r.codigo_estudiante, r.curso, r.trimestre,
-        r.asistencia, r.nota_trimestre, r.conducta,
-        r.rendimiento, r.observacion
-      ]),
-      styles: { fontSize: 8 },
-      headStyles: { fillColor: [76, 175, 80] }
-    });
+      autoTable(doc, {
+        head: [[
+          'Código', 'Grado', 'Curso', 'Trimestre', 'Asistencia',
+          'Nota', 'Conducta', 'Rendimiento', 'Observación', 'Proyecciones y/o Resultados'
+        ]],
+        body: this.dataSource.filteredData.map(r => [
+          r.codigo_estudiante, r.grado, r.curso, r.trimestre,
+          r.asistencia, r.nota_trimestre, r.conducta,
+          r.rendimiento, r.observacion, r.mensaje_umbral
+        ]),
+        styles: { fontSize: 8 },
+        headStyles: { fillColor: [76, 175, 80] }
+      });
 
-    doc.save('reporte_prediccion.pdf');
+      doc.save('reporte_prediccion.pdf');
+    } catch (error) {
+      console.error('Error al exportar PDF:', error);
+      alert('Exportación fallida, intente de nuevo.');
+    }
   }
   limpiarFiltros() {
     this.cursoSeleccionado = '';
