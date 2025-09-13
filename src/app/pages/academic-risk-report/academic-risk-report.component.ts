@@ -181,36 +181,45 @@ export class AcademicRiskReportComponent implements OnInit{
   }
 
   exportarExcel(): void {
-    const worksheet = XLSX.utils.json_to_sheet(this.estudiantesEnRiesgo);
-    const workbook = { Sheets: { 'Estudiantes en Riesgo': worksheet }, SheetNames: ['Estudiantes en Riesgo'] };
-    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    const fileName = `reporte_riesgo_${new Date().getTime()}.xlsx`;
-    FileSaver.saveAs(new Blob([excelBuffer], { type: 'application/octet-stream' }), fileName);
+    try {
+      const worksheet = XLSX.utils.json_to_sheet(this.estudiantesEnRiesgo);
+      const workbook = { Sheets: { 'Estudiantes en Riesgo': worksheet }, SheetNames: ['Estudiantes en Riesgo'] };
+      const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const fileName = `reporte_riesgo_${new Date().getTime()}.xlsx`;
+      FileSaver.saveAs(new Blob([excelBuffer], { type: 'application/octet-stream' }), fileName);
+    } catch (error) {
+      console.error('Error al exportar Excel:', error);
+      alert('Exportación fallida, intente de nuevo.');
+    }
   }
 
   exportarPDF(): void {
-    const doc = new jsPDF('l', 'mm', 'a4');
+    try {
+      const doc = new jsPDF('l', 'mm', 'a4');
 
-    autoTable(doc, {
-      head: [[
-        'Código', 'Grado', 'Curso', 'Trimestre', 'Nota', 'Riesgo', 'Rendimiento'
-      ]],
-      body: this.dataSource.data.map(est => [
-        est.Codigo_estudiante, est.grado, est.curso, est.trimestre,
-        est.nota_trimestre, est.causas_riesgo, est.rendimiento
-      ]),
-      styles: { fontSize: 8 },
-      headStyles: { fillColor: [76, 175, 80] },
-      startY: 15
-    });
+      autoTable(doc, {
+        head: [[
+          'Código', 'Grado', 'Curso', 'Trimestre', 'Nota', 'Riesgo', 'Rendimiento'
+        ]],
+        body: this.dataSource.data.map(est => [
+          est.Codigo_estudiante, est.grado, est.curso, est.trimestre,
+          est.nota_trimestre, est.causas_riesgo, est.rendimiento
+        ]),
+        styles: { fontSize: 8 },
+        headStyles: { fillColor: [76, 175, 80] },
+        startY: 15
+      });
 
-    // 📊 Agregar el gráfico después de la tabla
-    const canvas = document.querySelector('canvas') as HTMLCanvasElement;
-    if (canvas) {
-      const imgData = canvas.toDataURL('image/png');
-      doc.addImage(imgData, 'PNG', 10, 90, 250, 80); // Ajusta valores si es necesario
+      const canvas = document.querySelector('canvas') as HTMLCanvasElement;
+      if (canvas) {
+        const imgData = canvas.toDataURL('image/png');
+        doc.addImage(imgData, 'PNG', 10, 90, 250, 80);
+      }
+
+      doc.save('reporte_riesgo_academico.pdf');
+    } catch (error) {
+      console.error('Error al exportar PDF:', error);
+      alert('Exportación fallida, intente de nuevo.');
     }
-
-    doc.save('reporte_riesgo_academico.pdf');
   }
 }

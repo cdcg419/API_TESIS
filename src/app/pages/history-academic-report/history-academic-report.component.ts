@@ -205,46 +205,55 @@ export class HistoryAcademicReportComponent implements OnInit {
   }
 
   exportarPDF(): void {
-    const doc = new jsPDF('l', 'mm', 'a4');
+    try {
+      const doc = new jsPDF('l', 'mm', 'a4');
 
-    // Agrega la tabla
-    autoTable(doc, {
-      head: [[
-        'Código','Grado', 'Curso', 'Trimestre', 'Asistencia',
-        'Nota', 'Conducta', 'Rendimiento', 'Observación', 'Proyeccion y/o Resultados'
-      ]],
-      body: this.historialFiltrado.data.map(r => [
-        r.Codigo_estudiante, r.curso, r.trimestre,
-        r.asistencia, r.nota, r.conducta,
-        r.rendimiento, r.observacion
-      ]),
-      styles: { fontSize: 8 },
-      headStyles: { fillColor: [76, 175, 80] },
-      startY: 15
-    });
+      autoTable(doc, {
+        head: [[
+          'Código', 'Grado', 'Curso', 'Trimestre', 'Asistencia',
+          'Nota', 'Conducta', 'Rendimiento', 'Observación', 'Proyección y/o Resultados'
+        ]],
+        body: this.historialFiltrado.data.map(r => [
+          r.Codigo_estudiante, r.grado, r.curso, r.trimestre,
+          r.asistencia, r.nota, r.conducta,
+          r.rendimiento, r.observacion, r.mensaje_umbral
+        ]),
+        styles: { fontSize: 8 },
+        headStyles: { fillColor: [76, 175, 80] },
+        startY: 15
+      });
 
-    // Usar posición fija si `previous` no está disponible
-    const graphOffsetY = 90; // ← Ajusta este valor si es necesario
+      const graphOffsetY = 90;
+      const canvas = document.querySelector('canvas') as HTMLCanvasElement;
+      if (canvas) {
+        const imgData = canvas.toDataURL('image/png');
+        doc.addImage(imgData, 'PNG', 10, graphOffsetY, 250, 80);
+      }
 
-    const canvas = document.querySelector('canvas') as HTMLCanvasElement;
-    if (canvas) {
-      const imgData = canvas.toDataURL('image/png');
-      doc.addImage(imgData, 'PNG', 10, graphOffsetY, 250, 80); // ← ajusta ancho y alto
+      doc.save('historial_academico_horizontal.pdf');
+    } catch (error) {
+      console.error('Error al exportar PDF:', error);
+      alert('Exportación fallida, intente de nuevo.');
     }
-
-    doc.save('historial_academico_horizontal.pdf');
   }
 
-  exportarExcel() {
-    const workbook = XLSX.utils.book_new();
-    const worksheet = XLSX.utils.json_to_sheet(this.historialFiltrado.filteredData);
+  exportarExcel(): void {
+    try {
+      const workbook = XLSX.utils.book_new();
+      const worksheet = XLSX.utils.json_to_sheet(this.historialFiltrado.filteredData);
 
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Historial Académico');
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Historial Académico');
 
-    // Guardar el archivo Excel
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    FileSaver.saveAs(blob, 'Historial_Academico.xlsx');
+      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([excelBuffer], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      });
+
+      FileSaver.saveAs(blob, 'Historial_Academico.xlsx');
+    } catch (error) {
+      console.error('Error al exportar Excel:', error);
+      alert('Exportación fallida, intente de nuevo.');
+    }
   }
 }
 
