@@ -11,7 +11,7 @@
       #estudianteId="ngModel"
       required
     >
-      <option value="" disabled selected>Seleccione estudiante</option>
+      <option value="" disabled selected>Seleccione código de estudiante</option>
       <option *ngFor="let estudiante of estudiantes" [value]="estudiante.id">
         {{ estudiante.Codigo_estudiante }}
       </option>
