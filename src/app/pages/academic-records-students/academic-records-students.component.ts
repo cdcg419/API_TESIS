@@ -67,7 +67,7 @@ export class AcademicRecordsStudentsComponent implements OnInit{
         this.mensajeErrorCarga = '';
 
         if (this.notas.length === 0) {
-          this.mensajeSinDatos = 'No se encontraron datos para los criterios seleccionados.';
+          this.mensajeSinDatos = 'No hay notas registradas para este estudiante.';
         } else {
           this.iniciarPrediccion();
         }
@@ -81,7 +81,7 @@ export class AcademicRecordsStudentsComponent implements OnInit{
           this.mensajeErrorCarga = '';
         } else {
           // A2: error técnico
-          this.mensajeErrorCarga = 'Error al generar el historial académico. Intente de nuevo.';
+          this.mensajeErrorCarga = 'Error al generar notas. Intente de nuevo.';
           this.mensajeSinDatos = '';
         }
       }
@@ -111,7 +111,7 @@ export class AcademicRecordsStudentsComponent implements OnInit{
       ? this.notas.filter(n => n.curso === this.cursoFiltrado)
       : this.notas;
     if (this.notasFiltradas.length === 0 && this.notas.length > 0) {
-      this.mensajeSinDatos = 'No se encontraron datos para los criterios seleccionados.';
+      this.mensajeSinDatos = 'No hay notas registradas para este estudiante.';
     } else {
       this.mensajeSinDatos = '';
     }

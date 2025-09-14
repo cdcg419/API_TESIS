@@ -115,7 +115,7 @@ export class DashboardComponent implements OnInit{
       },
       error: (err) => {
         console.error('Error al obtener predicciones', err);
-        this.mensajeErrorDashboard = 'No se pudo cargar la información. Intente nuevamente.';
+        alert('No se pudo cargar la información. Intente nuevamente.') ;
       }
     });
     this.dashboardService.obtenerTotalCursosAsignados().subscribe({
