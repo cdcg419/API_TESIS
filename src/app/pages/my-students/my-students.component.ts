@@ -75,7 +75,7 @@ export class MyStudentsComponent implements OnInit{
         },
         error: (err) => {
           console.error('Error al eliminar estudiante. Por favor, intente de nuevo.', err);
-          alert('No se pudo eliminar el estudiante');
+          alert('Error al eliminar estudiante. Por favor, intente de nuevo.');
         }
       });
     }

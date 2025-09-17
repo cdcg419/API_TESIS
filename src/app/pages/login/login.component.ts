@@ -83,22 +83,27 @@ export class LoginComponent {
   }
 
   enviarRecuperacion(): void {
-    if (!this.correoRecuperacion) {
-      this.errorMessage = 'Por favor ingresa tu correo.';
-      return;
-    }
-
-    this.authService.recoverPassword(this.correoRecuperacion).subscribe({
-      next: () => {
-        alert('Se ha enviado una contraseña temporal a tu correo.');
-        this.closeRecuperacionModal();
-      },
-      error: err => {
-        this.errorMessage = err.error?.detail || 'No se pudo recuperar la contraseña';
-      }
-    });
+  if (!this.correoRecuperacion) {
+    this.errorMessage = 'Por favor ingresa tu correo.';
+    return;
   }
 
+  this.authService.recoverPassword(this.correoRecuperacion).subscribe({
+    next: () => {
+      alert('Se ha enviado una contraseña temporal a tu correo.');
+      this.closeRecuperacionModal();
+    },
+    error: err => {
+      if (err.status === 404) {
+        alert('Este correo no está registrado. Verifique e intente nuevamente.');
+        this.errorMessage = 'Correo no registrado.';
+      } else {
+        alert('No se pudo recuperar la contraseña. Intente de nuevo.');
+        this.errorMessage = err.error?.detail || 'Error inesperado en la recuperación.';
+      }
+    }
+  });
+}
 
 }
 
