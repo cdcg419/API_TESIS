@@ -18,7 +18,7 @@ export interface Student {
 })
 export class StudentService {
 
-private apiUrl = 'http://127.0.0.1:8000/estudiantes'; // Ajusta la URL si es necesario
+private apiUrl = 'https://backend-predix-h2grc3g4drb2hreh.canadacentral-01.azurewebsites.net/estudiantes'; // Ajusta la URL si es necesario
 
   constructor(private http: HttpClient) {}
 

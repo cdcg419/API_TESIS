@@ -17,7 +17,7 @@ export interface ResultadoPrediccion {
   providedIn: 'root'
 })
 export class PrediccionService {
-  private apiUrl = 'http://127.0.0.1:8000/api/auth/docente/predicciones';
+  private apiUrl = 'https://backend-predix-h2grc3g4drb2hreh.canadacentral-01.azurewebsites.net/api/auth/docente/predicciones';
 
   constructor(private http: HttpClient) {}
 

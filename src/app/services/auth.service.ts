@@ -8,7 +8,7 @@ import { HttpHeaders, HttpParams } from '@angular/common/http';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://127.0.0.1:8000/api/auth';  // URL del backend
+  private apiUrl = 'https://backend-predix-h2grc3g4drb2hreh.canadacentral-01.azurewebsites.net/api/auth';  // URL del backend
 
   constructor(private http: HttpClient) { }
 
@@ -95,7 +95,7 @@ export class AuthService {
   }
   //actualizar contraseña
   updatePassword(data: { user_id: number; new_password: string }): Observable<any> {
-    return this.http.put(`http://127.0.0.1:8000/api/auth/update_password`, data);
+    return this.http.put(`https://backend-predix-h2grc3g4drb2hreh.canadacentral-01.azurewebsites.net/api/auth/update_password`, data);
   }
 
   //Eliminar usuario

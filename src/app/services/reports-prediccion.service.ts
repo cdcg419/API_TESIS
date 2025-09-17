@@ -77,11 +77,11 @@ export interface RankingEstudiantesResponse {
 })
 export class ReportsPrediccionService {
 
-  private apiUrl = 'http://127.0.0.1:8000/prediccion/reportes';
-  private apiRiesgoUrl = 'http://127.0.0.1:8000/prediccion/reportes/riesgo';
-  private apiPorcentajeRiesgoUrl = 'http://127.0.0.1:8000/prediccion/reportes/porcentaje-riesgo';
-  private apipromCursoUrl= 'http://127.0.0.1:8000/prediccion/reportes/promedio';
-  private apiHistorialUrl = 'http://127.0.0.1:8000/prediccion/historial';
+  private apiUrl = 'https://backend-predix-h2grc3g4drb2hreh.canadacentral-01.azurewebsites.net/prediccion/reportes';
+  private apiRiesgoUrl = 'https://backend-predix-h2grc3g4drb2hreh.canadacentral-01.azurewebsites.net/prediccion/reportes/riesgo';
+  private apiPorcentajeRiesgoUrl = 'https://backend-predix-h2grc3g4drb2hreh.canadacentral-01.azurewebsites.net/prediccion/reportes/porcentaje-riesgo';
+  private apipromCursoUrl= 'https://backend-predix-h2grc3g4drb2hreh.canadacentral-01.azurewebsites.net/prediccion/reportes/promedio';
+  private apiHistorialUrl = 'https://backend-predix-h2grc3g4drb2hreh.canadacentral-01.azurewebsites.net/prediccion/historial';
   constructor(private http: HttpClient) {}
 
   obtenerReportes(mes?: number, anio?: number, grado?: number): Observable<ReportePrediccion[]> {

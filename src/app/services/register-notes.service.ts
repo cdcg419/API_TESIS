@@ -29,7 +29,7 @@ export interface EstudianteInfo {
 })
 export class RegisterNotesService {
 
-  private apiUrl = 'http://127.0.0.1:8000/registro-academico';
+  private apiUrl = 'https://backend-predix-h2grc3g4drb2hreh.canadacentral-01.azurewebsites.net/registro-academico';
 
   constructor(private http: HttpClient) { }
 
@@ -54,7 +54,7 @@ export class RegisterNotesService {
     curso: nota.curso,
     trimestre: nota.trimestre
   };
-  return this.http.post<any>('http://127.0.0.1:8000/prediccion/predecir_rendimiento', payload);
+  return this.http.post<any>('https://backend-predix-h2grc3g4drb2hreh.canadacentral-01.azurewebsites.net/prediccion/predecir_rendimiento', payload);
   }
 
 }

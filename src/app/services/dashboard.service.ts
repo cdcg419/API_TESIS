@@ -31,7 +31,7 @@ interface EstudianteBajoRendimiento {
 })
 export class DashboardService {
 
-  private apiUrl = 'http://127.0.0.1:8000/dashboard';
+  private apiUrl = 'https://backend-predix-h2grc3g4drb2hreh.canadacentral-01.azurewebsites.net/dashboard';
 
   constructor(private http: HttpClient) {}
 
