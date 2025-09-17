@@ -20,6 +20,12 @@ app.add_middleware(
     allow_headers=["*"],  
 )
 
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
+
 models.Base.metadata.create_all(bind=engine)
 
 app.include_router(auth_router, prefix="/api", tags=["auth"])
@@ -28,3 +34,4 @@ app.include_router(estudiantes_router)
 app.include_router(registro_notas_router)
 app.include_router(prediccion_router)
 app.include_router(dashboard_router)
+
