@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/ca85204b-9247-49d1-84f5-833cb9d28392/resourceGroups/frontend-predix_group/providers/Microsoft.Web/sites/frontend-predix",
+    "appService.deploySubpath": "dist\\frontend"
+}
